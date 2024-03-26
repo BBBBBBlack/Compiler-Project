@@ -1,0 +1,38 @@
+[
+{
+  "directory": "/home/jader/course/my_compiler/zlex/build",
+  "command": "/usr/sbin/c++  -I/home/jader/course/my_compiler/zlex/include -g -std=gnu++14 -o CMakeFiles/zlex.dir/src/FA.cpp.o -c /home/jader/course/my_compiler/zlex/src/FA.cpp",
+  "file": "/home/jader/course/my_compiler/zlex/src/FA.cpp",
+  "output": "CMakeFiles/zlex.dir/src/FA.cpp.o"
+},
+{
+  "directory": "/home/jader/course/my_compiler/zlex/build",
+  "command": "/usr/sbin/c++  -I/home/jader/course/my_compiler/zlex/include -g -std=gnu++14 -o CMakeFiles/zlex.dir/src/Symbol.cpp.o -c /home/jader/course/my_compiler/zlex/src/Symbol.cpp",
+  "file": "/home/jader/course/my_compiler/zlex/src/Symbol.cpp",
+  "output": "CMakeFiles/zlex.dir/src/Symbol.cpp.o"
+},
+{
+  "directory": "/home/jader/course/my_compiler/zlex/build",
+  "command": "/usr/sbin/c++  -I/home/jader/course/my_compiler/zlex/include -g -std=gnu++14 -o CMakeFiles/zlex.dir/src/main.cpp.o -c /home/jader/course/my_compiler/zlex/src/main.cpp",
+  "file": "/home/jader/course/my_compiler/zlex/src/main.cpp",
+  "output": "CMakeFiles/zlex.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/jader/course/my_compiler/zlex/build/test",
+  "command": "/usr/sbin/c++ -DGTEST_LINKED_AS_SHARED_LIBRARY=1 -I/home/jader/course/my_compiler/zlex/include -g -std=gnu++14 -o CMakeFiles/FATest.dir/FATest.cpp.o -c /home/jader/course/my_compiler/zlex/test/FATest.cpp",
+  "file": "/home/jader/course/my_compiler/zlex/test/FATest.cpp",
+  "output": "test/CMakeFiles/FATest.dir/FATest.cpp.o"
+},
+{
+  "directory": "/home/jader/course/my_compiler/zlex/build/test",
+  "command": "/usr/sbin/c++ -DGTEST_LINKED_AS_SHARED_LIBRARY=1 -I/home/jader/course/my_compiler/zlex/include -g -std=gnu++14 -o CMakeFiles/FATest.dir/__/src/FA.cpp.o -c /home/jader/course/my_compiler/zlex/src/FA.cpp",
+  "file": "/home/jader/course/my_compiler/zlex/src/FA.cpp",
+  "output": "test/CMakeFiles/FATest.dir/__/src/FA.cpp.o"
+},
+{
+  "directory": "/home/jader/course/my_compiler/zlex/build/test",
+  "command": "/usr/sbin/c++ -DGTEST_LINKED_AS_SHARED_LIBRARY=1 -I/home/jader/course/my_compiler/zlex/include -g -std=gnu++14 -o CMakeFiles/FATest.dir/__/src/Symbol.cpp.o -c /home/jader/course/my_compiler/zlex/src/Symbol.cpp",
+  "file": "/home/jader/course/my_compiler/zlex/src/Symbol.cpp",
+  "output": "test/CMakeFiles/FATest.dir/__/src/Symbol.cpp.o"
+}
+]
