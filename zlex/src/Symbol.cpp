@@ -5,7 +5,10 @@ std::map<std::string, OperatorType> Symbol::operatorMap = {
     {"-", UNION},
     {"*", CLOSURE},
     {"+", POSITIVE_CLOSURE},
-    {"?", ZERO_OR_ONE}};
+    {"?", ZERO_OR_ONE},
+    {"(", LEFT_BRACKET},
+    {")", RIGHT_BRACKET},
+};
 
 std::unordered_map<char, int> Symbol::opOrder = {
     {'\\', 0},

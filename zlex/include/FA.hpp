@@ -5,9 +5,12 @@
 #include <set>
 #include <map>
 #include <stack>
+#include <algorithm>
+#include <fstream>
 #include "Symbol.hpp"
 
 #define EPSILON "EPSILON"
+#define EPSILON_CHAR "\u03B5"
 
 struct FAState
 {
@@ -33,6 +36,7 @@ public:
     ~FA();
 
     void printFA(FAStateBlock block);
+    void printFA(FAStateBlock block, std::string fileName);
 
 private:
     std::vector<FAState> states;

@@ -8,6 +8,8 @@
 enum OperatorType
 {
     EPSILON,          // 空
+    LEFT_BRACKET,     // 左括号
+    RIGHT_BRACKET,    // 右括号
     OR,               // |
     UNION,            // -
     CLOSURE,          // *

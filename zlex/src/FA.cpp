@@ -6,12 +6,66 @@ FA::~FA() {}
 
 void FA::printFA(FAStateBlock block)
 {
-    printf("```mermaid\n");
-    printf("gragh LR\\");
-    int iter = block.beginStateID;
-    // dfs写出状态序列
+    printFA(block, "FA.md");
+}
 
-    printf("```\n");
+void FA::printFA(FAStateBlock block, std::string fileName)
+{
+    std::ofstream outFile(fileName, std::ios::trunc);
+    outFile << "## 状态图" << std::endl;
+    outFile << "```mermaid" << std::endl;
+    outFile << "graph LR" << std::endl;
+
+    std::stack<int> stateStack;
+    std::unordered_map<int, bool> visited;
+    stateStack.push(block.beginStateID);
+    // dfs 打印状态
+    int i = 1;
+    while (!stateStack.empty())
+    {
+        int stateID = stateStack.top();
+        stateStack.pop();
+        visited[stateID] = true;
+
+        // print节点
+        if (states[stateID].isAccepting)
+        {
+            outFile << stateID << "((END))" << std::endl;
+        }
+        else if (stateID == block.beginStateID)
+        {
+            outFile << stateID << "((START))" << std::endl;
+        }
+        else
+        {
+            outFile << stateID << "((" << i++ << "))" << std::endl;
+        }
+
+        // print符号边
+        for (auto &trans : states[stateID].trans)
+        {
+            outFile << "--" << trans.first << "-->" << trans.second << std::endl;
+            if (visited.find(trans.second) == visited.end())
+            {
+                stateStack.push(trans.second);
+                visited[trans.second] = true;
+            }
+        }
+
+        // print空边
+        for (auto &epsilonTrans : states[stateID].epsilonTrans)
+        {
+            outFile << stateID << "--" << EPSILON_CHAR << "-->" << epsilonTrans << std::endl;
+            if (visited.find(epsilonTrans) == visited.end())
+            {
+                stateStack.push(epsilonTrans);
+                visited[epsilonTrans] = true;
+            }
+        }
+        outFile << std::endl;
+    }
+
+    outFile << "```" << std::endl;
 }
 
 int FA::addState(bool isAccepting)
@@ -56,6 +110,10 @@ FAStateBlock FA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock b
     }
     else if (inputSymbol == '|') // or
     {
+        // block1,2的终态取消
+        states[block1.endStateID].isAccepting = 0;
+        states[block2.endStateID].isAccepting = 0;
+
         int orBegin = addState(0), orEnd = addState(1);
         addEdge(orBegin, block1.beginStateID, EPSILON);
         addEdge(orBegin, block2.beginStateID, EPSILON);
@@ -65,6 +123,7 @@ FAStateBlock FA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock b
     }
     else if (inputSymbol == '*') // 闭包
     {
+        states[block1.endStateID].isAccepting = 0;
         int closureBegin = addState(0), closureEnd = addState(1);
         addEdge(closureBegin, block1.beginStateID, EPSILON);
         addEdge(block1.endStateID, closureEnd, EPSILON);
@@ -109,7 +168,9 @@ std::string FA::addUnion(std::string regex)
             result += regex[i];
             result += '-';
         }
-        else if ((!Symbol::isOperator(regex[i])) && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
+        // else if ((!Symbol::isOperator(regex[i])) && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
+        // TODO 好丑陋的if 改了它!
+        else if ((regex[i] != '|' && regex[i] != '(') && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
         {
             result += regex[i];
             result += '-';
