@@ -1,0 +1,85 @@
+**/.idea/*
+**/.vscode/*
+**/build/**
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Debug files
+*.pdb
+*.dSYM/
+
+# Qt meta-object compiler files
+moc_*.cpp
+moc_*.h
+moc_*.cxx
+
+# Qt user interface files
+ui_*.h
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.cmake
+Makefile*
+*.make
+*.qmlc
+*.jsc
+
+# Visual Studio files
+*.sdf
+*.opensdf
+*.sln
+*.vspscc
+*.vssscc
+*.vcxproj
+*.vcxproj.user
+*.sln
+
+# Others
+*.log
+*.log.*
+*.o
+*.obj
+*.orig
+*.rej
+*.swp
+*.swo
+*.tmp
+*.temp
+*.old
+*.backup
+*.bak
+*.diff
+*.patch
+*.DS_Store
+# *.gitignore
+*.gitmodules
