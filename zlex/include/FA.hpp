@@ -7,6 +7,7 @@
 #include <stack>
 #include <algorithm>
 #include <fstream>
+#include <filesystem>
 #include "Symbol.hpp"
 
 #define EPSILON "EPSILON"

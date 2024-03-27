@@ -11,6 +11,7 @@ void FA::printFA(FAStateBlock block)
 
 void FA::printFA(FAStateBlock block, std::string fileName)
 {
+    // TODO 创建路径上的文件夹
     std::ofstream outFile(fileName, std::ios::trunc);
     outFile << "## 状态图" << std::endl;
     outFile << "```mermaid" << std::endl;
@@ -170,7 +171,7 @@ std::string FA::addUnion(std::string regex)
         }
         // else if ((!Symbol::isOperator(regex[i])) && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
         // TODO 好丑陋的if 改了它!
-        else if ((regex[i] != '|' && regex[i] != '(') && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
+        else if ((regex[i] != '|' && regex[i] != '(') && (!Symbol::isOperator(regex[i + 1]) || regex[i + 1] == '(') && (i + 1) != regex.size())
         {
             result += regex[i];
             result += '-';

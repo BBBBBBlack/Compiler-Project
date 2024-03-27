@@ -19,6 +19,9 @@ TEST(FATest, addUnionTest)
     ASSERT_EQ(fa.addUnion(test3), expected3);
 
     // 测试符号连接
+
+    std::string test4 = "c(abc|b*)", expected4 = "c-(a-b-c|b*)";
+    ASSERT_EQ(fa.addUnion(test4), expected4);
 }
 
 TEST(FATest, infixToSufixTest)
