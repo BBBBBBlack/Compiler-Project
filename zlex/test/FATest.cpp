@@ -73,26 +73,36 @@ TEST(FATest, ConvertToSuffix)
     ASSERT_EQ(fa.infixToSufix(fa.addUnion("(a|b)*abb")), "ab|*a-b-b-");
 }
 
-TEST(FATest, testPrintFA)
+TEST(FATest, testSingleRegex)
 {
     FA fa1, fa2, fa3, fa4, fa5, fa6;
     FAStateBlock block = fa1.regexToBlock("a|b");
-    fa1.printFA(block, "build/test/FA1.md");
+    fa1.printFA(block, "output/test/single/FA1.md");
 
     FAStateBlock block2 = fa2.regexToBlock("ab");
-    fa2.printFA(block2, "build/test/FA2.md");
+    fa2.printFA(block2, "output/test/single/FA2.md");
 
     FAStateBlock block3 = fa3.regexToBlock("(ab)*");
-    fa3.printFA(block3, "build/test/FA3.md");
+    fa3.printFA(block3, "output/test/single/FA3.md");
 
     FAStateBlock block5 = fa5.regexToBlock("(a|b)*abb");
-    fa5.printFA(block5, "build/test/FA5.md");
+    fa5.printFA(block5, "output/test/single/FA5.md");
 
     FA fa5_1;
     FAStateBlock block5_1 = fa5_1.regexToBlock("(a|b)*");
-    fa5_1.printFA(block5_1, "build/test/FA5_1.md");
+    fa5_1.printFA(block5_1, "output/test/single/FA5_1.md");
 
     // (c(abc|b*))
     FAStateBlock block6 = fa6.regexToBlock("c(abc|b*)");
-    fa6.printFA(block6, "build/test/FA6.md");
+    fa6.printFA(block6, "output/test/single/FA6.md");
+}
+
+TEST(FATest, testRegexVecToBlock)
+{
+    FA fa1, fa2, fa3, fa4, fa5, fa6;
+
+    std::vector<std::string> regexVec1 = {"ab", "a|b", "(ab)*", "a(b|c)"};
+
+    FAStateBlock b1 = fa1.regexVecToBlock(regexVec1);
+    fa1.printFA(b1, "output/test/complex/FA1.md");
 }

@@ -82,7 +82,13 @@ private:
      */
     FAStateBlock addTransition(char inputSymbol, bool escapeFlag, FAStateBlock block1, FAStateBlock block2);
 
+    /**
+     * @brief 将一条正则表达式转换为状态机
+     * @param regex 正则表达式
+     */
     FAStateBlock regexToBlock(std::string regex);
+
+    FAStateBlock regexVecToBlock(std::vector<std::string> regexVec);
 };
 
 #endif // FA_H

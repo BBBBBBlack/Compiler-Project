@@ -11,8 +11,15 @@ void FA::printFA(FAStateBlock block)
 
 void FA::printFA(FAStateBlock block, std::string fileName)
 {
-    // TODO 创建路径上的文件夹
+    std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
+    std::filesystem::create_directories(folderPath);
+
     std::ofstream outFile(fileName, std::ios::trunc);
+    if (!outFile.is_open())
+    {
+        perror("打开文件失败");
+    }
+    // 向outFile写入当前时间
     outFile << "## 状态图" << std::endl;
     outFile << "```mermaid" << std::endl;
     outFile << "graph LR" << std::endl;
@@ -271,4 +278,15 @@ FAStateBlock FA::regexToBlock(std::string regex)
         }
     }
     return blockStack.top();
+}
+
+FAStateBlock FA::regexVecToBlock(std::vector<std::string> regexVec)
+{
+    int allBegin = addState(0);
+    for (auto &regex : regexVec)
+    {
+        FAStateBlock block = regexToBlock(regex);
+        addEdge(allBegin, block.beginStateID, EPSILON);
+    }
+    return {allBegin, -1};
 }

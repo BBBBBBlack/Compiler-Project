@@ -1,6 +1,7 @@
 **/.idea/*
 **/.vscode/*
 **/build/**
+**/output/**
 
 # Compiled Object files
 *.slo

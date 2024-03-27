@@ -14,5 +14,7 @@ target_link_libraries(FATest
         ${GTEST_BOTH_LIBRARIES}
         pthread )
 
+# target_link_libraries(FATest stdc++fs)
+
 # 添加测试
 gtest_discover_tests(FATest)
