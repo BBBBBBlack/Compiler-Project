@@ -4,12 +4,7 @@ FA::FA() {}
 
 FA::~FA() {}
 
-void FA::printFA(FAStateBlock block)
-{
-    printFA(block, "FA.md");
-}
-
-void FA::printFA(FAStateBlock block, std::string fileName)
+void FA::printFA(int startStateID, std::string fileName, FAStateVec &states)
 {
     std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);
@@ -20,13 +15,16 @@ void FA::printFA(FAStateBlock block, std::string fileName)
         perror("打开文件失败");
     }
     // 向outFile写入当前时间
+    std::time_t currentTime = std::time(nullptr);
+    outFile << "Current time: " << std::asctime(std::localtime(&currentTime));
+
     outFile << "## 状态图" << std::endl;
     outFile << "```mermaid" << std::endl;
     outFile << "graph LR" << std::endl;
 
     std::stack<int> stateStack;
     std::unordered_map<int, bool> visited;
-    stateStack.push(block.beginStateID);
+    stateStack.push(startStateID);
     // dfs 打印状态
     int i = 1;
     while (!stateStack.empty())
@@ -40,7 +38,7 @@ void FA::printFA(FAStateBlock block, std::string fileName)
         {
             outFile << stateID << "((END))" << std::endl;
         }
-        else if (stateID == block.beginStateID)
+        else if (stateID == startStateID)
         {
             outFile << stateID << "((START))" << std::endl;
         }
@@ -76,20 +74,20 @@ void FA::printFA(FAStateBlock block, std::string fileName)
     outFile << "```" << std::endl;
 }
 
-int FA::addState(bool isAccepting)
+int FA::addState(bool isAccepting, FAStateVec &states)
 {
     FAState faState(states.size(), {}, {}, isAccepting);
     states.push_back(faState);
     return states.size() - 1;
 }
 
-void FA::addEdge(int fromStateID, int toStateID, char symbol)
+void FA::addEdge(int fromStateID, int toStateID, char symbol, FAStateVec &states)
 {
     std::string str_sym(1, symbol);
     states[fromStateID].trans[str_sym] = toStateID;
 }
 
-void FA::addEdge(int fromStateID, int toStateID, std::string symbol)
+void FA::addEdge(int fromStateID, int toStateID, std::string symbol, FAStateVec &states)
 {
     if (symbol == EPSILON) // 空边
     {
@@ -101,20 +99,21 @@ void FA::addEdge(int fromStateID, int toStateID, std::string symbol)
     }
 }
 
-FAStateBlock FA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock block1, FAStateBlock block2)
+FAStateBlock FA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock block1, FAStateBlock block2, FAStateVec &states)
 {
     FAStateBlock resultBlock{block1.beginStateID, block2.endStateID};
     // 问就是不爱用switch
     if (escapeFlag)
     {
-        int s1 = addState(0), s2 = addState(1);
-        addEdge(s1, s2, inputSymbol);
+        symbolTable[inputSymbol + ""] = true;
+        int s1 = addState(0, states), s2 = addState(1, states);
+        addEdge(s1, s2, inputSymbol, states);
         resultBlock = {s1, s2};
     }
     else if (inputSymbol == '-') // union
     {
         states[block1.endStateID].isAccepting = 0; // block1的终态取消
-        addEdge(block1.endStateID, block2.beginStateID, EPSILON);
+        addEdge(block1.endStateID, block2.beginStateID, EPSILON, states);
     }
     else if (inputSymbol == '|') // or
     {
@@ -122,43 +121,44 @@ FAStateBlock FA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock b
         states[block1.endStateID].isAccepting = 0;
         states[block2.endStateID].isAccepting = 0;
 
-        int orBegin = addState(0), orEnd = addState(1);
-        addEdge(orBegin, block1.beginStateID, EPSILON);
-        addEdge(orBegin, block2.beginStateID, EPSILON);
-        addEdge(block1.endStateID, orEnd, EPSILON);
-        addEdge(block2.endStateID, orEnd, EPSILON);
+        int orBegin = addState(0, states), orEnd = addState(1, states);
+        addEdge(orBegin, block1.beginStateID, EPSILON, states);
+        addEdge(orBegin, block2.beginStateID, EPSILON, states);
+        addEdge(block1.endStateID, orEnd, EPSILON, states);
+        addEdge(block2.endStateID, orEnd, EPSILON, states);
         resultBlock = {orBegin, orEnd};
     }
     else if (inputSymbol == '*') // 闭包
     {
         states[block1.endStateID].isAccepting = 0;
-        int closureBegin = addState(0), closureEnd = addState(1);
-        addEdge(closureBegin, block1.beginStateID, EPSILON);
-        addEdge(block1.endStateID, closureEnd, EPSILON);
-        addEdge(closureBegin, closureEnd, EPSILON);
-        addEdge(block1.endStateID, block1.beginStateID, EPSILON);
+        int closureBegin = addState(0, states), closureEnd = addState(1, states);
+        addEdge(closureBegin, block1.beginStateID, EPSILON, states);
+        addEdge(block1.endStateID, closureEnd, EPSILON, states);
+        addEdge(closureBegin, closureEnd, EPSILON, states);
+        addEdge(block1.endStateID, block1.beginStateID, EPSILON, states);
         resultBlock = {closureBegin, closureEnd};
     }
     else if (inputSymbol == '+') // 正闭包
     {
-        int closureBegin = addState(0), closureEnd = addState(1);
-        addEdge(closureBegin, block1.beginStateID, EPSILON);
-        addEdge(block1.endStateID, closureEnd, EPSILON);
-        addEdge(block1.endStateID, block1.beginStateID, EPSILON);
+        int closureBegin = addState(0, states), closureEnd = addState(1, states);
+        addEdge(closureBegin, block1.beginStateID, EPSILON, states);
+        addEdge(block1.endStateID, closureEnd, EPSILON, states);
+        addEdge(block1.endStateID, block1.beginStateID, EPSILON, states);
         resultBlock = {closureBegin, closureEnd};
     }
     else if (inputSymbol == '?') // 零次或一次
     {
-        int closureBegin = addState(0), closureEnd = addState(1);
-        addEdge(closureBegin, block1.beginStateID, EPSILON);
-        addEdge(block1.endStateID, closureEnd, EPSILON);
-        addEdge(closureBegin, closureEnd, EPSILON);
+        int closureBegin = addState(0, states), closureEnd = addState(1, states);
+        addEdge(closureBegin, block1.beginStateID, EPSILON, states);
+        addEdge(block1.endStateID, closureEnd, EPSILON, states);
+        addEdge(closureBegin, closureEnd, EPSILON, states);
         resultBlock = {closureBegin, closureEnd};
     }
     else // 普通字符
     {
-        int s1 = addState(0), s2 = addState(1);
-        addEdge(s1, s2, inputSymbol);
+        symbolTable[inputSymbol + ""] = true;
+        int s1 = addState(0, states), s2 = addState(1, states);
+        addEdge(s1, s2, inputSymbol, states);
         resultBlock = {s1, s2};
     }
     return resultBlock;
@@ -241,7 +241,7 @@ std::string FA::infixToSufix(std::string regex)
     return res;
 }
 
-FAStateBlock FA::regexToBlock(std::string regex)
+FAStateBlock FA::regexToBlock(std::string regex, FAStateVec &states)
 {
     std::string regexWithUnion = addUnion(regex);
     std::string regexWithSuffix = infixToSufix(regexWithUnion);
@@ -256,7 +256,7 @@ FAStateBlock FA::regexToBlock(std::string regex)
             {
                 perror("无效的转义字符");
             }
-            blockStack.push(addTransition(regexWithSuffix[i + 1], 1, {}, {}));
+            blockStack.push(addTransition(regexWithSuffix[i + 1], 1, {}, {}, states));
         }
         else if (Symbol::isOperator(regexWithSuffix[i]))
         {
@@ -269,24 +269,147 @@ FAStateBlock FA::regexToBlock(std::string regex)
             }
             block1 = blockStack.top();
             blockStack.pop();
-            blockStack.push(addTransition(regexWithSuffix[i], 0, block1, block2));
+            blockStack.push(addTransition(regexWithSuffix[i], 0, block1, block2, states));
         }
         else
         {
-            blockStack.push({addState(0), addState(1)});
-            addEdge(blockStack.top().beginStateID, blockStack.top().endStateID, regexWithSuffix[i]);
+            blockStack.push({addState(0, states), addState(1, states)});
+            addEdge(blockStack.top().beginStateID, blockStack.top().endStateID, regexWithSuffix[i], states);
         }
     }
     return blockStack.top();
 }
 
-FAStateBlock FA::regexVecToBlock(std::vector<std::string> regexVec)
+void FA::buildNFA(std::vector<std::string> regexVec)
 {
-    int allBegin = addState(0);
+    int allBegin = addState(0, NFAStates);
     for (auto &regex : regexVec)
     {
-        FAStateBlock block = regexToBlock(regex);
-        addEdge(allBegin, block.beginStateID, EPSILON);
+        FAStateBlock block = regexToBlock(regex, NFAStates);
+        addEdge(allBegin, block.beginStateID, EPSILON, NFAStates);
     }
-    return {allBegin, -1};
+    NFAStartStateID = allBegin;
+}
+
+/**
+ * @brief 获取一个状态的epsilon闭包
+ * @param stateID 状态ID
+ */
+StateSet FA::epsilonClosure(int stateID, FAStateVec &states)
+{
+    std::unordered_map<int, bool> visited;
+    return epsilonClosure(stateID, visited, states);
+}
+
+/**
+ * @brief 获取一个状态的epsilon闭包
+ * @param stateID 状态ID
+ * @param visited 访问标记(用于避免重复访问)
+ */
+StateSet FA::epsilonClosure(int stateID, std::unordered_map<int, bool> &visited, FAStateVec &states)
+{
+    std::stack<int> stateStack;
+    stateStack.push(stateID);
+    StateSet result;
+    while (!stateStack.empty())
+    {
+        int stateID = stateStack.top();
+        stateStack.pop();
+        result.insert(stateID);
+        visited[stateID] = true;
+        for (auto &epsilonTrans : states[stateID].epsilonTrans)
+        {
+            if (visited.find(epsilonTrans) == visited.end())
+            {
+                stateStack.push(epsilonTrans);
+                visited[epsilonTrans] = true;
+            }
+        }
+    }
+    return result;
+}
+/**
+ * @brief 获取一个状态集的epsilon闭包
+ * @param stateSet 状态集
+ */
+StateSet FA::epsilonClosure(StateSet stateSet, FAStateVec &states)
+{
+    std::unordered_map<int, bool> visited;
+    return epsilonClosure(stateSet, visited, states);
+}
+
+/**
+ * @brief 获取一个状态集的epsilon闭包
+ * @param stateSet 状态集
+ * @param visited 访问标记(用于避免重复访问)
+ */
+StateSet FA::epsilonClosure(StateSet stateSet, std::unordered_map<int, bool> &visited, FAStateVec &states)
+{
+    StateSet result;
+    for (auto &stateID : stateSet)
+    {
+        StateSet closure = epsilonClosure(stateID, visited, NFAStates);
+        result.insert(closure.begin(), closure.end());
+    }
+    return result;
+}
+
+/**
+ * @brief 获取一个状态集的转移闭包
+ * @param stateSet 状态集
+ * @param symbol 转移条件
+ */
+StateSet FA::move(StateSet stateSet, std::string symbol, FAStateVec &states)
+{
+    StateSet result;
+    for (auto &stateID : stateSet)
+    {
+        if (states[stateID].trans.find(symbol) != states[stateID].trans.end())
+        {
+            result.insert(states[stateID].trans[symbol]);
+        }
+    }
+    return result;
+}
+
+/**
+ * @brief 将states中的NFA转换为DFA
+ */
+void FA::toDFA()
+{
+    std::unordered_set<StateSet, StateSetHash> visitedSet;
+    std::queue<StateSet> stateSetQueue;
+    FAStateVec dfaStates;
+
+    StateSet startStateSet = epsilonClosure(NFAStartStateID, NFAStates);
+
+    stateSetQueue.push(startStateSet);
+    while (!stateSetQueue.empty())
+    {
+        StateSet currentStateSet = stateSetQueue.front();
+        stateSetQueue.pop();
+
+        if (visitedSet.find(currentStateSet) == visitedSet.end())
+        {
+            visitedSet.insert(currentStateSet);
+        }
+        else
+        {
+            continue; // 跳过已访问的状态集
+        }
+        for (auto &symbol : symbolTable)
+        {
+            StateSet nextStateSet = epsilonClosure(move(currentStateSet, symbol.first, NFAStates), NFAStates);
+            if (nextStateSet.size() == 0)
+            {
+                continue;
+            }
+            if (visitedSet.find(nextStateSet) == visitedSet.end())
+            {
+                visitedSet.insert(nextStateSet);
+                stateSetQueue.push(nextStateSet);
+            }
+            // 添加状态转移
+        }
+    }
 }

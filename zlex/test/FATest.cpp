@@ -76,25 +76,25 @@ TEST(FATest, ConvertToSuffix)
 TEST(FATest, testSingleRegex)
 {
     FA fa1, fa2, fa3, fa4, fa5, fa6;
-    FAStateBlock block = fa1.regexToBlock("a|b");
-    fa1.printFA(block, "output/test/single/FA1.md");
+    FAStateBlock block = fa1.regexToBlock("a|b", fa1.NFAStates);
+    fa1.printNFA("output/test/single/FA1.md");
 
-    FAStateBlock block2 = fa2.regexToBlock("ab");
-    fa2.printFA(block2, "output/test/single/FA2.md");
+    FAStateBlock block2 = fa2.regexToBlock("ab", fa2.NFAStates);
+    fa2.printNFA("output/test/single/FA2.md");
 
-    FAStateBlock block3 = fa3.regexToBlock("(ab)*");
-    fa3.printFA(block3, "output/test/single/FA3.md");
+    FAStateBlock block3 = fa3.regexToBlock("(ab)*", fa3.NFAStates);
+    fa3.printNFA("output/test/single/FA3.md");
 
-    FAStateBlock block5 = fa5.regexToBlock("(a|b)*abb");
-    fa5.printFA(block5, "output/test/single/FA5.md");
+    FAStateBlock block5 = fa5.regexToBlock("(a|b)*abb", fa5.NFAStates);
+    fa5.printNFA("output/test/single/FA5.md");
 
     FA fa5_1;
-    FAStateBlock block5_1 = fa5_1.regexToBlock("(a|b)*");
-    fa5_1.printFA(block5_1, "output/test/single/FA5_1.md");
+    FAStateBlock block5_1 = fa5_1.regexToBlock("(a|b)*", fa5_1.NFAStates);
+    fa5_1.printNFA("output/test/single/FA5_1.md");
 
     // (c(abc|b*))
-    FAStateBlock block6 = fa6.regexToBlock("c(abc|b*)");
-    fa6.printFA(block6, "output/test/single/FA6.md");
+    FAStateBlock block6 = fa6.regexToBlock("c(abc|b*)", fa6.NFAStates);
+    fa6.printNFA("output/test/single/FA6.md");
 }
 
 TEST(FATest, testRegexVecToBlock)
@@ -103,6 +103,15 @@ TEST(FATest, testRegexVecToBlock)
 
     std::vector<std::string> regexVec1 = {"ab", "a|b", "(ab)*", "a(b|c)"};
 
-    FAStateBlock b1 = fa1.regexVecToBlock(regexVec1);
-    fa1.printFA(b1, "output/test/complex/FA1.md");
+    fa1.buildNFA(regexVec1);
+    fa1.printNFA("output/test/complex/FA1.md");
+}
+
+TEST(FATest, homework)
+{
+    FA fa1;
+    std::vector<std::string> regexVec1 = {"b+", "a*ba"};
+
+    fa1.buildNFA(regexVec1);
+    fa1.printNFA("output/test/homework/FA1.md");
 }
