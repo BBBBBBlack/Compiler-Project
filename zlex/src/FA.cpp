@@ -16,7 +16,13 @@ void FA::printFA(int startStateID, std::string fileName, FAStateVec &states)
     }
     // 向outFile写入当前时间
     std::time_t currentTime = std::time(nullptr);
-    outFile << "Current time: " << std::asctime(std::localtime(&currentTime));
+    outFile << "Generate time: " << std::asctime(std::localtime(&currentTime));
+
+    outFile << "## 正则表达式集合" << std::endl;
+    for (auto &regex : regexVec)
+    {
+        outFile << "- " << regex << std::endl;
+    }
 
     outFile << "## 状态图" << std::endl;
     outFile << "```mermaid" << std::endl;
@@ -280,8 +286,9 @@ FAStateBlock FA::regexToBlock(std::string regex, FAStateVec &states)
     return blockStack.top();
 }
 
-void FA::buildNFA(std::vector<std::string> regexVec)
+void FA::buildNFA(RegexVec regexVec)
 {
+    this->regexVec = regexVec;
     int allBegin = addState(0, NFAStates);
     for (auto &regex : regexVec)
     {

@@ -34,6 +34,7 @@ struct FAStateBlock
 
 typedef std::vector<FAState> FAStateVec;
 typedef std::unordered_set<int> StateSet;
+typedef std::vector<std::string> RegexVec;
 
 struct StateSetHash
 {
@@ -59,6 +60,7 @@ struct StateSetEqual
 class FA
 {
 public:
+    RegexVec regexVec;
     FA();
     ~FA();
 
@@ -76,7 +78,7 @@ public:
      * @brief 根据正则表达式集合构建NFA
      * @param regexVec 正则表达式集合
      */
-    void buildNFA(std::vector<std::string> regexVec);
+    void buildNFA(RegexVec regexVec);
 
     /**
      * @brief 将states中的NFA转换为DFA
