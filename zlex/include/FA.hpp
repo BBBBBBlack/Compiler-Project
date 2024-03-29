@@ -13,6 +13,13 @@
 #include <filesystem>
 #include "Symbol.hpp"
 
+#define BANNER                   \
+    "  ______              \n"   \
+    " |__  / |    _____  __\n"   \
+    "   / /| |   / _ \\ \\/ /\n" \
+    "  / /_| |__|  __/>  < \n"   \
+    " /____|_____\\___/_/\\_\\"
+
 #define EPSILON "EPSILON"
 #define EPSILON_CHAR "\u03B5"
 #define DEFAULT_OUTPUT_FILE "output/FA.md"

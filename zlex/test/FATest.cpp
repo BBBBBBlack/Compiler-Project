@@ -112,7 +112,7 @@ TEST(FATest, testRegexVecToBlock)
 
 TEST(FATest, homework)
 {
-    FA fa1("output/test/homework/FA.md");
+    FA fa1("output/test/homework/FA1.md");
     std::vector<std::string> regexVec1 = {"b+", "a*ba"};
 
     fa1.setDebugMode(true);
@@ -120,4 +120,12 @@ TEST(FATest, homework)
     fa1.printNFA();
     fa1.toDFA();
     fa1.printDFA();
+
+    FA fa2("output/test/homework/FA2.md");
+    std::vector<std::string> regexVec2 = {"a*b*"};
+    fa2.setDebugMode(true);
+    fa2.buildNFA(regexVec2);
+    fa2.printNFA();
+    fa2.toDFA();
+    fa2.printDFA();
 }
