@@ -1,30 +1,45 @@
 #include "FA.hpp"
 
-FA::FA() {}
-
-FA::~FA() {}
-
-void FA::printFA(int startStateID, std::string fileName, FAStateVec &states)
+void FA::setOutputFile(std::string fileName)
 {
     std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);
-
-    std::ofstream outFile(fileName, std::ios::trunc);
+    outFile.open(fileName, std::ios::trunc);
     if (!outFile.is_open())
     {
         perror("打开文件失败");
     }
+
     // 向outFile写入当前时间
     std::time_t currentTime = std::time(nullptr);
     outFile << "Generate time: " << std::asctime(std::localtime(&currentTime));
+}
 
-    outFile << "## 正则表达式集合" << std::endl;
-    for (auto &regex : regexVec)
+void FA::printFA(int startStateID, FAStateVec &states)
+{
+    // 打印正则表达式集合
+    if (!printRegexFlag)
     {
-        outFile << "- " << regex << std::endl;
+        outFile << "## 正则表达式集合" << std::endl;
+        for (auto &regex : regexVec)
+        {
+            outFile << "- " << regex << std::endl;
+        }
+        printRegexFlag = true;
     }
 
-    outFile << "## 状态图" << std::endl;
+    // 打印状态图
+    if (states == NFAStates)
+    {
+        outFile << std::endl
+                << "## NFA状态图" << std::endl;
+    }
+    else
+    {
+        outFile << std::endl
+                << "## DFA状态图" << std::endl;
+    }
+
     outFile << "```mermaid" << std::endl;
     outFile << "graph LR" << std::endl;
 
@@ -40,23 +55,43 @@ void FA::printFA(int startStateID, std::string fileName, FAStateVec &states)
         visited[stateID] = true;
 
         // print节点
-        if (states[stateID].isAccepting)
+        if (debugMode)
         {
-            outFile << stateID << "((END))" << std::endl;
-        }
-        else if (stateID == startStateID)
-        {
-            outFile << stateID << "((START))" << std::endl;
+            // print节点
+            if (stateID == startStateID)
+            {
+                outFile << stateID << "((START<" << stateID << ">))" << std::endl;
+            }
+            else if (states[stateID].isAccepting)
+            {
+                outFile << stateID << "((END<" << stateID << ">))" << std::endl;
+            }
+            else
+            {
+                outFile << stateID << "((" << i++ << "<" << stateID << ">"
+                        << "))" << std::endl;
+            }
         }
         else
         {
-            outFile << stateID << "((" << i++ << "))" << std::endl;
+            if (states[stateID].isAccepting)
+            {
+                outFile << stateID << "((END))" << std::endl;
+            }
+            else if (stateID == startStateID)
+            {
+                outFile << stateID << "((START))" << std::endl;
+            }
+            else
+            {
+                outFile << stateID << "((" << i++ << "))" << std::endl;
+            }
         }
 
         // print符号边
         for (auto &trans : states[stateID].trans)
         {
-            outFile << "--" << trans.first << "-->" << trans.second << std::endl;
+            outFile << stateID << "--" << trans.first << "-->" << trans.second << std::endl;
             if (visited.find(trans.second) == visited.end())
             {
                 stateStack.push(trans.second);
@@ -105,13 +140,14 @@ void FA::addEdge(int fromStateID, int toStateID, std::string symbol, FAStateVec 
     }
 }
 
+// TODO 部分代码功能被regexToBlock替代 待重构
 FAStateBlock FA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock block1, FAStateBlock block2, FAStateVec &states)
 {
     FAStateBlock resultBlock{block1.beginStateID, block2.endStateID};
     // 问就是不爱用switch
     if (escapeFlag)
     {
-        symbolTable[inputSymbol + ""] = true;
+        alphabet.insert(std::string(1, inputSymbol));
         int s1 = addState(0, states), s2 = addState(1, states);
         addEdge(s1, s2, inputSymbol, states);
         resultBlock = {s1, s2};
@@ -162,7 +198,7 @@ FAStateBlock FA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock b
     }
     else // 普通字符
     {
-        symbolTable[inputSymbol + ""] = true;
+        alphabet.insert(inputSymbol + "");
         int s1 = addState(0, states), s2 = addState(1, states);
         addEdge(s1, s2, inputSymbol, states);
         resultBlock = {s1, s2};
@@ -266,7 +302,6 @@ FAStateBlock FA::regexToBlock(std::string regex, FAStateVec &states)
         }
         else if (Symbol::isOperator(regexWithSuffix[i]))
         {
-
             block2 = blockStack.top();
             // 正则操作符对象可能只有一个
             if (!Symbol::isUnaryOp(regexWithSuffix[i]))
@@ -279,6 +314,10 @@ FAStateBlock FA::regexToBlock(std::string regex, FAStateVec &states)
         }
         else
         {
+            // 直连
+            // alphabet.insert(regexWithSuffix[i] + "");
+            alphabet.insert(std::string(1, regexWithSuffix[i]));
+            // symbolTable[regexWithSuffix[i] + ""] = true; // 记录符号
             blockStack.push({addState(0, states), addState(1, states)});
             addEdge(blockStack.top().beginStateID, blockStack.top().endStateID, regexWithSuffix[i], states);
         }
@@ -296,16 +335,17 @@ void FA::buildNFA(RegexVec regexVec)
         addEdge(allBegin, block.beginStateID, EPSILON, NFAStates);
     }
     NFAStartStateID = allBegin;
-}
 
-/**
- * @brief 获取一个状态的epsilon闭包
- * @param stateID 状态ID
- */
-StateSet FA::epsilonClosure(int stateID, FAStateVec &states)
-{
-    std::unordered_map<int, bool> visited;
-    return epsilonClosure(stateID, visited, states);
+    if (debugMode)
+    {
+        outFile << std::endl
+                << "## 字母表" << std::endl;
+        for (auto &letter : alphabet)
+        {
+            outFile << letter << " ";
+        }
+        outFile << std::endl;
+    }
 }
 
 /**
@@ -322,27 +362,19 @@ StateSet FA::epsilonClosure(int stateID, std::unordered_map<int, bool> &visited,
     {
         int stateID = stateStack.top();
         stateStack.pop();
-        result.insert(stateID);
+        result.set.insert(stateID);
         visited[stateID] = true;
         for (auto &epsilonTrans : states[stateID].epsilonTrans)
         {
             if (visited.find(epsilonTrans) == visited.end())
             {
                 stateStack.push(epsilonTrans);
+                result.isAccepting = result.isAccepting || states[epsilonTrans].isAccepting;
                 visited[epsilonTrans] = true;
             }
         }
     }
     return result;
-}
-/**
- * @brief 获取一个状态集的epsilon闭包
- * @param stateSet 状态集
- */
-StateSet FA::epsilonClosure(StateSet stateSet, FAStateVec &states)
-{
-    std::unordered_map<int, bool> visited;
-    return epsilonClosure(stateSet, visited, states);
 }
 
 /**
@@ -353,10 +385,11 @@ StateSet FA::epsilonClosure(StateSet stateSet, FAStateVec &states)
 StateSet FA::epsilonClosure(StateSet stateSet, std::unordered_map<int, bool> &visited, FAStateVec &states)
 {
     StateSet result;
-    for (auto &stateID : stateSet)
+    for (auto &stateID : stateSet.set)
     {
-        StateSet closure = epsilonClosure(stateID, visited, NFAStates);
-        result.insert(closure.begin(), closure.end());
+        StateSet closure = epsilonClosure(stateID, visited, states);
+        result.set.insert(closure.set.begin(), closure.set.end());
+        result.isAccepting = result.isAccepting || closure.isAccepting;
     }
     return result;
 }
@@ -369,14 +402,36 @@ StateSet FA::epsilonClosure(StateSet stateSet, std::unordered_map<int, bool> &vi
 StateSet FA::move(StateSet stateSet, std::string symbol, FAStateVec &states)
 {
     StateSet result;
-    for (auto &stateID : stateSet)
+    // 遍历状态集
+    for (auto &stateID : stateSet.set)
     {
+        // 查看当前状态是否有symbol转移
         if (states[stateID].trans.find(symbol) != states[stateID].trans.end())
         {
-            result.insert(states[stateID].trans[symbol]);
+            result.set.insert(states[stateID].trans[symbol]);
+            result.isAccepting = result.isAccepting || states[stateID].isAccepting;
         }
     }
     return result;
+}
+
+void FA::printDFATransTableHeader()
+{
+    outFile << std::endl
+            << "## NFA->DFA(子集构造)" << std::endl;
+    outFile << "|原NFA集合|";
+    for (auto &symbol : alphabet)
+    {
+        outFile << symbol << "|";
+    }
+    outFile << std::endl;
+    // 打印分隔线
+    outFile << "|---|";
+    for (auto &symbol : alphabet)
+    {
+        outFile << "---|";
+    }
+    outFile << std::endl;
 }
 
 /**
@@ -384,39 +439,71 @@ StateSet FA::move(StateSet stateSet, std::string symbol, FAStateVec &states)
  */
 void FA::toDFA()
 {
-    std::unordered_set<StateSet, StateSetHash> visitedSet;
+    if (debugMode)
+        printDFATransTableHeader();
+
+    std::unordered_set<StateSet, StateSetHash, StateSetEqual> visitedSet;
     std::queue<StateSet> stateSetQueue;
-    FAStateVec dfaStates;
 
     StateSet startStateSet = epsilonClosure(NFAStartStateID, NFAStates);
+    // 初始NFA状态集->DFA状态
+    startStateSet.stateID = addState(startStateSet.isAccepting, DFAStates);
+    DFAStartStateID = startStateSet.stateID;
 
+    // 开始递归 生成DFA
     stateSetQueue.push(startStateSet);
     while (!stateSetQueue.empty())
     {
+        // 获取当前状态集
         StateSet currentStateSet = stateSetQueue.front();
         stateSetQueue.pop();
 
-        if (visitedSet.find(currentStateSet) == visitedSet.end())
+        // 跳过已访问的状态集
+        if (visitedSet.find(currentStateSet) != visitedSet.end())
+            continue;
+
+        visitedSet.insert(currentStateSet);
+
+        if (debugMode)
         {
-            visitedSet.insert(currentStateSet);
+            outFile << "|" << currentStateSet << "|";
         }
-        else
+
+        for (auto &symbol : alphabet)
         {
-            continue; // 跳过已访问的状态集
-        }
-        for (auto &symbol : symbolTable)
-        {
-            StateSet nextStateSet = epsilonClosure(move(currentStateSet, symbol.first, NFAStates), NFAStates);
-            if (nextStateSet.size() == 0)
+            // TODO 生成的nextStateSet的StateID从何而来
+            StateSet nextStateSet = epsilonClosure(move(currentStateSet, symbol, NFAStates), NFAStates);
+            // 跳过空集
+            if (nextStateSet.set.size() == 0)
             {
+                if (debugMode)
+                    outFile << EMPTY_SET << "|";
                 continue;
             }
+
+            // 检查是否为新生成的集合(DFA状态)
             if (visitedSet.find(nextStateSet) == visitedSet.end())
             {
-                visitedSet.insert(nextStateSet);
+                // visitedSet.insert(nextStateSet);
+                nextStateSet.stateID = addState(nextStateSet.isAccepting, DFAStates);
                 stateSetQueue.push(nextStateSet);
             }
-            // 添加状态转移
+            else
+            {
+                // 重复状态集
+                // NOTE: 否则StateID会因为epsilonClosure生成出错
+                nextStateSet = *visitedSet.find(nextStateSet);
+            }
+
+            if (debugMode)
+            {
+                outFile << nextStateSet << "|";
+            }
+            // 为新生成的状态集(DFA状态)添加转移(边)
+            addEdge(currentStateSet.stateID, nextStateSet.stateID, symbol, DFAStates);
         }
+
+        if (debugMode)
+            outFile << std::endl;
     }
 }
