@@ -1,0 +1,83 @@
+#ifndef STRUCT_HPP
+#define STRUCT_HPP
+
+#include <map>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <set>
+#include <unordered_set>
+#include <iostream>
+
+struct FAState
+{
+    int stateID;
+    std::map<std::string, int> trans; // 映射字符到下一个状态集合
+    std::vector<int> epsilonTrans;    // 空边
+    bool isAccepting;                 // 是否为终节点
+
+    FAState(int stateID, std::map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting)
+        : stateID(stateID), trans(trans), epsilonTrans(epsilonTrans), isAccepting(isAccepting) {}
+
+    bool operator==(const FAState &other) const
+    {
+        return stateID == other.stateID && trans == other.trans && epsilonTrans == other.epsilonTrans && isAccepting == other.isAccepting;
+    }
+};
+
+struct FAStateBlock
+{
+    int beginStateID;
+    int endStateID;
+};
+
+struct StateSet
+{
+    bool isAccepting = false;
+    int stateID;
+    std::unordered_set<int> set;
+
+    friend std::ostream &operator<<(std::ostream &os, const StateSet &stateSet)
+    {
+        std::string isAccepting = stateSet.isAccepting ? "T" : "F";
+        os << "ID:" << stateSet.stateID << ", END:" << isAccepting << ", {";
+        bool flag = false;
+        for (const auto &state : stateSet.set)
+        {
+            if (flag)
+            {
+                os << ", ";
+            }
+            os << state;
+            flag = true;
+        }
+        os << "}";
+        return os;
+    }
+};
+
+typedef std::vector<FAState> FAStateVec;
+typedef std::vector<std::string> RegexVec;
+
+struct StateSetHash
+{
+    std::size_t operator()(const StateSet &stateSet) const
+    {
+        std::size_t seed = 0;
+        for (const auto &state : stateSet.set)
+        {
+            seed ^= std::hash<int>{}(state) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        }
+        return seed;
+    }
+};
+
+struct StateSetEqual
+{
+    bool operator()(const StateSet &lhs, const StateSet &rhs) const
+    {
+        return lhs.set == rhs.set;
+    }
+};
+
+#endif // STRUCT_HPP

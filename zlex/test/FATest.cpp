@@ -2,9 +2,9 @@
 #include <iostream>
 
 // 用于测试私有成员函数
-#define private public
+#define protected public
 #include "FA.hpp"
-#undef private
+#undef protected
 
 TEST(FATest, addUnionTest)
 {
