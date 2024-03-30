@@ -8,6 +8,20 @@
 #include <set>
 #include <unordered_set>
 #include <iostream>
+#include <any>
+#include <functional>
+
+using ActionFunction = std::function<std::any()>;
+const ActionFunction NullAction;
+
+struct PatternAction
+{
+    std::string pattern;
+    ActionFunction action;
+};
+
+typedef PatternAction PA;
+typedef std::vector<PatternAction> PAVec;
 
 struct FAState
 {
@@ -15,9 +29,10 @@ struct FAState
     std::map<std::string, int> trans; // 映射字符到下一个状态集合
     std::vector<int> epsilonTrans;    // 空边
     bool isAccepting;                 // 是否为终节点
+    ActionFunction action;            // 动作
 
-    FAState(int stateID, std::map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting)
-        : stateID(stateID), trans(trans), epsilonTrans(epsilonTrans), isAccepting(isAccepting) {}
+    FAState(int stateID, std::map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting, ActionFunction action)
+        : stateID(stateID), trans(trans), epsilonTrans(epsilonTrans), isAccepting(isAccepting), action(action) {}
 
     bool operator==(const FAState &other) const
     {

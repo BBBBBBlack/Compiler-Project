@@ -26,7 +26,8 @@
 class FA
 {
 public:
-    RegexVec regexVec;
+    PAVec *paVec;
+
     FA() : FAType("FA") {}
     FA(std::string outPutFileName) : FA()
     {
@@ -96,6 +97,15 @@ protected:
      * @return 返回状态ID
      */
     int addState(bool isAccepting, FAStateVec &states);
+
+    /**
+     * @brief 添加一个状态
+     * @param isAccepting 是否为终态
+     * @param action 状态匹配时执行的动作
+     * @param states 状态集
+     * @return 返回状态ID
+     */
+    int addState(bool isAccepting, ActionFunction ActionFunction, FAStateVec &states);
 
     /**
      * @brief 在state中添加一条边

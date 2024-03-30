@@ -16,7 +16,7 @@ public:
     {
         FAType = "NFA";
     }
-    void buildNFA(RegexVec regexVec);
+    void buildNFA(PAVec &PAVec);
 
 protected:
     /**
@@ -32,7 +32,7 @@ protected:
      * @param regex 正则表达式
      * @return NFA的起始和终止状态
      */
-    FAStateBlock regexToBlock(std::string regex, FAStateVec &states);
+    FAStateBlock regexToBlock(PatternAction pa, FAStateVec &states);
 
     /**
      * @brief 添加转移

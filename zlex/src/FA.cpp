@@ -28,9 +28,9 @@ void FA::printFA()
     if (!printRegexFlag)
     {
         *outputFile << "## 正则表达式集合" << std::endl;
-        for (auto &regex : regexVec)
+        for (auto &pa : *paVec)
         {
-            *outputFile << "- " << regex << std::endl;
+            *outputFile << "- " << pa.pattern << std::endl;
         }
         printRegexFlag = true;
     }
@@ -118,7 +118,12 @@ void FA::printFA()
 
 int FA::addState(bool isAccepting, FAStateVec &states)
 {
-    FAState faState(states.size(), {}, {}, isAccepting);
+    return addState(isAccepting, NullAction, states);
+}
+
+int FA::addState(bool isAccepting, ActionFunction action, FAStateVec &states)
+{
+    FAState faState(states.size(), {}, {}, isAccepting, action);
     states.push_back(faState);
     return states.size() - 1;
 }
