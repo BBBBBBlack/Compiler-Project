@@ -30,7 +30,15 @@ public:
     FA() : FAType("FA") {}
     FA(std::string outPutFileName) : FA()
     {
-        setOutputFile(outPutFileName);
+
+        if (outPutFileName.empty())
+        {
+            setOutputFile(DEFAULT_OUTPUT_FILE);
+        }
+        else
+        {
+            setOutputFile(outPutFileName);
+        }
     }
     FA(const FA &fa) : FAType(fa.FAType)
     {
@@ -38,7 +46,7 @@ public:
         // states = fa.states;
         // startStateID = fa.startStateID;
         alphabet = fa.alphabet;
-        outFile = fa.outFile;
+        outputFile = fa.outputFile;
         printRegexFlag = fa.printRegexFlag;
     }
     ~FA() {}
@@ -59,9 +67,8 @@ public:
 protected:
     FAStateVec states;
     int startStateID;
-    std::ofstream *outFile = nullptr;
+    std::ofstream *outputFile = nullptr;
     std::string FAType;
-    std::string outputFileName = DEFAULT_OUTPUT_FILE;
 
     // TODO 配置到print中
     bool debugMode = false;

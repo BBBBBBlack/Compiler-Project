@@ -72,21 +72,22 @@ StateSet DFA::move(StateSet stateSet, std::string symbol, FAStateVec &states)
 
 void DFA::printDFATransTableHeader()
 {
-    *outFile << std::endl
-             << "## NFA->DFA(子集构造)" << std::endl;
-    *outFile << "|原NFA集合|";
+    *outputFile << std::endl
+                << "## NFA->DFA(子集构造)" << std::endl;
+    *outputFile << "|原NFA集合|";
     for (auto &symbol : alphabet)
     {
-        *outFile << symbol << "|";
+        *outputFile << symbol << "|";
     }
-    *outFile << std::endl;
+    *outputFile << std::endl;
     // 打印分隔线
-    *outFile << "|---|";
+    *outputFile << "|---|";
     for (auto &symbol : alphabet)
     {
-        *outFile << "---|";
+        *outputFile << "---|";
     }
-    *outFile << std::endl;
+    *outputFile << std::endl;
+    outputFile->flush();
 }
 
 /**
@@ -121,7 +122,7 @@ void DFA::buildDFA(NFA &nfa)
 
         if (debugMode)
         {
-            *outFile << "|" << currentStateSet << "|";
+            *outputFile << "|" << currentStateSet << "|";
         }
 
         for (auto &symbol : alphabet)
@@ -132,7 +133,7 @@ void DFA::buildDFA(NFA &nfa)
             if (nextStateSet.set.size() == 0)
             {
                 if (debugMode)
-                    *outFile << EMPTY_SET << "|";
+                    *outputFile << EMPTY_SET << "|";
                 continue;
             }
 
@@ -152,32 +153,13 @@ void DFA::buildDFA(NFA &nfa)
 
             if (debugMode)
             {
-                *outFile << nextStateSet << "|";
+                *outputFile << nextStateSet << "|";
             }
             // 为新生成的状态集(DFA状态)添加转移(边)
             addEdge(currentStateSet.stateID, nextStateSet.stateID, symbol, states);
         }
 
         if (debugMode)
-            *outFile << std::endl;
-    }
-}
-
-void DFA::lexicalAnalysis(std::string fileName)
-{
-    std::ifstream file(fileName);
-    if (!file.is_open())
-    {
-        perror("文件打开失败");
-        return;
-    }
-
-    std::string line;
-    while (std::getline(file, line))
-    {
-        std::string token;
-        for (auto &ch : line)
-        {
-        }
+            *outputFile << std::endl;
     }
 }

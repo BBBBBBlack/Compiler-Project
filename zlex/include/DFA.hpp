@@ -29,7 +29,7 @@ protected:
     {
         debugMode = nfa.debugMode;
         alphabet = nfa.alphabet;
-        outFile = nfa.outFile;
+        outputFile = nfa.outputFile;
     }
     /**
      * @brief 获取一个状态的epsilon闭包
@@ -72,11 +72,6 @@ protected:
      * @param states 状态集
      */
     StateSet move(StateSet stateSet, std::string symbol, FAStateVec &states);
-
-    /**
-     * @brief 对文件进行词法分析
-     */
-    void lexicalAnalysis(std::string fileName);
 };
 
 #endif // DFA_HPP

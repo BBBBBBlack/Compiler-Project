@@ -137,13 +137,13 @@ void NFA::buildNFA(RegexVec regexVec)
 
     if (debugMode)
     {
-        *outFile << std::endl
-                 << "## 字母表" << std::endl;
+        *outputFile << std::endl
+                    << "## 字母表" << std::endl;
         for (auto &letter : alphabet)
         {
-            *outFile << letter << " ";
+            *outputFile << letter << " ";
         }
-        *outFile << std::endl;
+        *outputFile << std::endl;
     }
 }
 
