@@ -103,7 +103,7 @@ void DFA::buildDFA(NFA &nfa)
     StateSet startStateSet = epsilonClosure(nfa.startStateID, nfa.states);
     // 初始NFA状态集->DFA状态
     startStateSet.stateID = addState(startStateSet.isAccepting, states);
-    DFAStartStateID = startStateSet.stateID;
+    startStateID = startStateSet.stateID;
 
     // 开始递归 生成DFA
     stateSetQueue.push(startStateSet);
@@ -127,7 +127,7 @@ void DFA::buildDFA(NFA &nfa)
         for (auto &symbol : alphabet)
         {
             // TODO 生成的nextStateSet的StateID从何而来
-            StateSet nextStateSet = epsilonClosure(move(currentStateSet, symbol, NFAStates), NFAStates);
+            StateSet nextStateSet = epsilonClosure(move(currentStateSet, symbol, nfa.states), nfa.states);
             // 跳过空集
             if (nextStateSet.set.size() == 0)
             {
@@ -140,7 +140,7 @@ void DFA::buildDFA(NFA &nfa)
             if (visitedSet.find(nextStateSet) == visitedSet.end())
             {
                 // visitedSet.insert(nextStateSet);
-                nextStateSet.stateID = addState(nextStateSet.isAccepting, DFAStates);
+                nextStateSet.stateID = addState(nextStateSet.isAccepting, states);
                 stateSetQueue.push(nextStateSet);
             }
             else
@@ -155,10 +155,29 @@ void DFA::buildDFA(NFA &nfa)
                 *outFile << nextStateSet << "|";
             }
             // 为新生成的状态集(DFA状态)添加转移(边)
-            addEdge(currentStateSet.stateID, nextStateSet.stateID, symbol, DFAStates);
+            addEdge(currentStateSet.stateID, nextStateSet.stateID, symbol, states);
         }
 
         if (debugMode)
             *outFile << std::endl;
+    }
+}
+
+void DFA::lexicalAnalysis(std::string fileName)
+{
+    std::ifstream file(fileName);
+    if (!file.is_open())
+    {
+        perror("文件打开失败");
+        return;
+    }
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        std::string token;
+        for (auto &ch : line)
+        {
+        }
     }
 }

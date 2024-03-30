@@ -1,5 +1,6 @@
 # 设置测试文件
-set(TEST_SOURCE_FILES FATest.cpp ${SOURCE_DIR}/FA.cpp ${SOURCE_DIR}/Symbol.cpp)
+set(TEST_SOURCE_FILES FATest.cpp ${SOURCE_DIR}/FA.cpp 
+        ${SOURCE_DIR}/NFA.cpp ${SOURCE_DIR}/DFA.cpp ${SOURCE_DIR}/Symbol.cpp)
 
 # 添加测试执行文件
 add_executable(FATest ${TEST_SOURCE_FILES})

@@ -1,5 +1,87 @@
 #include "NFA.hpp"
 
+std::string NFA::addUnion(std::string regex)
+{
+    std::string result;
+    for (int i = 0; i < regex.size(); i++)
+    {
+        if (regex[i] == '\\' && !Symbol::isOperator(regex[i + 2]) && (i + 2) != regex.size())
+        {
+            // 转义字符
+            result += regex[i++];
+            result += regex[i];
+            result += '-';
+        }
+        // else if (regex[i] == '-')
+        // {
+        //     result += '\\';
+        //     result += regex[i];
+        // }
+        // else if ((!Symbol::isOperator(regex[i])) && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
+        // TODO 好丑陋的if 改了它!
+        else if ((regex[i] != '|' && regex[i] != '(') && (!Symbol::isOperator(regex[i + 1]) || regex[i + 1] == '(') && (i + 1) != regex.size())
+        {
+            result += regex[i];
+            result += '-';
+        }
+        else
+        {
+            result += regex[i];
+        }
+    }
+    return result;
+}
+
+std::string NFA::infixToSufix(std::string regex)
+{
+    std::stack<char> opStack;
+    std::string res;
+
+    for (int i = 0; i < regex.size(); i++)
+    {
+        // 转义字符
+        if (regex[i] == '\\')
+        {
+            res += '\\';
+            res += regex[++i];
+        }
+        else if (regex[i] == '(')
+        {
+            opStack.push(regex[i]);
+        }
+        else if (regex[i] == ')')
+        {
+            while (opStack.top() != '(')
+            {
+                res += opStack.top();
+                opStack.pop();
+            }
+            // 弹出左括号
+            opStack.pop();
+        }
+        else if (Symbol::isOperator(regex[i]))
+        {
+            while (!opStack.empty() && Symbol::opOrder[opStack.top()] <= Symbol::opOrder[regex[i]])
+            {
+                res += opStack.top();
+                opStack.pop();
+            }
+            opStack.push(regex[i]);
+        }
+        else // 普通字符
+        {
+            res += regex[i];
+        }
+    }
+    while (!opStack.empty())
+    {
+        res += opStack.top();
+        opStack.pop();
+    }
+
+    return res;
+}
+
 FAStateBlock NFA::regexToBlock(std::string regex, FAStateVec &states)
 {
     std::string regexWithUnion = addUnion(regex);

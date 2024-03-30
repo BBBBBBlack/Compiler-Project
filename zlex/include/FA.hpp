@@ -27,46 +27,29 @@ class FA
 {
 public:
     RegexVec regexVec;
-    FA() {}
-    FA(std::string outPutFileName)
+    FA() : FAType("FA") {}
+    FA(std::string outPutFileName) : FA()
     {
         setOutputFile(outPutFileName);
     }
+    FA(const FA &fa) : FAType(fa.FAType)
+    {
+        // regexVec = fa.regexVec;
+        // states = fa.states;
+        // startStateID = fa.startStateID;
+        alphabet = fa.alphabet;
+        outFile = fa.outFile;
+        printRegexFlag = fa.printRegexFlag;
+    }
     ~FA() {}
 
-    void setOutputFile(std::string fileName);
+    void setOutputFile(std::string outputFileName);
 
-    void printNFA(std::string fileName)
+    void printFA(std::string outputFileName)
     {
-        setOutputFile(fileName);
-        printNFA();
+        setOutputFile(outputFileName);
+        printFA();
     }
-
-    void printDFA(std::string fileName)
-    {
-        setOutputFile(fileName);
-        printDFA();
-    }
-
-    void printNFA()
-    {
-        printFA(NFAStartStateID, NFAStates);
-    }
-    void printDFA()
-    {
-        printFA(DFAStartStateID, DFAStates);
-    }
-
-    /**
-     * @brief 根据正则表达式集合构建NFA
-     * @param regexVec 正则表达式集合
-     */
-    void buildNFA(RegexVec regexVec);
-
-    // /**
-    //  * @brief 将states中的NFA转换为DFA
-    //  */
-    // void toDFA();
 
     void setDebugMode(bool debugMode)
     {
@@ -76,18 +59,15 @@ public:
 protected:
     FAStateVec states;
     int startStateID;
-    std::ofstream *outFile;
-    // TODO 重构:删除
-    FAStateVec NFAStates;
-    int NFAStartStateID;
-    FAStateVec DFAStates;
-    int DFAStartStateID;
+    std::ofstream *outFile = nullptr;
+    std::string FAType;
+    std::string outputFileName = DEFAULT_OUTPUT_FILE;
 
     // TODO 配置到print中
     bool debugMode = false;
     bool printRegexFlag = false;
 
-    void printFA(int startStateID, FAStateVec &states);
+    void printFA();
 
     /**
      * @brief 状态块
@@ -101,15 +81,6 @@ protected:
      * @note 在FA::addTransition中更新
      */
     std::set<std::string> alphabet;
-
-    /**
-     * @brief 为正则表达式添加省略的"-"(Union)符号
-     */
-    std::string addUnion(std::string regex);
-    /**
-     * @brief 将中缀正则表达式转换为后缀形式
-     */
-    std::string infixToSufix(std::string regex);
 
     /**
      * @brief 添加一个状态

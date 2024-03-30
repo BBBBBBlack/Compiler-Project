@@ -3,12 +3,16 @@
 
 // 用于测试私有成员函数
 #define protected public
-#include "FA.hpp"
+#define private public
+#include "NFA.hpp"
+#include "NFA.hpp"
+#include "DFA.hpp"
+#undef private
 #undef protected
 
 TEST(FATest, addUnionTest)
 {
-    FA fa;
+    NFA fa;
     std::string test1 = "aab\\+", expected1 = "a-a-b-\\+";
     ASSERT_EQ(fa.addUnion(test1), expected1);
     std::string test2 = "a|b", expected2 = "a|b";
@@ -26,7 +30,7 @@ TEST(FATest, addUnionTest)
 
 TEST(FATest, infixToSufixTest)
 {
-    FA fa;
+    NFA fa;
     std::string test1 = "a|b", expected1 = "ab|";
     ASSERT_EQ(fa.infixToSufix(test1), expected1);
     std::string test2 = "ab|c", expected2 = "ab-c|";
@@ -39,7 +43,7 @@ TEST(FATest, infixToSufixTest)
 // 测试将中缀正则表达式转换为后缀形式
 TEST(FATest, ConvertToSuffix)
 {
-    FA fa;
+    NFA fa;
 
     // 测试空表达式
     ASSERT_EQ(fa.infixToSufix(""), "");
@@ -78,54 +82,55 @@ TEST(FATest, ConvertToSuffix)
  */
 // TEST(FATest, testSingleRegex)
 // {
-//     FA fa1, fa2, fa3, fa4, fa5, fa6;
+//     NFA fa1, fa2, fa3, fa4, fa5, fa6;
 //     FAStateBlock block = fa1.regexToBlock("a|b", fa1.NFAStates);
-//     fa1.printNFA("output/test/single/NFA1.md");
+//     fa1.printFA("output/test/single/NFA1.md");
 
 //     FAStateBlock block2 = fa2.regexToBlock("ab", fa2.NFAStates);
-//     fa2.printNFA("output/test/single/NFA2.md");
+//     fa2.printFA("output/test/single/NFA2.md");
 
 //     FAStateBlock block3 = fa3.regexToBlock("(ab)*", fa3.NFAStates);
-//     fa3.printNFA("output/test/single/NFA3.md");
+//     fa3.printFA("output/test/single/NFA3.md");
 
 //     FAStateBlock block5 = fa5.regexToBlock("(a|b)*abb", fa5.NFAStates);
-//     fa5.printNFA("output/test/single/NFA5.md");
+//     fa5.printFA("output/test/single/NFA5.md");
 
-//     FA fa5_1;
+//     NFA fa5_1;
 //     FAStateBlock block5_1 = fa5_1.regexToBlock("(a|b)*", fa5_1.NFAStates);
-//     fa5_1.printNFA("output/test/single/NFA5_1.md");
+//     fa5_1.printFA("output/test/single/NFA5_1.md");
 
 //     // (c(abc|b*))
 //     FAStateBlock block6 = fa6.regexToBlock("c(abc|b*)", fa6.NFAStates);
-//     fa6.printNFA("output/test/single/NFA6.md");
+//     fa6.printFA("output/test/single/NFA6.md");
 // }
 
 TEST(FATest, testRegexVecToBlock)
 {
-    FA fa1, fa2, fa3, fa4, fa5, fa6;
+    NFA fa1, fa2, fa3, fa4, fa5, fa6;
 
     std::vector<std::string> regexVec1 = {"ab", "a|b", "(ab)*", "a(b|c)"};
 
     fa1.buildNFA(regexVec1);
-    fa1.printNFA("output/test/complex/NFA1.md");
+    fa1.printFA("output/test/complex/NFA1.md");
 }
 
 TEST(FATest, homework)
 {
-    FA fa1("output/test/homework/FA1.md");
+    NFA fa1("output/test/homework/FA1.md");
     std::vector<std::string> regexVec1 = {"b+", "a*ba"};
 
     fa1.setDebugMode(true);
     fa1.buildNFA(regexVec1);
-    fa1.printNFA();
-    fa1.toDFA();
-    fa1.printDFA();
+    fa1.printFA();
 
-    FA fa2("output/test/homework/FA2.md");
+    DFA dfa1(fa1);
+    dfa1.printFA();
+
+    NFA fa2("output/test/homework/FA2.md");
     std::vector<std::string> regexVec2 = {"a*b*"};
     fa2.setDebugMode(true);
     fa2.buildNFA(regexVec2);
-    fa2.printNFA();
-    fa2.toDFA();
-    fa2.printDFA();
+    fa2.printFA();
+    DFA dfa2(fa2);
+    dfa2.printFA();
 }

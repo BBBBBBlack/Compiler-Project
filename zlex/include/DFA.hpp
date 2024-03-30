@@ -8,21 +8,29 @@ class DFA : public FA
 {
 public:
     friend class NFA;
-    DFA() : FA() {}
+    /**
+     * @brief 从NFA构建DFA
+     * @param nfa NFA
+     * @note 该构造函数会调用buildDFA函数
+     */
     DFA(const NFA &nfa) : FA(nfa)
     {
-        startStateID = nfa.startStateID;
-        outFile = nfa.outFile;
-    }
-
-    void printFA()
-    {
-        FA::printFA(startStateID, states);
+        FAType = "DFA";
+        copyProperties(nfa);
+        buildDFA(const_cast<NFA &>(nfa));
     }
 
     void buildDFA(NFA &nfa);
 
 protected:
+    void printDFATransTableHeader();
+
+    void copyProperties(const NFA &nfa)
+    {
+        debugMode = nfa.debugMode;
+        alphabet = nfa.alphabet;
+        outFile = nfa.outFile;
+    }
     /**
      * @brief 获取一个状态的epsilon闭包
      * @param stateID 状态ID
@@ -65,7 +73,10 @@ protected:
      */
     StateSet move(StateSet stateSet, std::string symbol, FAStateVec &states);
 
-    void printDFATransTableHeader();
+    /**
+     * @brief 对文件进行词法分析
+     */
+    void lexicalAnalysis(std::string fileName);
 };
 
 #endif // DFA_HPP

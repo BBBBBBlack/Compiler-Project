@@ -2,6 +2,8 @@
 
 void FA::setOutputFile(std::string fileName)
 {
+    outputFileName = fileName;
+    outFile = new std::ofstream();
     std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);
     outFile->open(fileName, std::ios::trunc);
@@ -20,26 +22,7 @@ void FA::setOutputFile(std::string fileName)
     *outFile << "Generate time: " << std::asctime(std::localtime(&currentTime));
 }
 
-// void FA::printDFATransTableHeader()
-// {
-//     *outFile << std::endl
-//              << "## NFA->DFA(子集构造)" << std::endl;
-//     *outFile << "|原NFA集合|";
-//     for (auto &symbol : alphabet)
-//     {
-//         *outFile << symbol << "|";
-//     }
-//     *outFile << std::endl;
-//     // 打印分隔线
-//     *outFile << "|---|";
-//     for (auto &symbol : alphabet)
-//     {
-//         *outFile << "---|";
-//     }
-//     *outFile << std::endl;
-// }
-
-void FA::printFA(int startStateID, FAStateVec &states)
+void FA::printFA()
 {
     // 打印正则表达式集合
     if (!printRegexFlag)
@@ -53,16 +36,9 @@ void FA::printFA(int startStateID, FAStateVec &states)
     }
 
     // 打印状态图
-    if (states == NFAStates)
-    {
-        *outFile << std::endl
-                 << "## NFA状态图" << std::endl;
-    }
-    else
-    {
-        *outFile << std::endl
-                 << "## DFA状态图" << std::endl;
-    }
+
+    *outFile << std::endl
+             << "## " << FAType << "状态图" << std::endl;
 
     *outFile << "```mermaid" << std::endl;
     *outFile << "graph LR" << std::endl;
@@ -161,148 +137,6 @@ void FA::addEdge(int fromStateID, int toStateID, std::string symbol, FAStateVec 
     else // 转移条件
     {
         states[fromStateID].trans[symbol] = toStateID;
-    }
-}
-
-std::string FA::addUnion(std::string regex)
-{
-    std::string result;
-    for (int i = 0; i < regex.size(); i++)
-    {
-        if (regex[i] == '\\' && !Symbol::isOperator(regex[i + 2]) && (i + 2) != regex.size())
-        {
-            // 转义字符
-            result += regex[i++];
-            result += regex[i];
-            result += '-';
-        }
-        // else if ((!Symbol::isOperator(regex[i])) && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
-        // TODO 好丑陋的if 改了它!
-        else if ((regex[i] != '|' && regex[i] != '(') && (!Symbol::isOperator(regex[i + 1]) || regex[i + 1] == '(') && (i + 1) != regex.size())
-        {
-            result += regex[i];
-            result += '-';
-        }
-        else
-        {
-            result += regex[i];
-        }
-    }
-    return result;
-}
-
-std::string FA::infixToSufix(std::string regex)
-{
-    std::stack<char> opStack;
-    std::string res;
-
-    for (int i = 0; i < regex.size(); i++)
-    {
-        // 转义字符
-        if (regex[i] == '\\')
-        {
-            res += '\\';
-            res += regex[++i];
-        }
-        else if (regex[i] == '(')
-        {
-            opStack.push(regex[i]);
-        }
-        else if (regex[i] == ')')
-        {
-            while (opStack.top() != '(')
-            {
-                res += opStack.top();
-                opStack.pop();
-            }
-            // 弹出左括号
-            opStack.pop();
-        }
-        else if (Symbol::isOperator(regex[i]))
-        {
-            while (!opStack.empty() && Symbol::opOrder[opStack.top()] <= Symbol::opOrder[regex[i]])
-            {
-                res += opStack.top();
-                opStack.pop();
-            }
-            opStack.push(regex[i]);
-        }
-        else // 普通字符
-        {
-            res += regex[i];
-        }
-    }
-    while (!opStack.empty())
-    {
-        res += opStack.top();
-        opStack.pop();
-    }
-
-    return res;
-}
-
-FAStateBlock FA::regexToBlock(std::string regex, FAStateVec &states)
-{
-    std::string regexWithUnion = addUnion(regex);
-    std::string regexWithSuffix = infixToSufix(regexWithUnion);
-
-    std::stack<FAStateBlock> blockStack;
-    for (int i = 0; i < regexWithSuffix.size(); i++)
-    {
-        FAStateBlock block1, block2;
-        if (regexWithSuffix[i] == '\\')
-        {
-            if (i + 1 > regexWithSuffix.size())
-            {
-                perror("无效的转义字符");
-            }
-            blockStack.push(addTransition(regexWithSuffix[i + 1], 1, {}, {}, states));
-        }
-        else if (Symbol::isOperator(regexWithSuffix[i]))
-        {
-            block2 = blockStack.top();
-            // 正则操作符对象可能只有一个
-            if (!Symbol::isUnaryOp(regexWithSuffix[i]))
-            {
-                blockStack.pop();
-            }
-            block1 = blockStack.top();
-            blockStack.pop();
-            blockStack.push(addTransition(regexWithSuffix[i], 0, block1, block2, states));
-        }
-        else
-        {
-            // 直连
-            // alphabet.insert(regexWithSuffix[i] + "");
-            alphabet.insert(std::string(1, regexWithSuffix[i]));
-            // symbolTable[regexWithSuffix[i] + ""] = true; // 记录符号
-            blockStack.push({addState(0, states), addState(1, states)});
-            addEdge(blockStack.top().beginStateID, blockStack.top().endStateID, regexWithSuffix[i], states);
-        }
-    }
-    return blockStack.top();
-}
-
-void FA::buildNFA(RegexVec regexVec)
-{
-    this->regexVec = regexVec;
-    int allBegin = addState(0, NFAStates);
-    for (auto &regex : regexVec)
-    {
-        FAStateBlock block = regexToBlock(regex, NFAStates);
-        addEdge(allBegin, block.beginStateID, EPSILON, NFAStates);
-    }
-    NFAStartStateID = allBegin;
-
-    if (debugMode)
-    {
-        *outFile << std::endl
-                 << "## 字母表" << std::endl;
-        for (auto &letter : alphabet)
-        {
-            *outFile << letter << " ";
-        }
-        *outFile << std::endl;
     }
 }
 
