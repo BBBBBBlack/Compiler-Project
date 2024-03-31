@@ -28,6 +28,8 @@ protected:
     void copyProperties(const NFA &nfa)
     {
         debugMode = nfa.debugMode;
+        printRegexFlag = nfa.printRegexFlag;
+        printAlphabetFlag = nfa.printAlphabetFlag;
         alphabet = nfa.alphabet;
         outputFile = nfa.outputFile;
     }

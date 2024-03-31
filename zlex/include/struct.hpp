@@ -18,6 +18,8 @@ struct PatternAction
 {
     std::string pattern;
     ActionFunction action;
+    std::string note;
+    PatternAction(std::string pattern, ActionFunction action) : pattern(pattern), action(action), note(pattern) {}
 };
 
 typedef PatternAction PA;
@@ -30,6 +32,7 @@ struct FAState
     std::vector<int> epsilonTrans;    // 空边
     bool isAccepting;                 // 是否为终节点
     ActionFunction action;            // 动作
+    std::string note;                 // 备注, 可为空
 
     FAState(int stateID, std::map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting, ActionFunction action)
         : stateID(stateID), trans(trans), epsilonTrans(epsilonTrans), isAccepting(isAccepting), action(action) {}

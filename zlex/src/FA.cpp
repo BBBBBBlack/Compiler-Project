@@ -35,8 +35,20 @@ void FA::printFA()
         printRegexFlag = true;
     }
 
-    // 打印状态图
+    // 打印字母表
+    if (!printAlphabetFlag)
+    {
+        *outputFile << std::endl
+                    << "## 字母表" << std::endl;
+        for (auto &letter : alphabet)
+        {
+            *outputFile << letter << " ";
+        }
+        *outputFile << std::endl;
+        printAlphabetFlag = true;
+    }
 
+    // 打印状态图
     *outputFile << std::endl
                 << "## " << FAType << "状态图" << std::endl;
 
@@ -54,38 +66,24 @@ void FA::printFA()
         stateStack.pop();
         visited[stateID] = true;
 
-        // print节点
+        std::string debugMessage = ""; // 调试信息, 默认为空
+
         if (debugMode)
         {
-            // print节点
-            if (stateID == startStateID)
-            {
-                *outputFile << stateID << "((START<" << stateID << ">))" << std::endl;
-            }
-            else if (states[stateID].isAccepting)
-            {
-                *outputFile << stateID << "((END<" << stateID << ">))" << std::endl;
-            }
-            else
-            {
-                *outputFile << stateID << "((" << i++ << "<" << stateID << ">"
-                            << "))" << std::endl;
-            }
+            debugMessage = "<" + std::to_string(stateID) + (states[stateID].note.empty() ? "" : (", " + states[stateID].note)) + ">";
+        }
+        // print节点
+        if (stateID == startStateID)
+        {
+            *outputFile << stateID << "((\"STAR<" << debugMessage << "\"))" << std::endl;
+        }
+        else if (states[stateID].isAccepting)
+        {
+            *outputFile << stateID << "((\"END" << debugMessage << "\"))" << std::endl;
         }
         else
         {
-            if (states[stateID].isAccepting)
-            {
-                *outputFile << stateID << "((END))" << std::endl;
-            }
-            else if (stateID == startStateID)
-            {
-                *outputFile << stateID << "((START))" << std::endl;
-            }
-            else
-            {
-                *outputFile << stateID << "((" << i++ << "))" << std::endl;
-            }
+            *outputFile << stateID << "((\"" << i++ << debugMessage << "\"))" << std::endl;
         }
 
         // print符号边
@@ -214,77 +212,3 @@ StateSet FA::move(StateSet stateSet, std::string symbol, FAStateVec &states)
     }
     return result;
 }
-
-// /**
-//  * @brief 将states中的NFA转换为DFA
-//  */
-// void FA::toDFA()
-// {
-//     if (debugMode)
-//         printDFATransTableHeader();
-
-//     std::unordered_set<StateSet, StateSetHash, StateSetEqual> visitedSet;
-//     std::queue<StateSet> stateSetQueue;
-
-//     StateSet startStateSet = epsilonClosure(NFAStartStateID, NFAStates);
-//     // 初始NFA状态集->DFA状态
-//     startStateSet.stateID = addState(startStateSet.isAccepting, DFAStates);
-//     DFAStartStateID = startStateSet.stateID;
-
-//     // 开始递归 生成DFA
-//     stateSetQueue.push(startStateSet);
-//     while (!stateSetQueue.empty())
-//     {
-//         // 获取当前状态集
-//         StateSet currentStateSet = stateSetQueue.front();
-//         stateSetQueue.pop();
-
-//         // 跳过已访问的状态集
-//         if (visitedSet.find(currentStateSet) != visitedSet.end())
-//             continue;
-
-//         visitedSet.insert(currentStateSet);
-
-//         if (debugMode)
-//         {
-//             *outFile << "|" << currentStateSet << "|";
-//         }
-
-//         for (auto &symbol : alphabet)
-//         {
-//             // TODO 生成的nextStateSet的StateID从何而来
-//             StateSet nextStateSet = epsilonClosure(move(currentStateSet, symbol, NFAStates), NFAStates);
-//             // 跳过空集
-//             if (nextStateSet.set.size() == 0)
-//             {
-//                 if (debugMode)
-//                     *outFile << EMPTY_SET << "|";
-//                 continue;
-//             }
-
-//             // 检查是否为新生成的集合(DFA状态)
-//             if (visitedSet.find(nextStateSet) == visitedSet.end())
-//             {
-//                 // visitedSet.insert(nextStateSet);
-//                 nextStateSet.stateID = addState(nextStateSet.isAccepting, DFAStates);
-//                 stateSetQueue.push(nextStateSet);
-//             }
-//             else
-//             {
-//                 // 重复状态集
-//                 // NOTE: 否则StateID会因为epsilonClosure生成出错
-//                 nextStateSet = *visitedSet.find(nextStateSet);
-//             }
-
-//             if (debugMode)
-//             {
-//                 *outFile << nextStateSet << "|";
-//             }
-//             // 为新生成的状态集(DFA状态)添加转移(边)
-//             addEdge(currentStateSet.stateID, nextStateSet.stateID, symbol, DFAStates);
-//         }
-
-//         if (debugMode)
-//             *outFile << std::endl;
-//     }
-// }

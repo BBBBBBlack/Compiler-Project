@@ -74,6 +74,7 @@ protected:
     // TODO 配置到print中
     bool debugMode = false;
     bool printRegexFlag = false;
+    bool printAlphabetFlag = false;
 
     void printFA();
 
@@ -105,7 +106,7 @@ protected:
      * @param states 状态集
      * @return 返回状态ID
      */
-    int addState(bool isAccepting, ActionFunction ActionFunction, FAStateVec &states);
+    int addState(bool isAccepting, ActionFunction action, FAStateVec &states);
 
     /**
      * @brief 在state中添加一条边

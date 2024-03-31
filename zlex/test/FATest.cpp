@@ -1,14 +1,9 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-// 用于测试私有成员函数
-#define protected public
-#define private public
 #include "NFA.hpp"
 #include "NFA.hpp"
 #include "DFA.hpp"
-#undef private
-#undef protected
 
 TEST(FATest, addUnionTest)
 {
@@ -106,18 +101,23 @@ TEST(FATest, ConvertToSuffix)
 
 TEST(FATest, testRegexVecToBlock)
 {
-    NFA fa1, fa2, fa3, fa4, fa5, fa6;
+    NFA nfa1("output/test/complex/FA.md");
 
-    std::vector<std::string> regexVec1 = {"ab", "a|b", "(ab)*", "a(b|c)"};
+    std::vector<PatternAction> regexVec1 = {{"ab", NullAction}, {"a|b", NullAction}, {"(ab)*", NullAction}, {"a(b|c)", NullAction}};
 
-    fa1.buildNFA(regexVec1);
-    fa1.printFA("output/test/complex/NFA1.md");
+    nfa1.setDebugMode(true);
+    nfa1.buildNFA(regexVec1);
+    nfa1.printFA();
+    // 这样调用输出有问题, 懒得改了
+    // fa1.printFA("output/test/complex/NFA1.md");
+    DFA dfa1(nfa1);
+    dfa1.printFA();
 }
 
 TEST(FATest, homework)
 {
     NFA fa1("output/test/homework/FA1.md");
-    std::vector<std::string> regexVec1 = {"b+", "a*ba"};
+    std::vector<PA> regexVec1 = {{"b+", NullAction}, {"a*ba", NullAction}};
 
     fa1.setDebugMode(true);
     fa1.buildNFA(regexVec1);
@@ -127,7 +127,7 @@ TEST(FATest, homework)
     dfa1.printFA();
 
     NFA fa2("output/test/homework/FA2.md");
-    std::vector<std::string> regexVec2 = {"a*b*"};
+    std::vector<PA> regexVec2 = {{"a*b*", NullAction}};
     fa2.setDebugMode(true);
     fa2.buildNFA(regexVec2);
     fa2.printFA();
