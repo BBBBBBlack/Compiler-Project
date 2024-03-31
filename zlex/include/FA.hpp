@@ -54,15 +54,36 @@ public:
 
     void setOutputFile(std::string outputFileName);
 
+    // TODO 这个函数不可用, 考虑删除
     void printFA(std::string outputFileName)
     {
         setOutputFile(outputFileName);
         printFA();
     }
+    void printFA();
 
     void setDebugMode(bool debugMode)
     {
         this->debugMode = debugMode;
+    }
+
+    int getNext(int stateID, char symbol)
+    {
+        return getNext(stateID, std::string(1, symbol));
+    }
+
+    int getNext(int stateID, std::string symbol)
+    {
+        return (states[stateID].trans.find(symbol) == states[stateID].trans.end()) ? -1 : states[stateID].trans[symbol];
+    }
+
+    int getStartStateID()
+    {
+        return startStateID;
+    }
+    int runAction(int stateID)
+    {
+        return states[stateID].action();
     }
 
 protected:
@@ -75,8 +96,6 @@ protected:
     bool debugMode = false;
     bool printRegexFlag = false;
     bool printAlphabetFlag = false;
-
-    void printFA();
 
     /**
      * @brief 状态块

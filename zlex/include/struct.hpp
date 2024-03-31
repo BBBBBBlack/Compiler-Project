@@ -11,7 +11,11 @@
 #include <any>
 #include <functional>
 
-using ActionFunction = std::function<std::any()>;
+/**
+ * @brief action
+ * @return token类型 (0表示无返回值)
+ */
+using ActionFunction = std::function<int()>;
 const ActionFunction NullAction;
 
 struct PatternAction
@@ -28,13 +32,14 @@ typedef std::vector<PatternAction> PAVec;
 struct FAState
 {
     int stateID;
-    std::map<std::string, int> trans; // 映射字符到下一个状态集合
-    std::vector<int> epsilonTrans;    // 空边
-    bool isAccepting;                 // 是否为终节点
-    ActionFunction action;            // 动作
-    std::string note;                 // 备注, 可为空
+    // TODO 重构为<char, int>
+    std::unordered_map<std::string, int> trans; // 映射字符到下一个状态集合
+    std::vector<int> epsilonTrans;              // 空边
+    bool isAccepting;                           // 是否为终节点
+    ActionFunction action;                      // 动作
+    std::string note;                           // 备注, 可为空
 
-    FAState(int stateID, std::map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting, ActionFunction action)
+    FAState(int stateID, std::unordered_map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting, ActionFunction action)
         : stateID(stateID), trans(trans), epsilonTrans(epsilonTrans), isAccepting(isAccepting), action(action) {}
 
     bool operator==(const FAState &other) const

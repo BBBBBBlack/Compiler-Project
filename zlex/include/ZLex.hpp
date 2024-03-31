@@ -3,10 +3,18 @@
 
 class ZLex
 {
+public:
+    ZLex()
+    {
+    }
+    // int yyleng;         // 当前识别的字符串长度
+    std::string yytext; // 当前识别的字符串
+    int yylineno;       // 当前识别的行号
 
 protected:
     // TODO 在窗口打印outputfile位置
     std::string outputFileName;
+    DFA *dfa;
     /**
      * @brief 构建DFA
      * @param debugMode 打开调试模式
@@ -16,7 +24,7 @@ protected:
      */
     void buildDFA(bool debugMode, PAVec PAvec, std::string outputFileName);
     /**
-     * @brief 进行词法分析
+     * @brief 使用构件好的dfa进行词法分析
      */
-    void lexicalAnalysis(DFA &dfa, std::ostream &outputStream, std::string fileName);
+    int lexicalAnalysis(std::ostream &outputStream, std::string fileName, std::streampos &pos);
 };

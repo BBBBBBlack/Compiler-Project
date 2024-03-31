@@ -2,7 +2,7 @@
 
 void FA::setOutputFile(std::string fileName)
 {
-    outputFile = new std::ofstream();
+    outputFile = new std::ofstream(); // 申请内存
     std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);
     outputFile->open(fileName, std::ios::trunc);

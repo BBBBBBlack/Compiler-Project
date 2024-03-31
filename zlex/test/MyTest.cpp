@@ -1,9 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-#include "NFA.hpp"
-#include "NFA.hpp"
-#include "DFA.hpp"
+#include "ZLex.hpp"
 
 TEST(FATest, addUnionTest)
 {
@@ -58,6 +56,7 @@ TEST(FATest, ConvertToSuffix)
 
     // 测试带有 * 运算符的情况
     ASSERT_EQ(fa.infixToSufix("a*"), "a*");
+    // ASSERT_EQ(fa.infixToSufix("(abc)*"), "abc*");
     ASSERT_EQ(fa.infixToSufix("(a|b)*"), "ab|*");
 
     // 测试带有 + 运算符的情况
@@ -133,4 +132,19 @@ TEST(FATest, homework)
     fa2.printFA();
     DFA dfa2(fa2);
     dfa2.printFA();
+}
+
+TEST(ZLexTest, testBuildDFA)
+{
+    ZLex zlex;
+    PAVec paVec = {{"a|b", NullAction}, {"ab", NullAction}, {"(ab)*", NullAction}, {"a(b|c)", NullAction}};
+    zlex.buildDFA(true, paVec, "output/test/ZLex/FA.md");
+    // zlex.lexicalAnalysis("output/test/ZLex/FA.md", "output/test/ZLex/FA.md", "output/test/ZLex/FA.md");
+}
+
+TEST(ZLexTest, testLexicalAnalysis)
+{
+    ZLex zlex;
+    std::streampos pos = 0;
+    zlex.lexicalAnalysis(std::cout, "resource/test/hello.cpp", pos);
 }
