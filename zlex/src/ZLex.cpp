@@ -74,4 +74,5 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
         pos = file.tellg();
         pos_i = 0;
     }
+    return 0;
 }

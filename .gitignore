@@ -84,3 +84,4 @@ Makefile*
 *.DS_Store
 # *.gitignore
 *.gitmodules
+zlex/test/flex
