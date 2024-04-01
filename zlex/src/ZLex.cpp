@@ -17,7 +17,7 @@ void ZLex::buildDFA(bool debugMode, PAVec paVec, std::string outputFileName)
     }
 }
 
-int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName, std::wstreampos &pos)
+int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
 {
     std::wifstream file(fileName); // 使用 std::wifstream 读取文件
     if (!file.is_open())
@@ -36,25 +36,22 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName, std:
     {
         yylineno++; // 更新行号
         int current = start;
-        int lastMatchLinePostion = -1;
         int lastMatchedState = -1;
         std::wstring lastMatched = L"";
-        for (int i = 0; i < line.size(); i++)
+        // 从上一次匹配的位置(pos_i)开始, 继续读取
+        for (int i = pos_i; i < line.size(); i++)
         {
-            wchar_t c = line[i];
+            char c = line[i];
             current = dfa->getNext(current, c);
             if (current == -1) // 无法匹配
             {
                 if (lastMatchedState != -1)
                 {
-                    // 回退到上一个匹配的状态
-                    i = lastMatchLinePostion;
-                    current = lastMatchedState;
-                    pos = file.tellg() + i * sizeof(wchar_t); // 使用 sizeof(wchar_t) 计算正确的字节偏移量
-
+                    // 从上一次匹配的位置(pos_i)开始, 继续读取
+                    i = pos_i;
                     // 运行action
                     int token = dfa->runAction(lastMatchedState);
-                    if (token != 0)
+                    if (token != 0) // action有返回值
                     {
                         return token;
                     }
@@ -62,7 +59,6 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName, std:
                 else
                 {
                     outputStream << "Error at line " << yylineno << " position " << i << std::endl;
-                    pos = file.tellg() + i * sizeof(wchar_t); // 使用 sizeof(wchar_t) 计算正确的字节偏移量
                     break;
                 }
             }
@@ -70,8 +66,12 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName, std:
             {
                 lastMatched += c;
                 lastMatchedState = current;
-                lastMatchLinePostion = i;
+                pos_i = i;
             }
         }
+        // 一行读取完毕, 更新pos
+        // 如果错误, 则是跳到下一行
+        pos = file.tellg();
+        pos_i = 0;
     }
 }

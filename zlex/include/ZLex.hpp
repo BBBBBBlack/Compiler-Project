@@ -14,6 +14,9 @@ public:
 protected:
     // TODO 在窗口打印outputfile位置
     std::string outputFileName;
+    // 文件读入位置
+    std::wstreampos pos;
+    int pos_i = 0;
     DFA *dfa;
     /**
      * @brief 构建DFA
@@ -26,5 +29,5 @@ protected:
     /**
      * @brief 使用构件好的dfa进行词法分析
      */
-    int lexicalAnalysis(std::ostream &outputStream, std::string fileName, std::streampos &pos);
+    int lexicalAnalysis(std::ostream &outputStream, std::string fileName);
 };

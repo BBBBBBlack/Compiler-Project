@@ -145,6 +145,5 @@ TEST(ZLexTest, testBuildDFA)
 TEST(ZLexTest, testLexicalAnalysis)
 {
     ZLex zlex;
-    std::streampos pos = 0;
-    zlex.lexicalAnalysis(std::cout, "resource/test/hello.cpp", pos);
+    zlex.lexicalAnalysis(std::cout, "resource/test/hello.cpp");
 }
