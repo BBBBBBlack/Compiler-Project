@@ -137,7 +137,7 @@ std::string NFA::infixToSufix(std::string regex)
     return res;
 }
 
-FAStateBlock NFA::regexToBlock(PatternAction pa, FAStateVec &states)
+FAStateBlock NFA::regexToBlock(PatternAction pa, FAStateVec &states, int priority)
 {
     std::string regex = convertSquareBrackets(pa.pattern);
     std::string regexWithUnion = addUnion(regex);
@@ -183,6 +183,7 @@ FAStateBlock NFA::regexToBlock(PatternAction pa, FAStateVec &states)
     }
     // 添加action
     states[blockStack.top().endStateID].action = pa.action;
+    states[blockStack.top().endStateID].priority = priority;
     states[blockStack.top().endStateID].note = pa.note;
     return blockStack.top();
 }
@@ -191,9 +192,10 @@ void NFA::buildNFA(PAVec &paVec)
 {
     this->paVec = &paVec;
     int allBegin = addState(0, states);
+    int i = 0;
     for (auto &pa : paVec)
     {
-        FAStateBlock block = regexToBlock(pa, states);
+        FAStateBlock block = regexToBlock(pa, states, i++);
         addEdge(allBegin, block.beginStateID, EPSILON, states);
     }
     startStateID = allBegin;

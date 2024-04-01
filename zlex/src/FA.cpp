@@ -75,7 +75,7 @@ void FA::printFA()
         // print节点
         if (stateID == startStateID)
         {
-            *outputFile << stateID << "((\"STAR<" << debugMessage << "\"))" << std::endl;
+            *outputFile << stateID << "((\"STAR" << debugMessage << "\"))" << std::endl;
         }
         else if (states[stateID].isAccepting)
         {
@@ -116,7 +116,7 @@ void FA::printFA()
 
 int FA::addState(bool isAccepting, FAStateVec &states)
 {
-    return addState(isAccepting, NullAction, states);
+    return addState(isAccepting, &NullAction, states);
 }
 
 int FA::addState(bool isAccepting, ActionFunction action, FAStateVec &states)

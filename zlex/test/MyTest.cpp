@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <iostream>
-
 #include "ZLex.hpp"
 
 TEST(FATest, testConvertSquareBrackets)
@@ -115,7 +114,7 @@ TEST(FATest, testRegexVecToBlock)
 {
     NFA nfa1("output/test/complex/FA.md");
 
-    std::vector<PatternAction> regexVec1 = {{"ab", NullAction}, {"a|b", NullAction}, {"(ab)*", NullAction}, {"a(b|c)", NullAction}};
+    std::vector<PatternAction> regexVec1 = {{"ab", &NullAction}, {"a|b", &NullAction}, {"(ab)*", &NullAction}, {"a(b|c)", &NullAction}};
 
     nfa1.setDebugMode(true);
     nfa1.buildNFA(regexVec1);
@@ -129,7 +128,7 @@ TEST(FATest, testRegexVecToBlock)
 TEST(FATest, homework)
 {
     NFA fa1("output/test/homework/FA1.md");
-    std::vector<PA> regexVec1 = {{"b+", NullAction}, {"a*ba", NullAction}};
+    std::vector<PA> regexVec1 = {{"b+", &NullAction}, {"a*ba", &NullAction}};
 
     fa1.setDebugMode(true);
     fa1.buildNFA(regexVec1);
@@ -139,7 +138,7 @@ TEST(FATest, homework)
     dfa1.printFA();
 
     NFA fa2("output/test/homework/FA2.md");
-    std::vector<PA> regexVec2 = {{"a*b*", NullAction}};
+    std::vector<PA> regexVec2 = {{"a*b*", &NullAction}};
     fa2.setDebugMode(true);
     fa2.buildNFA(regexVec2);
     fa2.printFA();
@@ -150,22 +149,49 @@ TEST(FATest, homework)
 TEST(ZLexTest, testBuildDFA)
 {
     ZLex zlex;
-    PAVec paVec = {{"a|b", NullAction}, {"ab", NullAction}, {"(ab)*", NullAction}, {"a(b|c)", NullAction}};
+    PAVec paVec = {{"a|b", &NullAction}, {"ab", &NullAction}, {"(ab)*", &NullAction}, {"a(b|c)", &NullAction}};
     zlex.buildDFA(true, paVec, "output/test/ZLex/FA.md");
 
     ZLex zlex2;
-    PAVec paVec2 = {{"a[b-z]", NullAction}, {"a*ba", NullAction}};
+    PAVec paVec2 = {{"a[b-z]", &NullAction}, {"a*ba", &NullAction}};
     zlex2.buildDFA(true, paVec2, "output/test/ZLex/FA2.md");
+
+    ZLex zlex3;
+    PAVec paVec3 = {{"abc", &NullAction}, {"a[f-h]c", &NullAction}};
+    zlex3.buildDFA(true, paVec3, "output/test/ZLex/FA3.md");
 }
 
 TEST(ZLexTest, testLexicalAnalysis)
 {
+    std::ofstream out("output/test/ZLex/lexicalAnalysis.md", std::ios::trunc);
+
     ZLex zlex;
-    // PAVec paVec = {{"0|1|2|3|4|5|6|7|8|9", []() -> int
-    //                 { printf("?"); }},
-    //                {"ab", NullAction},
-    //                {"(ab)*", NullAction},
-    //                {"a(b|c)", NullAction}};
-    // zlex.buildDFA(1, );
-    zlex.lexicalAnalysis(std::cout, "resource/test/digit.cpp");
+    PAVec paVec = {
+        {"[0-9]", [&]() -> int
+         {
+             out << "?";
+             return 0;
+         },
+         "note1"},
+        // =用于捕获yytext
+        {"[a-z]", [&]() -> int
+         {
+             out << yytext;
+             return 0;
+         },
+         "note2"}};
+    // 测试action
+    paVec[0].action();
+    paVec[1].action();
+
+    zlex.buildDFA(true, paVec, "output/test/ZLex/FA3.md");
+    // 检查dfa中的action是否正确
+    for (auto &state : zlex.dfa->states)
+    {
+        if (state.action)
+        {
+            state.action();
+        }
+    }
+    zlex.lexicalAnalysis(out, "resource/test/hello.cpp");
 }

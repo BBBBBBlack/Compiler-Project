@@ -3,6 +3,7 @@
 
 #include "FA.hpp"
 #include "NFA.hpp"
+#include "climits"
 
 class DFA : public FA
 {
@@ -74,6 +75,8 @@ protected:
      * @param states 状态集
      */
     StateSet move(StateSet stateSet, std::string symbol, FAStateVec &states);
+
+    void setActionAndNote(int dfaStateID, StateSet &stateSet, FAStateVec &nfaStates);
 };
 
 #endif // DFA_HPP

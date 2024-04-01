@@ -27,6 +27,7 @@ class FA
 {
 public:
     PAVec *paVec;
+    FAStateVec states;
 
     FA() : FAType("FA") {}
     FA(std::string outPutFileName) : FA()
@@ -87,7 +88,6 @@ public:
     }
 
 protected:
-    FAStateVec states;
     int startStateID;
     std::ofstream *outputFile = nullptr;
     std::string FAType;

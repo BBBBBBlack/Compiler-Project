@@ -1,6 +1,9 @@
 #include "NFA.hpp"
 #include "DFA.hpp"
 
+extern std::string yytext; // 当前识别的字符串
+extern int yylineno;       // 当前识别的行号
+
 class ZLex
 {
 public:
@@ -8,8 +11,6 @@ public:
     {
     }
     // int yyleng;         // 当前识别的字符串长度
-    std::string yytext; // 当前识别的字符串
-    int yylineno;       // 当前识别的行号
 
 protected:
     // TODO 在窗口打印outputfile位置

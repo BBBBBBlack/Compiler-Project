@@ -142,6 +142,8 @@ void DFA::buildDFA(NFA &nfa)
             {
                 // visitedSet.insert(nextStateSet);
                 nextStateSet.stateID = addState(nextStateSet.isAccepting, states);
+                // 设置action和note
+                setActionAndNote(nextStateSet.stateID, nextStateSet, nfa.states);
                 stateSetQueue.push(nextStateSet);
             }
             else
@@ -162,4 +164,29 @@ void DFA::buildDFA(NFA &nfa)
         if (debugMode)
             *outputFile << std::endl;
     }
+}
+
+void DFA::setActionAndNote(int dfaStateID, StateSet &stateSet, FAStateVec &nfaStates)
+{
+    if (!stateSet.isAccepting)
+        return;
+
+    // 查找NFA中priority最小的状态
+    int minPriority = INT_MAX;
+    int minPriorityStateID = -1;
+    for (auto &stateID : stateSet.set)
+    {
+        if (!nfaStates[stateID].isAccepting) // 跳过非终态
+            continue;
+        if (nfaStates[stateID].priority < minPriority)
+        {
+            minPriority = nfaStates[stateID].priority;
+            minPriorityStateID = stateID;
+        }
+    }
+
+    // 设置action和note
+    states[dfaStateID].action = nfaStates[minPriorityStateID].action;
+    states[dfaStateID].priority = nfaStates[minPriorityStateID].priority;
+    states[dfaStateID].note = nfaStates[minPriorityStateID].note;
 }

@@ -16,7 +16,12 @@
  * @return token类型 (0表示无返回值)
  */
 using ActionFunction = std::function<int()>;
-const ActionFunction NullAction;
+
+// 空的动作函数
+inline int NullAction()
+{
+    return 0; // 或者根据实际情况返回其他值
+}
 
 struct PatternAction
 {
@@ -37,6 +42,7 @@ struct FAState
     std::unordered_map<std::string, int> trans; // 映射字符到下一个状态集合
     std::vector<int> epsilonTrans;              // 空边
     bool isAccepting;                           // 是否为终节点
+    int priority;                               // 优先级
     ActionFunction action;                      // 动作
     std::string note;                           // 备注, 可为空
 
@@ -58,7 +64,7 @@ struct FAStateBlock
 struct StateSet
 {
     bool isAccepting = false;
-    int stateID;
+    int stateID; // DFA中的stateID
     std::unordered_set<int> set;
 
     friend std::ostream &operator<<(std::ostream &os, const StateSet &stateSet)

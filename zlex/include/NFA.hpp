@@ -36,7 +36,7 @@ protected:
      * @param regex 正则表达式
      * @return NFA的起始和终止状态
      */
-    FAStateBlock regexToBlock(PatternAction pa, FAStateVec &states);
+    FAStateBlock regexToBlock(PatternAction pa, FAStateVec &states, int priority);
 
     /**
      * @brief 添加转移
