@@ -5,6 +5,9 @@
 #include <map>
 #include <unordered_map>
 
+#define CHAR_UNION '_'
+#define STR_UNION "_"
+
 enum OperatorType
 {
     EPSILON,          // 空

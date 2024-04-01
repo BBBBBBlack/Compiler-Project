@@ -24,6 +24,7 @@ struct PatternAction
     ActionFunction action;
     std::string note;
     PatternAction(std::string pattern, ActionFunction action) : pattern(pattern), action(action), note(pattern) {}
+    PatternAction(std::string pattern, ActionFunction action, std::string note) : pattern(pattern), action(action), note(note) {}
 };
 
 typedef PatternAction PA;

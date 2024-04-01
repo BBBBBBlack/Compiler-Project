@@ -3,10 +3,23 @@
 
 #include "ZLex.hpp"
 
+TEST(FATest, testConvertSquareBrackets)
+{
+    NFA nfa;
+    std::string test1 = "a[0-9]b", expected1 = "a(0|1|2|3|4|5|6|7|8|9)b";
+    ASSERT_EQ(nfa.convertSquareBrackets(test1), expected1);
+    std::string test2 = "a[0-9]b[0-9]", expected2 = "a(0|1|2|3|4|5|6|7|8|9)b(0|1|2|3|4|5|6|7|8|9)";
+    ASSERT_EQ(nfa.convertSquareBrackets(test2), expected2);
+    std::string test3 = "a[a-e]b", expected3 = "a(a|b|c|d|e)b";
+    ASSERT_EQ(nfa.convertSquareBrackets(test3), expected3);
+    std::string test4 = "a[ac-f]", expected4 = "a(a|c|d|e|f)";
+    ASSERT_EQ(nfa.convertSquareBrackets(test4), expected4);
+}
+
 TEST(FATest, addUnionTest)
 {
     NFA fa;
-    std::string test1 = "aab\\+", expected1 = "a-a-b-\\+";
+    std::string test1 = "aab\\+", expected1 = "a_a_b_\\+";
     ASSERT_EQ(fa.addUnion(test1), expected1);
     std::string test2 = "a|b", expected2 = "a|b";
     ASSERT_EQ(fa.addUnion(test2), expected2);
@@ -17,7 +30,7 @@ TEST(FATest, addUnionTest)
 
     // 测试符号连接
 
-    std::string test4 = "c(abc|b*)", expected4 = "c-(a-b-c|b*)";
+    std::string test4 = "c(abc|b*)", expected4 = "c_(a_b_c|b*)";
     ASSERT_EQ(fa.addUnion(test4), expected4);
 }
 
@@ -26,10 +39,10 @@ TEST(FATest, infixToSufixTest)
     NFA fa;
     std::string test1 = "a|b", expected1 = "ab|";
     ASSERT_EQ(fa.infixToSufix(test1), expected1);
-    std::string test2 = "ab|c", expected2 = "ab-c|";
+    std::string test2 = "ab|c", expected2 = "ab_c|";
     ASSERT_EQ(fa.infixToSufix(fa.addUnion(test2)), expected2);
-    std::string test3 = "a\\|b|c", expected3 = "a\\|-b-c|";
-    ASSERT_EQ(fa.addUnion(test3), "a-\\|-b|c");
+    std::string test3 = "a\\|b|c", expected3 = "a\\|_b_c|";
+    ASSERT_EQ(fa.addUnion(test3), "a_\\|_b|c");
     ASSERT_EQ(fa.infixToSufix(fa.addUnion(test3)), expected3);
 }
 
@@ -50,9 +63,9 @@ TEST(FATest, ConvertToSuffix)
     ASSERT_EQ(fa.infixToSufix("a|b"), "ab|");
     ASSERT_EQ(fa.infixToSufix("a|b|c"), "ab|c|");
 
-    // 测试带有 - 运算符的情况
-    ASSERT_EQ(fa.infixToSufix("a-b"), "ab-");
-    ASSERT_EQ(fa.infixToSufix("a-b-c"), "ab-c-");
+    // 测试带有 _ 运算符的情况
+    ASSERT_EQ(fa.infixToSufix("a_b"), "ab_");
+    ASSERT_EQ(fa.infixToSufix("a_b_c"), "ab_c_");
 
     // 测试带有 * 运算符的情况
     ASSERT_EQ(fa.infixToSufix("a*"), "a*");
@@ -68,7 +81,7 @@ TEST(FATest, ConvertToSuffix)
     ASSERT_EQ(fa.infixToSufix("(a|b)?"), "ab|?");
 
     // (a|b)*abb
-    ASSERT_EQ(fa.infixToSufix(fa.addUnion("(a|b)*abb")), "ab|*a-b-b-");
+    ASSERT_EQ(fa.infixToSufix(fa.addUnion("(a|b)*abb")), "ab|*a_b_b_");
 }
 
 /**
@@ -139,11 +152,20 @@ TEST(ZLexTest, testBuildDFA)
     ZLex zlex;
     PAVec paVec = {{"a|b", NullAction}, {"ab", NullAction}, {"(ab)*", NullAction}, {"a(b|c)", NullAction}};
     zlex.buildDFA(true, paVec, "output/test/ZLex/FA.md");
-    // zlex.lexicalAnalysis("output/test/ZLex/FA.md", "output/test/ZLex/FA.md", "output/test/ZLex/FA.md");
+
+    ZLex zlex2;
+    PAVec paVec2 = {{"a[b-z]", NullAction}, {"a*ba", NullAction}};
+    zlex2.buildDFA(true, paVec2, "output/test/ZLex/FA2.md");
 }
 
 TEST(ZLexTest, testLexicalAnalysis)
 {
     ZLex zlex;
-    zlex.lexicalAnalysis(std::cout, "resource/test/hello.cpp");
+    // PAVec paVec = {{"0|1|2|3|4|5|6|7|8|9", []() -> int
+    //                 { printf("?"); }},
+    //                {"ab", NullAction},
+    //                {"(ab)*", NullAction},
+    //                {"a(b|c)", NullAction}};
+    // zlex.buildDFA(1, );
+    zlex.lexicalAnalysis(std::cout, "resource/test/digit.cpp");
 }

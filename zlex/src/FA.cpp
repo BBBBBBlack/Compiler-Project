@@ -89,7 +89,7 @@ void FA::printFA()
         // print符号边
         for (auto &trans : states[stateID].trans)
         {
-            *outputFile << stateID << "--" << trans.first << "-->" << trans.second << std::endl;
+            *outputFile << stateID << "--\"" << trans.first << "\"-->" << trans.second << std::endl;
             if (visited.find(trans.second) == visited.end())
             {
                 stateStack.push(trans.second);

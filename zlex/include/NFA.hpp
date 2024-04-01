@@ -20,6 +20,10 @@ public:
 
 protected:
     /**
+     * @brief 转换[]为(|)组合而成的正则
+     */
+    std::string convertSquareBrackets(std::string regex);
+    /**
      * @brief 为正则表达式添加省略的"-"(Union)符号
      */
     std::string addUnion(std::string regex);

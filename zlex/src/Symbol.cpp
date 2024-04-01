@@ -2,7 +2,7 @@
 
 std::map<std::string, OperatorType> Symbol::operatorMap = {
     {"|", OR},
-    {"-", UNION},
+    {STR_UNION, UNION},
     {"*", CLOSURE},
     {"+", POSITIVE_CLOSURE},
     {"?", ZERO_OR_ONE},
@@ -17,7 +17,7 @@ std::unordered_map<char, int> Symbol::opOrder = {
     {'*', 2},
     {'+', 3},
     {'?', 4},
-    {'-', 5},
+    {CHAR_UNION, 5},
     {'|', 998}};
 
 std::unordered_map<char, bool> Symbol::unaryOpMap = {

@@ -1,5 +1,60 @@
 #include "NFA.hpp"
 
+std::string NFA::convertSquareBrackets(std::string regex)
+{
+    std::string result;
+    bool inSquareBrackets = false;
+    bool squareBracketsFirstChar = false;
+    bool escapeMod = false;
+    for (int i = 0; i < regex.size(); i++)
+    {
+        if (escapeMod) // 转义模式
+        {
+            result += regex[i];
+            escapeMod = false;
+        }
+        else if (regex[i] == '\\')
+        {
+            result += regex[i];
+            escapeMod = true;
+        }
+        else if (regex[i] == '[')
+        {
+            inSquareBrackets = true;
+            squareBracketsFirstChar = true;
+            result += '(';
+        }
+        else if (regex[i] == ']')
+        {
+            inSquareBrackets = false;
+            result += ')';
+        }
+        else if (inSquareBrackets && regex[i] == '-')
+        {
+            char begin = regex[i - 1], end = regex[i + 1];
+            for (char j = begin + 1; j < end; j++)
+            {
+                result += '|';
+                result += j;
+            }
+        }
+        else if (inSquareBrackets)
+        {
+            if (!squareBracketsFirstChar)
+            {
+                result += '|';
+            }
+            squareBracketsFirstChar = false;
+            result += regex[i];
+        }
+        else
+        {
+            result += regex[i];
+        }
+    }
+    return result;
+}
+
 std::string NFA::addUnion(std::string regex)
 {
     std::string result;
@@ -10,9 +65,9 @@ std::string NFA::addUnion(std::string regex)
             // 转义字符
             result += regex[i++];
             result += regex[i];
-            result += '-';
+            result += CHAR_UNION;
         }
-        // else if (regex[i] == '-')
+        // else if (regex[i] == CHAR_UNION)
         // {
         //     result += '\\';
         //     result += regex[i];
@@ -22,7 +77,7 @@ std::string NFA::addUnion(std::string regex)
         else if ((regex[i] != '|' && regex[i] != '(') && (!Symbol::isOperator(regex[i + 1]) || regex[i + 1] == '(') && (i + 1) != regex.size())
         {
             result += regex[i];
-            result += '-';
+            result += CHAR_UNION;
         }
         else
         {
@@ -84,7 +139,8 @@ std::string NFA::infixToSufix(std::string regex)
 
 FAStateBlock NFA::regexToBlock(PatternAction pa, FAStateVec &states)
 {
-    std::string regexWithUnion = addUnion(pa.pattern);
+    std::string regex = convertSquareBrackets(pa.pattern);
+    std::string regexWithUnion = addUnion(regex);
     std::string regexWithSuffix = infixToSufix(regexWithUnion);
 
     std::stack<FAStateBlock> blockStack;
@@ -155,7 +211,7 @@ FAStateBlock NFA::addTransition(char inputSymbol, bool escapeFlag, FAStateBlock 
         addEdge(s1, s2, inputSymbol, states);
         resultBlock = {s1, s2};
     }
-    else if (inputSymbol == '-') // union
+    else if (inputSymbol == CHAR_UNION) // union
     {
         states[block1.endStateID].isAccepting = 0; // block1的终态取消
         addEdge(block1.endStateID, block2.beginStateID, EPSILON, states);
