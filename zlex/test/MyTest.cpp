@@ -13,6 +13,12 @@ TEST(FATest, testConvertSquareBrackets)
     ASSERT_EQ(nfa.convertSquareBrackets(test3), expected3);
     std::string test4 = "a[ac-f]", expected4 = "a(a|c|d|e|f)";
     ASSERT_EQ(nfa.convertSquareBrackets(test4), expected4);
+    std::string test5 = "a[a-c-f]", expected5 = "a(a|b|c|d|e|f)";
+    ASSERT_EQ(nfa.convertSquareBrackets(test5), expected5);
+    std::string test6 = "a[a-c0-3]b", expected6 = "a(a|b|c|0|1|2|3)b";
+    ASSERT_EQ(nfa.convertSquareBrackets(test6), expected6);
+    std::string test7 = "a[a-zA-Z]", expected7 = "a(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z)";
+    ASSERT_EQ(nfa.convertSquareBrackets(test7), expected7);
 }
 
 TEST(FATest, addUnionTest)
@@ -166,17 +172,19 @@ TEST(ZLexTest, testLexicalAnalysis)
     std::ofstream out("output/test/ZLex/lexicalAnalysis.md", std::ios::trunc);
 
     ZLex zlex;
+    std::string &yytext_ref = yytext;
     PAVec paVec = {
-        {"[0-9]", [&]() -> int
+        // TODO 添加"+"后无法识别, 可能是正则构造有误
+        {"[0-9]+", [&]() -> int
          {
-             out << "?";
+             out << "$" << yytext << "$";
              return 0;
          },
          "note1"},
-        // =用于捕获yytext
-        {"[a-z]", [&]() -> int
+        // &用于捕获yytext和out
+        {"[a-zA-Z]+", [&]() -> int
          {
-             out << yytext;
+             out << yytext << " ";
              return 0;
          },
          "note2"}};
@@ -193,5 +201,5 @@ TEST(ZLexTest, testLexicalAnalysis)
             state.action();
         }
     }
-    zlex.lexicalAnalysis(out, "resource/test/hello.cpp");
+    zlex.lexicalAnalysis(out, "resource/test/test.txt");
 }
