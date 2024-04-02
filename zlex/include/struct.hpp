@@ -61,6 +61,8 @@ struct FAStateBlock
     int endStateID;
 };
 
+typedef std::vector<FAState> FAStateVec;
+typedef std::vector<std::string> RegexVec;
 struct StateSet
 {
     bool isAccepting = false;
@@ -84,30 +86,28 @@ struct StateSet
         os << "}";
         return os;
     }
-};
-
-typedef std::vector<FAState> FAStateVec;
-typedef std::vector<std::string> RegexVec;
-
-struct StateSetHash
-{
-    std::size_t operator()(const StateSet &stateSet) const
+    // Hash function for StateSet
+    struct Hash
     {
-        std::size_t seed = 0;
-        for (const auto &state : stateSet.set)
+        std::size_t operator()(const StateSet &stateSet) const
         {
-            seed ^= std::hash<int>{}(state) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            std::size_t hash = 0;
+            for (const auto &state : stateSet.set)
+            {
+                hash ^= std::hash<int>{}(state);
+            }
+            return hash;
         }
-        return seed;
-    }
-};
+    };
 
-struct StateSetEqual
-{
-    bool operator()(const StateSet &lhs, const StateSet &rhs) const
+    // Equality comparison for StateSet
+    struct Equal
     {
-        return lhs.set == rhs.set;
-    }
+        bool operator()(const StateSet &lhs, const StateSet &rhs) const
+        {
+            return lhs.set == rhs.set;
+        }
+    };
 };
 
 #endif // STRUCT_HPP

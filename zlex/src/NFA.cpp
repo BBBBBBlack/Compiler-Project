@@ -10,11 +10,17 @@ std::string NFA::convertSquareBrackets(std::string regex)
     {
         if (escapeMod) // 转义模式
         {
+
             result += regex[i];
             escapeMod = false;
         }
         else if (regex[i] == '\\')
         {
+            if (!squareBracketsFirstChar)
+            {
+                result += '|';
+            }
+            squareBracketsFirstChar = false;
             result += regex[i];
             escapeMod = true;
         }
@@ -29,7 +35,7 @@ std::string NFA::convertSquareBrackets(std::string regex)
             inSquareBrackets = false;
             result += ')';
         }
-        else if (inSquareBrackets && regex[i] == '-')
+        else if (inSquareBrackets && regex[i] == '-') // 处理"-"
         {
             char begin = regex[i - 1], end = regex[i + 1];
             for (char j = begin + 1; j < end; j++)
@@ -60,12 +66,28 @@ std::string NFA::addUnion(std::string regex)
     std::string result;
     for (int i = 0; i < regex.size(); i++)
     {
-        if (regex[i] == '\\' && !Symbol::isOperator(regex[i + 2]) && (i + 2) != regex.size())
+        char c = regex[i], c_1, c_2;
+        bool b1 = regex[i] == '\\', b2;
+
+        if ((i + 1) < regex.size())
+        {
+            c_1 = regex[i + 1];
+        }
+        if ((i + 2) < regex.size())
+        {
+            c_2 = regex[i + 2];
+            b2 = !Symbol::isOperator(regex[i + 2]);
+        }
+
+        if (regex[i] == '\\' && (i + 2) < regex.size())
         {
             // 转义字符
-            result += regex[i++];
+
             result += regex[i];
-            result += CHAR_UNION;
+            result += regex[i + 1];
+            if (!Symbol::isOperator(regex[i + 2]))
+                result += CHAR_UNION;
+            i++;
         }
         // else if (regex[i] == CHAR_UNION)
         // {
@@ -154,6 +176,7 @@ FAStateBlock NFA::regexToBlock(PatternAction pa, FAStateVec &states, int priorit
                 perror("无效的转义字符");
             }
             blockStack.push(addTransition(regexWithSuffix[i + 1], 1, {}, {}, states));
+            i++;
         }
         else if (Symbol::isOperator(regexWithSuffix[i]))
         {

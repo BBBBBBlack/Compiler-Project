@@ -19,6 +19,20 @@ TEST(FATest, testConvertSquareBrackets)
     ASSERT_EQ(nfa.convertSquareBrackets(test6), expected6);
     std::string test7 = "a[a-zA-Z]", expected7 = "a(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z)";
     ASSERT_EQ(nfa.convertSquareBrackets(test7), expected7);
+
+    // 转义字符
+    std::string test8 = "a[\\-\\]]", expected8 = "a(\\-|\\])";
+    ASSERT_EQ(nfa.convertSquareBrackets(test8), expected8);
+}
+
+TEST(FATest, addUnionTest_escape)
+{
+    NFA fa;
+    // 奇怪的测试
+    std::string test4 = "[\\!\\?\\ \\.]", test4_1 = fa.convertSquareBrackets(test4), test4_2 = fa.addUnion(test4_1);
+    ASSERT_TRUE(test4[1] == '\\');
+    ASSERT_EQ(test4_1, "(\\!|\\?|\\ |\\.)");
+    ASSERT_EQ(test4_2, "(\\!|\\?|\\ |\\.)");
 }
 
 TEST(FATest, addUnionTest)
@@ -34,9 +48,8 @@ TEST(FATest, addUnionTest)
     ASSERT_EQ(fa.addUnion(test3), expected3);
 
     // 测试符号连接
-
-    std::string test4 = "c(abc|b*)", expected4 = "c_(a_b_c|b*)";
-    ASSERT_EQ(fa.addUnion(test4), expected4);
+    std::string test5 = "c(abc|b*)", expected5 = "c_(a_b_c|b*)";
+    ASSERT_EQ(fa.addUnion(test5), expected5);
 }
 
 TEST(FATest, infixToSufixTest)
@@ -87,6 +100,9 @@ TEST(FATest, ConvertToSuffix)
 
     // (a|b)*abb
     ASSERT_EQ(fa.infixToSufix(fa.addUnion("(a|b)*abb")), "ab|*a_b_b_");
+
+    // // 测试转义字符
+    // ASSERT_EQ(fa.infixToSufix("a\\|b"), "a\\|b");
 }
 
 /**
@@ -131,6 +147,13 @@ TEST(FATest, testRegexVecToBlock)
     dfa1.printFA();
 }
 
+TEST(FATest, testBuildDFA)
+{
+    ZLex zlex1;
+    PAVec paVec = {{"[0-2]+", &NullAction}};
+    zlex1.buildDFA(true, paVec, "output/test/buildDFA/FA1.md");
+}
+
 TEST(FATest, homework)
 {
     NFA fa1("output/test/homework/FA1.md");
@@ -165,34 +188,44 @@ TEST(ZLexTest, testBuildDFA)
     ZLex zlex3;
     PAVec paVec3 = {{"abc", &NullAction}, {"a[f-h]c", &NullAction}};
     zlex3.buildDFA(true, paVec3, "output/test/ZLex/FA3.md");
+
+    ZLex zlex4;
+    PAVec paVec4 = {{"[0-1]+", &NullAction}, {"[a-c]*", &NullAction}};
+    zlex4.buildDFA(true, paVec4, "output/test/ZLex/FA4.md");
 }
 
-TEST(ZLexTest, testLexicalAnalysis)
+TEST(ZLexTest, testLexicalAnalysis_simple)
 {
-    std::ofstream out("output/test/ZLex/lexicalAnalysis.md", std::ios::trunc);
+    std::string fileName = "output/test/ZLex/all/lexicalAnalysis1.md";
+    std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
+    std::filesystem::create_directories(folderPath);
+    std::ofstream out(fileName, std::ios::trunc);
 
     ZLex zlex;
     std::string &yytext_ref = yytext;
-    PAVec paVec = {
-        // TODO 添加"+"后无法识别, 可能是正则构造有误
-        {"[0-9]+", [&]() -> int
+    PAVec paVec1 = {
+        // TODO 添加"+"后无法识别, 可能是正则构造有误wd
+        // 子集构造算法出错
+        {"[0-2]+", [&]() -> int
          {
              out << "$" << yytext << "$";
+             out.flush();
              return 0;
          },
          "note1"},
         // &用于捕获yytext和out
-        {"[a-zA-Z]+", [&]() -> int
+        {"[a-c]+", [&]() -> int
          {
              out << yytext << " ";
+             out.flush();
              return 0;
          },
          "note2"}};
     // 测试action
-    paVec[0].action();
-    paVec[1].action();
+    // paVec[0].action();
+    // paVec[1].action();
 
-    zlex.buildDFA(true, paVec, "output/test/ZLex/FA3.md");
+    zlex.buildDFA(true, paVec1, "output/test/ZLex/all/FA1.md");
     // 检查dfa中的action是否正确
     for (auto &state : zlex.dfa->states)
     {
@@ -201,5 +234,94 @@ TEST(ZLexTest, testLexicalAnalysis)
             state.action();
         }
     }
+    zlex.lexicalAnalysis(out, "resource/test/test_simple.txt");
+}
+
+TEST(ZLexTest, testLexicalAnalysis)
+{
+    std::string fileName = "output/test/ZLex/all/lexicalAnalysis2.md";
+    std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
+    std::filesystem::create_directories(folderPath);
+    std::ofstream out(fileName, std::ios::trunc);
+
+    ZLex zlex;
+    std::string &yytext_ref = yytext;
+    PAVec paVec1 = {
+        // TODO 添加"+"后无法识别, 可能是正则构造有误wd
+        // 子集构造算法出错
+        {"[0-9]+", [&]() -> int
+         {
+             out << "$" << yytext << "$";
+             out.flush();
+             return 0;
+         },
+         "number"},
+        // &用于捕获yytext和out
+        {"[a-zA-Z]+", [&]() -> int
+         {
+             out << yytext << " ";
+             out.flush();
+             return 0;
+         },
+         "string"},
+        {"[\\!\\?\\ \\.]", [&]() -> int
+         {
+             out << "$" << yytext << "$";
+             out.flush();
+             return 0;
+         },
+         "spcial char"}};
+    // 测试action
+    // paVec[0].action();
+    // paVec[1].action();
+
+    zlex.buildDFA(true, paVec1, "output/test/ZLex/all/FA2.md");
+    // 检查dfa中的action是否正确
+    out << "## action check" << std::endl;
+    for (auto &state : zlex.dfa->states)
+    {
+        if (state.action)
+        {
+            state.action();
+        }
+    }
+    out << std::endl
+        << "## lexical analysis" << std::endl;
     zlex.lexicalAnalysis(out, "resource/test/test.txt");
+}
+
+TEST(ZLexTest, testLexicalAnalysis_escape)
+{
+    std::string fileName = "output/test/ZLex/all/lexicalAnalysis3.md";
+    std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
+    std::filesystem::create_directories(folderPath);
+    std::ofstream out(fileName, std::ios::trunc);
+
+    ZLex zlex;
+    std::string &yytext_ref = yytext;
+    PAVec paVec1 = {
+        {"[\\!\\?\\ \\.]", [&]() -> int
+         {
+             out << "`" << yytext << "`,";
+             out.flush();
+             return 0;
+         },
+         "spcial char"}};
+    // 测试action
+    // paVec[0].action();
+    // paVec[1].action();
+
+    zlex.buildDFA(true, paVec1, "output/test/ZLex/all/FA3.md");
+    // 检查dfa中的action是否正确
+    out << "## action check" << std::endl;
+    for (auto &state : zlex.dfa->states)
+    {
+        if (state.action)
+        {
+            state.action();
+        }
+    }
+    out << std::endl
+        << "## lexical analysis" << std::endl;
+    zlex.lexicalAnalysis(out, "resource/test/test_escape.txt");
 }

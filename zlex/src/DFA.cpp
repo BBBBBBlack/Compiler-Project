@@ -95,10 +95,14 @@ void DFA::printDFATransTableHeader()
  */
 void DFA::buildDFA(NFA &nfa)
 {
+    StateSet::Hash hasher;
     if (debugMode)
+    {
         printDFATransTableHeader();
+    }
 
-    std::unordered_set<StateSet, StateSetHash, StateSetEqual> visitedSet;
+    std::unordered_set<StateSet, StateSet::Hash, StateSet::Equal> visitedSet;
+    std::unordered_set<StateSet, StateSet::Hash, StateSet::Equal> createdSet;
     std::queue<StateSet> stateSetQueue;
 
     StateSet startStateSet = epsilonClosure(nfa.startStateID, nfa.states);
@@ -119,6 +123,7 @@ void DFA::buildDFA(NFA &nfa)
             continue;
 
         visitedSet.insert(currentStateSet);
+        // std::cout << visitedSet.size() << std::endl;
 
         if (debugMode)
         {
@@ -138,23 +143,29 @@ void DFA::buildDFA(NFA &nfa)
             }
 
             // 检查是否为新生成的集合(DFA状态)
-            if (visitedSet.find(nextStateSet) == visitedSet.end())
+            // error: nextStateSet只有当它从queue中取出后, 才会被加入visitedSet
+            // if (visitedSet.find(nextStateSet) == visitedSet.end())
+            if (createdSet.find(nextStateSet) == createdSet.end())
             {
                 // visitedSet.insert(nextStateSet);
                 nextStateSet.stateID = addState(nextStateSet.isAccepting, states);
                 // 设置action和note
                 setActionAndNote(nextStateSet.stateID, nextStateSet, nfa.states);
+                createdSet.insert(nextStateSet);
                 stateSetQueue.push(nextStateSet);
             }
             else
             {
-                // 重复状态集
-                // NOTE: 否则StateID会因为epsilonClosure生成出错
-                nextStateSet = *visitedSet.find(nextStateSet);
+                nextStateSet = *createdSet.find(nextStateSet);
             }
 
             if (debugMode)
             {
+                // bool visited = (visitedSet.find(nextStateSet) != visitedSet.end());
+                // *outputFile << "HASH:" << hasher(nextStateSet) << ","
+                //             << "visited:" << visited << ", "
+                //             << "size:" << visitedSet.size()
+                //             << "<br>";
                 *outputFile << nextStateSet << "|";
             }
             // 为新生成的状态集(DFA状态)添加转移(边)
