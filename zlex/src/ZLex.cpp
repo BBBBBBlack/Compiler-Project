@@ -38,7 +38,8 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
     int start = dfa->getStartStateID();
     while (std::getline(file, line)) // Use regular getline function
     {
-        yylineno++; // 更新行号
+        line += "\n"; // 补充行末尾的换行符
+        yylineno++;   // 更新行号
         int current = start;
         int lastMatchedState = -1;
         std::string lastMatched = "", afterMatched = "";
@@ -90,6 +91,21 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
             else // 成功匹配, 暂存, 尝试更长的匹配
             {
                 afterMatched += c;
+            }
+        }
+        // 处理行末尾, 未匹配状态
+        if (lastMatchedState != -1) // 存在更短的匹配
+        {
+            // 运行action
+            int token = dfa->runAction(lastMatchedState);
+            // 重置状态机
+            current = start;
+            lastMatchedState = -1;
+            lastMatched = "";
+            afterMatched = "";
+            if (token != 0) // action有返回值
+            {
+                return token;
             }
         }
         // 一行读取完毕, 更新pos
