@@ -1,6 +1,6 @@
 # 设置测试文件
 set(TEST_INCLUDE_FILES ${SOURCE_DIR}/FA.cpp ${SOURCE_DIR}/Symbol.cpp 
-        ${SOURCE_DIR}/NFA.cpp ${SOURCE_DIR}/DFA.cpp 
+        ${SOURCE_DIR}/NFA.cpp ${SOURCE_DIR}/DFA.cpp ${SOURCE_DIR}/Token.cpp
         ${SOURCE_DIR}/ZLex.cpp)
 
 set(FA_TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} MyTest.cpp)

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include "ZLex.hpp"
+#include "Token.hpp"
 
 TEST(FATest, testConvertSquareBrackets)
 {
@@ -324,4 +325,53 @@ TEST(ZLexTest, testLexicalAnalysis_escape)
     out << std::endl
         << "## lexical analysis" << std::endl;
     zlex.lexicalAnalysis(out, "resource/test/test_escape.txt");
+}
+
+std::ofstream createOutFile(std::string fileName)
+{
+    std::string folderPath = fileName.substr(0, fileName.find_last_of("/\\"));
+    std::filesystem::create_directories(folderPath);
+    std::ofstream out(fileName, std::ios::trunc);
+    return out;
+}
+
+TEST(ZLexTest, test2)
+{
+    std::string fileName = "output/test/ZLex/all/lexicalAnalysis3.md";
+    std::ofstream tokenFile = createOutFile(fileName);
+
+    PAVec paVec2 = {
+        {"main", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "main"},
+        {"{", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "{"},
+        {"}", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "}"},
+        {"\\(", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "\\("},
+    };
+
+    ZLex zlex;
+    zlex.buildDFA(true, paVec2, "output/test/ZLex/all/FA4.md");
+    zlex.lexicalAnalysis(tokenFile, "resource/test/test2.txt");
 }

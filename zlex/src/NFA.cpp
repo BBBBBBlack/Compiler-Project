@@ -16,11 +16,14 @@ std::string NFA::convertSquareBrackets(std::string regex)
         }
         else if (regex[i] == '\\')
         {
-            if (!squareBracketsFirstChar)
+            if (inSquareBrackets)
             {
-                result += '|';
+                if (!squareBracketsFirstChar)
+                {
+                    result += '|';
+                }
+                squareBracketsFirstChar = false;
             }
-            squareBracketsFirstChar = false;
             result += regex[i];
             escapeMod = true;
         }
@@ -64,48 +67,33 @@ std::string NFA::convertSquareBrackets(std::string regex)
 std::string NFA::addUnion(std::string regex)
 {
     std::string result;
-    for (int i = 0; i < regex.size(); i++)
+    bool escapeMod = false;
+    for (int i = 0; i < regex.size() - 1; i++)
     {
-        char c = regex[i], c_1, c_2;
-        bool b1 = regex[i] == '\\', b2;
-
-        if ((i + 1) < regex.size())
+        result += regex[i];
+        if (regex[i] == '\\' && !escapeMod)
         {
-            c_1 = regex[i + 1];
-        }
-        if ((i + 2) < regex.size())
-        {
-            c_2 = regex[i + 2];
-            b2 = !Symbol::isOperator(regex[i + 2]);
+            escapeMod = true;
+            continue;
         }
 
-        if (regex[i] == '\\' && (i + 2) < regex.size())
+        // 双目运算符或(的开头不加UNION
+        bool isSpecialChar = !escapeMod && (regex[i] == '|' || regex[i] == '(');
+        if ((!isSpecialChar) && (!Symbol::isOperator(regex[i + 1])))
         {
-            // 转义字符
-
-            result += regex[i];
-            result += regex[i + 1];
-            if (!Symbol::isOperator(regex[i + 2]))
-                result += CHAR_UNION;
-            i++;
-        }
-        // else if (regex[i] == CHAR_UNION)
-        // {
-        //     result += '\\';
-        //     result += regex[i];
-        // }
-        // else if ((!Symbol::isOperator(regex[i])) && !Symbol::isOperator(regex[i + 1]) && (i + 1) != regex.size())
-        // TODO 好丑陋的if 改了它!
-        else if ((regex[i] != '|' && regex[i] != '(') && (!Symbol::isOperator(regex[i + 1]) || regex[i + 1] == '(') && (i + 1) != regex.size())
-        {
-            result += regex[i];
             result += CHAR_UNION;
         }
-        else
+        else if (!escapeMod && regex[i + 1] == '(' && (i + 1) != regex.size())
         {
-            result += regex[i];
+            result += CHAR_UNION;
+        }
+
+        if (escapeMod) // 转义模式
+        {
+            escapeMod = false;
         }
     }
+    result += regex.end()[-1];
     return result;
 }
 
