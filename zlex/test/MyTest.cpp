@@ -267,11 +267,18 @@ TEST(ZLexTest, testLexicalAnalysis)
          "string"},
         {"[\\!\\?\\ \\.]", [&]() -> int
          {
-             out << "$" << yytext << "$";
+             out << "`" << yytext << "`";
              out.flush();
              return 0;
          },
-         "spcial char"}};
+         "spcial char"},
+        {"\\\n", [&]() -> int
+         {
+             out << std::endl;
+             out.flush();
+             return 0;
+         },
+         "newline"}};
     // 测试action
     // paVec[0].action();
     // paVec[1].action();
