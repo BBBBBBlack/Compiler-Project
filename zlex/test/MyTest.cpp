@@ -347,7 +347,105 @@ TEST(ZLexTest, test2)
     std::string fileName = "output/test/ZLex/all/lexicalAnalysis3.md";
     std::ofstream tokenFile = createOutFile(fileName);
 
-    PAVec paVec2 = {
+    PAVec paVec = {
+        {"[0-9]+.[0-9]+", [&]() -> int
+         {
+             Token token(yytext, tokenFile, true);
+             token.print_token();
+             return 0;
+         },
+         "digit"},
+        {"int", [&]() -> int
+         {
+             Token token(yytext, tokenFile, true);
+             token.print_token();
+             return 0;
+         },
+         "int"},
+        {"float", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "float"},
+        {"double", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "double"},
+        {"long", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "long"},
+        {"if", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "if"},
+        {"else", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "else"},
+        {"while", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "while"},
+        {"for", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "for"},
+        {"do", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "do"},
+        {"break", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "break"},
+        {"continue", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "continue"},
+        {"return", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "return"},
+        {"void", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "void"},
         {"main", [&]() -> int
          {
              Token token(yytext, tokenFile, false);
@@ -376,9 +474,204 @@ TEST(ZLexTest, test2)
              return 0;
          },
          "\\("},
-    };
+        {"\\)", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "\\)"},
+        {"\\[", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "["},
+        {"\\]", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "]"},
+        {";", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         ";"},
+        {",", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         ","},
+        {"=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "="},
+        {"<", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "<"},
+        {"<=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "<="},
+        {">", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         ">"},
+        {">=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         ">="},
+        {"==", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "=="},
+        {"\\!=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "!="},
+        {"\\+", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "\\+"},
+        {"-", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "-"},
+        {"\\*", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "\\*"},
+        {"/", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "/"},
+        {"%", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "%"},
+        {"\\+\\+", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "++"},
+        {"--", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "--"},
+        {"\\+=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "+="},
+        {"-=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "-="},
+        {"\\*=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "*="},
+        {"/=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "/="},
+        {"%=", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "%="},
+        {"&&", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "&&"},
+        {"\\|\\|", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "||"},
+        {"[a-zA-Z\\_]+[a-zA-Z0-9\\_]*", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "identifier"},
+        {"[\\ \\\n]+", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "space&newline"}};
 
     ZLex zlex;
-    zlex.buildDFA(true, paVec2, "output/test/ZLex/all/FA4.md");
+    zlex.buildDFA(true, paVec, "output/test/ZLex/all/FA4.md");
     zlex.lexicalAnalysis(tokenFile, "resource/test/test2.txt");
 }
