@@ -22,5 +22,7 @@ add_subdirectory(test)
 add_executable(zlex ${SOURCE_FILES})
 # target_link_libraries(zlex stdc++fs)
 
+add_compile_options(-O2)
+
 # 启用测试
 enable_testing()

@@ -4,6 +4,13 @@
 std::string yytext; // 当前识别的字符串
 int yylineno;       // 当前识别的行号
 
+int ZLex::buildAndAnalysis(bool debugMode, PAVec PAvec, std::string outputFAFile,
+                           std::ostream &outputStream, std::string sourceFile)
+{
+    buildDFA(debugMode, PAvec, outputFAFile);
+    return lexicalAnalysis(outputStream, sourceFile);
+}
+
 void ZLex::buildDFA(bool debugMode, PAVec paVec, std::string outputFileName)
 {
     // TODO 将debugMode重构到构造函数中

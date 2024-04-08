@@ -12,6 +12,8 @@ public:
     {
     }
     // int yyleng;         // 当前识别的字符串长度
+    int buildAndAnalysis(bool debugMode, PAVec PAvec, std::string outputFAFile,
+                         std::ostream &outputStream, std::string sourceFile);
 
 protected:
     // TODO 在窗口打印outputfile位置
