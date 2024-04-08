@@ -1,5 +1,6 @@
 #include "NFA.hpp"
 #include "DFA.hpp"
+#include <chrono>
 
 extern std::string yytext; // 当前识别的字符串
 extern int yylineno;       // 当前识别的行号
@@ -19,6 +20,7 @@ protected:
     std::wstreampos pos;
     int pos_i = 0;
     DFA *dfa;
+    bool debugMode = false;
     /**
      * @brief 构建DFA
      * @param debugMode 打开调试模式

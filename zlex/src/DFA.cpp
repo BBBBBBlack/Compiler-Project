@@ -95,6 +95,8 @@ void DFA::printDFATransTableHeader()
  */
 void DFA::buildDFA(NFA &nfa)
 {
+    // std::chrono::duration<double> epsilonClosureTime;
+
     StateSet::Hash hasher;
     if (debugMode)
     {
@@ -132,8 +134,14 @@ void DFA::buildDFA(NFA &nfa)
 
         for (auto &symbol : alphabet)
         {
+            // auto start = std::chrono::high_resolution_clock::now();
             // TODO 生成的nextStateSet的StateID从何而来
+            // TODO 每次都要重新计算epsilonClosure, 有没有更好的办法?
             StateSet nextStateSet = epsilonClosure(move(currentStateSet, symbol, nfa.states), nfa.states);
+
+            // auto end = std::chrono::high_resolution_clock::now();
+            // epsilonClosureTime += end - start;
+
             // 跳过空集
             if (nextStateSet.set.size() == 0)
             {
@@ -175,6 +183,8 @@ void DFA::buildDFA(NFA &nfa)
         if (debugMode)
             *outputFile << std::endl;
     }
+
+    // std::cout << "epsilonClosureTime: " << epsilonClosureTime.count() << "s" << std::endl;
 }
 
 void DFA::setActionAndNote(int dfaStateID, StateSet &stateSet, FAStateVec &nfaStates)

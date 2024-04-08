@@ -6,12 +6,21 @@ int yylineno;       // 当前识别的行号
 
 void ZLex::buildDFA(bool debugMode, PAVec paVec, std::string outputFileName)
 {
+    // TODO 将debugMode重构到构造函数中
+    this->debugMode = debugMode;
+    auto start = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Building DFA..." << std::endl;
+
     NFA nfa(outputFileName);
     nfa.setDebugMode(debugMode);
     nfa.buildNFA(paVec);
     if (debugMode)
     {
         nfa.printFA();
+        auto endNFA = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsedNFA = endNFA - start;
+        std::cout << "NFA built in " << elapsedNFA.count() << "s" << std::endl;
     }
     dfa = new DFA(nfa);
     if (debugMode)
@@ -19,10 +28,17 @@ void ZLex::buildDFA(bool debugMode, PAVec paVec, std::string outputFileName)
         // nfa.printFA(); // 这样调用输出有问题, 懒得改了)
         dfa->printFA();
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+
+    std::cout << "DFA built finished in " << elapsed.count() << "s" << std::endl;
 }
 
 int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
 {
+    auto start = std::chrono::high_resolution_clock::now();
+    std::cout << "Lexical Analysis..." << std::endl;
+
     std::ifstream file(fileName);
     if (!file.is_open())
     {
@@ -35,20 +51,20 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
 
     std::string line;
     yylineno = 0; // 存储行号
-    int start = dfa->getStartStateID();
+    int startStateID = dfa->getStartStateID();
     while (std::getline(file, line)) // Use regular getline function
     {
         line += "\n"; // 补充行末尾的换行符
         yylineno++;   // 更新行号
-        int current = start;
+        int currentStateID = startStateID;
         int lastMatchedState = -1;
         std::string lastMatched = "", afterMatched = "";
         // 从上一次匹配的位置(pos_i)开始, 继续读取
         for (int i = pos_i; i < line.size(); i++)
         {
             char c = line[i];
-            current = dfa->getNext(current, c);
-            if (current == -1) // 无法匹配
+            currentStateID = dfa->getNext(currentStateID, c);
+            if (currentStateID == -1) // 无法匹配
             {
                 afterMatched += c;
                 if (lastMatchedState != -1) // 存在更短的匹配
@@ -57,7 +73,7 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
                     // 运行action
                     int token = dfa->runAction(lastMatchedState);
                     // 重置状态机
-                    current = start;
+                    currentStateID = startStateID;
                     lastMatchedState = -1;
                     lastMatched = "";
                     afterMatched = "";
@@ -73,18 +89,18 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
                                  << "[ERROR] at line " << yylineno
                                  << " position " << i
                                  << ":[" << afterMatched << "]" << std::endl;
-                    current = start;
+                    currentStateID = startStateID;
                     lastMatchedState = -1;
                     lastMatched = "";
                     afterMatched = "";
                     continue;
                 }
             }
-            else if (dfa->states[current].isAccepting)
+            else if (dfa->states[currentStateID].isAccepting)
             {
                 lastMatched += afterMatched + c;
                 afterMatched = "";
-                lastMatchedState = current;
+                lastMatchedState = currentStateID;
                 yytext = lastMatched;
                 pos_i = i;
             }
@@ -99,7 +115,7 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
             // 运行action
             int token = dfa->runAction(lastMatchedState);
             // 重置状态机
-            current = start;
+            currentStateID = startStateID;
             lastMatchedState = -1;
             lastMatched = "";
             afterMatched = "";
@@ -112,5 +128,10 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
         pos = file.tellg();
         pos_i = 0;
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+
+    std::cout << "Lexical Analysis finished in " << elapsed.count() << "s" << std::endl;
+
     return 0;
 }

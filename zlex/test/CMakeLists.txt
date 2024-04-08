@@ -10,7 +10,7 @@ set(FA_TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} MyTest.cpp)
 add_executable(MyTest ${FA_TEST_SOURCE_FILES})
 # add_executable(ZLexTest ${ZLEX_TEST_SOURCE_FILES})
 
-target_compile_options(MyTest PRIVATE -fno-access-control)
+target_compile_options(MyTest PRIVATE -fno-access-control -O2)
 # target_compile_options(ZLexTest PRIVATE -fno-access-control)
 
 # 找到 Google Test 库

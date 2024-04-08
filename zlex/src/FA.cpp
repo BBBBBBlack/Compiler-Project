@@ -30,7 +30,7 @@ void FA::printFA()
         *outputFile << "## 正则表达式集合" << std::endl;
         for (auto &pa : *paVec)
         {
-            *outputFile << "- " << pa.pattern << std::endl;
+            *outputFile << "- `" << pa.pattern << '`' << std::endl;
         }
         printRegexFlag = true;
     }
