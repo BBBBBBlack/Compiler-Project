@@ -1,5 +1,7 @@
 #include "Symbol.hpp"
 
+std::unordered_set<char> needEscapeSet = {'|', '*', '+', '?', '(', ')', '\\', '_', '[', ']'};
+
 std::map<std::string, OperatorType> Symbol::operatorMap = {
     {"|", OR},
     {STR_UNION, UNION},

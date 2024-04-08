@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 
 #define CHAR_UNION '_'
 #define STR_UNION "_"
@@ -51,12 +52,17 @@ public:
      */
     static bool isOperator(char character);
     static bool isUnaryOp(char symbol);
+    static bool needEscape(char symbol)
+    {
+        return needEscapeSet.find(symbol) != needEscapeSet.end();
+    }
 
 private:
     std::string character;     // 符号
     bool operatorFlag;         // 是否为运算符
     OperatorType operatorType; // 运算符类型
     static std::map<std::string, OperatorType> operatorMap;
+    static std::unordered_set<char> needEscapeSet;
 };
 
 #endif // SYMBOL_HPP
