@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include "ZLex.hpp"
-#include "Token.hpp"
 
 TEST(FATest, testConvertSquareBrackets)
 {

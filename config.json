@@ -1,0 +1,240 @@
+{
+    "config": {
+        "sourceCodePath": "/home/jader/course/my_compiler/zlex/resource/test/test2.txt",
+        "tokenOutPath": "zlex_out/lexicalAnalysis.md",
+        "FAOutPath": "zlex_out/FA.md",
+        "printFA": true
+    },
+    "grammar": [
+	{
+	    "pattern": "\\\\\\t|\\\\\\n| ",
+	    "action": "",
+	    "note": "nothing"
+	},
+        {
+            "pattern": "[0-9]+(.[0-9]+)?",
+            "action": "Token token(yytext, tokenFile, true);token.print_token();",
+            "note": "digit"
+        },
+        {
+            "pattern": "int",
+            "action": "Token token(yytext, tokenFile, true);token.print_token();",
+            "note": "int"
+        },
+        {
+            "pattern": "float",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "float"
+        },
+        {
+            "pattern": "double",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "double"
+        },
+        {
+            "pattern": "long",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "long"
+        },
+        {
+            "pattern": "if",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "if"
+        },
+        {
+            "pattern": "else",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "else"
+        },
+        {
+            "pattern": "while",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "while"
+        },
+        {
+            "pattern": "for",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "for"
+        },
+        {
+            "pattern": "do",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "do"
+        },
+        {
+            "pattern": "break",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "break"
+        },
+        {
+            "pattern": "continue",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "continue"
+        },
+        {
+            "pattern": "return",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "return"
+        },
+        {
+            "pattern": "void",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "void"
+        },
+        {
+            "pattern": "main",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "main"
+        },
+        {
+            "pattern": "{",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "{"
+        },
+        {
+            "pattern": "}",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "}"
+        },
+        {
+            "pattern": "\\\\(",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "("
+        },
+        {
+            "pattern": "\\\\)",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": ")"
+        },
+        {
+            "pattern": "\\\\[",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "["
+        },
+        {
+            "pattern": "\\\\]",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "]"
+        },
+        {
+            "pattern": ";",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": ";"
+        },
+        {
+            "pattern": ",",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": ","
+        },
+        {
+            "pattern": "=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "="
+        },
+        {
+            "pattern": "<",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "<"
+        },
+        {
+            "pattern": "<=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "<="
+        },
+        {
+            "pattern": ">",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": ">"
+        },
+        {
+            "pattern": ">=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": ">="
+        },
+        {
+            "pattern": "==",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "=="
+        },
+        {
+            "pattern": "\\\\!=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "!="
+        },
+        {
+            "pattern": "\\\\+",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "+"
+        },
+        {
+            "pattern": "-",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "-"
+        },
+        {
+            "pattern": "\\\\*",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "*"
+        },
+        {
+            "pattern": "/",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "/"
+        },
+        {
+            "pattern": "%",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "%"
+        },
+        {
+            "pattern": "\\\\+\\\\+",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "++"
+        },
+        {
+            "pattern": "--",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "--"
+        },
+        {
+            "pattern": "\\\\+=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "+="
+        },
+        {
+            "pattern": "-=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "-="
+        },
+        {
+            "pattern": "\\\\*=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "*="
+        },
+        {
+            "pattern": "/=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "/="
+        },
+        {
+            "pattern": "%=",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "%="
+        },
+        {
+            "pattern": "&&",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "&&"
+        },
+        {
+            "pattern": "\\\\|\\\\|",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "||"
+        },
+        {
+            "pattern": "[a-zA-Z\\\\_]+[a-zA-Z0-9\\\\_]*",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "identifier"
+        }
+    ]
+}

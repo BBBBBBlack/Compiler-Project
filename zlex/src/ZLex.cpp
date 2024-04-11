@@ -3,6 +3,8 @@
 // ZLex.cpp
 std::string yytext; // 当前识别的字符串
 int yylineno;       // 当前识别的行号
+// TODO
+int yypos; // 当前识别的位置
 
 int ZLex::buildAndAnalysis(bool debugMode, PAVec PAvec, std::string outputFAFile,
                            std::ostream &outputStream, std::string sourceFile)

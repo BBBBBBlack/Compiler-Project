@@ -1,5 +1,6 @@
 #include "NFA.hpp"
 #include "DFA.hpp"
+#include "Token.hpp"
 #include <chrono>
 
 extern std::string yytext; // 当前识别的字符串
