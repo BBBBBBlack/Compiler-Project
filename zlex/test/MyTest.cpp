@@ -23,6 +23,10 @@ TEST(FATest, testConvertSquareBrackets)
     // 转义字符
     std::string test8 = "a[\\-\\]]", expected8 = "a(\\-|\\])";
     ASSERT_EQ(nfa.convertSquareBrackets(test8), expected8);
+
+    // 空格到~
+    std::string test9 = "a[ -~]", expected9 = "a( |!|\"|#|$|%|&|'|\\(|\\)|\\*|\\+|,|-|.|/|0|1|2|3|4|5|6|7|8|9|:|;|<|=|>|\\?|@|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|\\[|\\\\|\\]|^|\\_|`|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|{|\\||}|~)";
+    ASSERT_EQ(nfa.convertSquareBrackets(test9), expected9);
 }
 
 TEST(FATest, addUnionTest_escape)
@@ -672,5 +676,24 @@ TEST(ZLexTest, test2)
 
     ZLex zlex;
     zlex.buildDFA(true, paVec, "output/test/ZLex/all/FA4.md");
+    zlex.lexicalAnalysis(tokenFile, "resource/test/test2.txt");
+}
+
+TEST(ZLexTest, testAnnotation)
+{
+    std::string fileName = "output/test/ZLex/all/lexicalAnalysis5.md";
+    std::ofstream tokenFile = createOutFile(fileName);
+
+    PAVec paVec = {
+        {"//[ -~]*", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "spcial char"}};
+
+    ZLex zlex;
+    zlex.buildDFA(true, paVec, "output/test/ZLex/all/FA5.md");
     zlex.lexicalAnalysis(tokenFile, "resource/test/test2.txt");
 }

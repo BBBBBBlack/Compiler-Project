@@ -44,6 +44,13 @@ std::string NFA::convertSquareBrackets(std::string regex)
             for (char j = begin + 1; j < end; j++)
             {
                 result += '|';
+                // 为范围中的字符添加转义
+                if (Symbol::needEscape(j))
+                {
+                    /* code */
+                    result += '\\';
+                }
+
                 result += j;
             }
         }
