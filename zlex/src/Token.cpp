@@ -1,5 +1,30 @@
 #include "Token.hpp"
 
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> SymbolTable::symbolTable;
+
+void SymbolTable::addToSymbolTable(std::string type, std::string name)
+{
+    if (type != "")
+    {
+        symbolTable.insert(std::make_pair(type, name));
+    }
+}
+
+void SymbolTable::printSymbolTable(std::ofstream &symbolOut)
+{
+    symbolOut << "Symbol Table" << std::endl;
+    symbolOut << "Type\tName" << std::endl;
+    std::vector<std::pair<std::string, std::string>> vec(SymbolTable::symbolTable.begin(), SymbolTable::symbolTable.end());
+
+    // 对 vector 进行排序
+    std::sort(vec.begin(), vec.end(), [](const auto &a, const auto &b)
+              { return a.first < b.first; });
+    for (const auto &pair : vec)
+    {
+        symbolOut << pair.first << "\t" << pair.second << std::endl;
+    }
+}
+
 Token::Token(std::string character, std::ofstream &tokenOut, bool isDigit)
     : character(character), tokenOut(tokenOut), isDigit(isDigit) {}
 

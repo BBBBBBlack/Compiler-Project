@@ -6,6 +6,7 @@
 #include <filesystem>
 #include "Symbol.hpp"
 #include "struct.hpp"
+#include "Token.hpp"
 
 #define BANNER                   \
     "  ______              \n"   \
@@ -85,6 +86,14 @@ public:
     int runAction(int stateID)
     {
         return states[stateID].action();
+    }
+    // 加入符号表
+    void addToSymbolTable(int stateID, std::string yytext)
+    {
+        if (states[stateID].isAccepting)
+        {
+            SymbolTable::addToSymbolTable(states[stateID].note, yytext);
+        }
     }
 
 protected:

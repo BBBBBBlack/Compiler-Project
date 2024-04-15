@@ -3,7 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <map>
-
+#include <unordered_set>
+#include <struct.hpp>
 typedef enum
 {
     T_Int = 256,
@@ -34,6 +35,14 @@ typedef enum
     T_And,
     T_Or
 } TokenType;
+
+// 符号表
+namespace SymbolTable
+{
+    void addToSymbolTable(std::string type, std::string name);
+    void printSymbolTable(std::ofstream &symbolOut);
+    extern std::unordered_set<std::pair<std::string, std::string>, pair_hash> symbolTable;
+}
 
 class Token
 {
