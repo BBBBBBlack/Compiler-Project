@@ -19,10 +19,10 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # 添加测试目录
 add_subdirectory(test)
 
-add_executable(exezlex ${SOURCE_FILES})
+# add_executable(exezlex ${SOURCE_FILES})
 # target_link_libraries(zlex stdc++fs)
 
-add_compile_options(exezlex PRIVATE -O2)
+# add_compile_options(exezlex PRIVATE -O2)
 
 add_library(zlex ${SOURCE_FILES})
 

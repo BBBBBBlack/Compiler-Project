@@ -2,7 +2,8 @@ int main()
 {
     int i;
     int j;
-    i=3.85+9*11;
+    i=3.85+9*11; // hello!, this is note
+    char str[] = "a simple string";
     j=50;
     while (true)        
         if (i == j)
