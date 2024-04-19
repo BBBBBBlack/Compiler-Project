@@ -12,10 +12,25 @@
 	    "action": "",
 	    "note": ""
 	},
+	{
+	    "pattern": "\\\\\\\\[ -~]*\\\\\\n",
+	    "action": "Token token(yytext, tokenFile, true);token.print_token();",
+	    "note": ""
+	},
         {
             "pattern": "[0-9]+(.[0-9]+)?",
             "action": "Token token(yytext, tokenFile, true);token.print_token();",
             "note": "NUMBER"
+        },
+	{
+	    "pattern": "signed",
+	    "action": "Token token(yytext, tokenFile, true);token.print_token();",
+	    "note": "KEYWORD"
+	},
+        {
+            "pattern": "unsigned",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
         },
         {
             "pattern": "int",
@@ -32,8 +47,38 @@
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
         },
+	{
+            "pattern": "char",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
         {
             "pattern": "long",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+        {
+            "pattern": "short",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+        {
+            "pattern": "static",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+	{
+            "pattern": "const",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+        {
+            "pattern": "extern",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+	{
+            "pattern": "enum",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
         },
@@ -44,6 +89,26 @@
         },
         {
             "pattern": "else",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+        {
+            "pattern": "goto",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+        {
+            "pattern": "switch",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+        {
+            "pattern": "case",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": "KEYWORD"
+        },
+        {
+            "pattern": "default",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
         },
@@ -227,6 +292,16 @@
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": ""
         },
+	{
+	    "pattern": "&",
+	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
+	    "note": ""
+	},
+	{
+            "pattern": "!",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": ""
+        },
         {
             "pattern": "\\\\|\\\\|",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
@@ -236,6 +311,16 @@
             "pattern": "[a-zA-Z\\\\_]+[a-zA-Z0-9\\\\_]*",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "IDENTIFIER"
-        }
+        },
+	{
+	    "pattern": "struct",
+	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
+	    "note": "KEYWORD"
+	},
+	{
+	    "pattern": "typedef",
+	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
+	    "note": "typedef"
+	}
     ]
 }
