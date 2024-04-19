@@ -81,6 +81,8 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
                     i = pos_i; // 从上一次匹配的位置(pos_i)开始, 继续读取
                     // 运行action
                     int token = dfa->runAction(lastMatchedState);
+                    // 加入符号表？？
+                    dfa->addToSymbolTable(lastMatchedState, yytext);
                     // 重置状态机
                     currentStateID = startStateID;
                     lastMatchedState = -1;
