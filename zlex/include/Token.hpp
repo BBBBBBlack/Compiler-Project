@@ -10,7 +10,9 @@ typedef enum
     T_Int = 256,
     T_Float,
     T_Double,
+    T_Char,
     T_Long,
+    T_Short,
     T_If,
     T_Else,
     T_While,
@@ -33,7 +35,22 @@ typedef enum
     T_Divid_Assignment,
     T_Mode_Assignment,
     T_And,
-    T_Or
+    T_Or,
+    T_Id,
+    T_Num,
+    T_Signed,
+    T_Unsigned,
+    T_Static,
+    T_Const,
+    T_Extern,
+    T_Enum,
+    T_Goto,
+    T_Switch,
+    T_Case,
+    T_Default,
+    T_Struct,
+    T_Typedef,
+
 } TokenType;
 
 // 符号表

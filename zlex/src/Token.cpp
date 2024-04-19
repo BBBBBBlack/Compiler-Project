@@ -32,7 +32,9 @@ std::map<std::string, int> Token::operatorMap = {
     {"int", T_Int},
     {"float", T_Float},
     {"double", T_Double},
+    {"char", T_Char},
     {"long", T_Long},
+    {"short", T_Short},
     {"if", T_If},
     {"else", T_Else},
     {"while", T_While},
@@ -72,7 +74,20 @@ std::map<std::string, int> Token::operatorMap = {
     {"%=", T_Mode_Assignment},
     {"&&", T_And},
     {"||", T_Or},
-};
+    {"id", T_Id},
+    {"num", T_Num},
+    {"signed", T_Signed},
+    {"unsigned", T_Unsigned},
+    {"static", T_Static},
+    {"const", T_Const},
+    {"extern", T_Extern},
+    {"enum", T_Enum},
+    {"goto", T_Goto},
+    {"switch", T_Switch},
+    {"case", T_Case},
+    {"default", T_Default},
+    {"struct", T_Struct},
+    {"typedef", T_Typedef}};
 
 void Token::print_token()
 {
