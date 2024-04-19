@@ -691,7 +691,21 @@ TEST(ZLexTest, testAnnotation)
              token.print_token();
              return 0;
          },
-         "spcial char"}};
+         "spcial char"},
+        {"\"[ -~]*\"", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "字符串"},
+        {"[ -~]", [&]() -> int
+         {
+             Token token(yytext, tokenFile, false);
+             token.print_token();
+             return 0;
+         },
+         "simple char"}};
 
     ZLex zlex;
     zlex.buildDFA(true, paVec, "output/test/ZLex/all/FA5.md");
