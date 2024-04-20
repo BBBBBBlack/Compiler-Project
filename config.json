@@ -13,8 +13,8 @@
 	    "note": ""
 	},
 	{
-	    "pattern": "\\\\\\\\[ -~]*\\\\\\n",
-	    "action": "Token token(yytext, tokenFile, true);token.print_token();",
+	    "pattern": "//[ -~]*\\\\\\n",
+	    "action": "",
 	    "note": ""
 	},
         {
@@ -24,7 +24,7 @@
         },
 	{
 	    "pattern": "signed",
-	    "action": "Token token(yytext, tokenFile, true);token.print_token();",
+	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
 	    "note": "KEYWORD"
 	},
         {
@@ -34,7 +34,7 @@
         },
         {
             "pattern": "int",
-            "action": "Token token(yytext, tokenFile, true);token.print_token();",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
         },
         {
@@ -320,7 +320,17 @@
 	{
 	    "pattern": "typedef",
 	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
-	    "note": "typedef"
-	}
+	    "note": "KEYWORD"
+	},
+	{
+	    "pattern": "\\\"",
+            "action": "Token token(yytext, tokenFile, false);token.print_token();",
+            "note": ""
+	},
+        {
+            "pattern": "[0-9]+[a-zA-Z]+",
+            "action": "tokenFile << \"[ERROR] at line \" << yylineno<< \" position \" << yypos << \":[\" << \"error identifier:\" << yytext << \"]\" << std::endl;",
+            "note": ""
+        }
     ]
 }
