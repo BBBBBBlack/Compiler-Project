@@ -2,6 +2,8 @@
 **/.vscode/*
 **/build/**
 **/output/**
+/mytest/**
+**/test/out/**
 
 # Compiled Object files
 *.slo
