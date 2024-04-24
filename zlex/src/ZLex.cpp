@@ -3,8 +3,7 @@
 // ZLex.cpp
 std::string yytext; // 当前识别的字符串
 int yylineno;       // 当前识别的行号
-// TODO
-int yypos; // 当前识别的位置
+int yypos;          // 当前识别的位置
 
 int ZLex::buildAndAnalysis(bool debugMode, PAVec PAvec, std::string outputFAFile,
                            std::ostream &outputStream, std::string sourceFile)
@@ -88,6 +87,7 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
                     lastMatchedState = -1;
                     lastMatched = "";
                     afterMatched = "";
+                    yypos = pos_i;
                     if (token != 0) // action有返回值
                     {
                         return token;
@@ -130,6 +130,7 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
             lastMatchedState = -1;
             lastMatched = "";
             afterMatched = "";
+            yypos = pos_i;
             if (token != 0) // action有返回值
             {
                 return token;
@@ -137,7 +138,7 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
         }
         // 一行读取完毕, 更新pos
         pos = file.tellg();
-        pos_i = 0;
+        pos_i = yypos = 0;
     }
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;

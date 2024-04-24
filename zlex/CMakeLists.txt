@@ -27,7 +27,7 @@ add_executable(zlex ${SOURCE_FILES})
 
 # add_library(zlex ${SOURCE_FILES})
 
-add_compile_options(zlex PRIVATE -O2)
+add_compile_options(zlex PRIVATE -O2 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
 
 # 启用测试
 enable_testing()

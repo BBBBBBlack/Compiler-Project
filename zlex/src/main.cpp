@@ -23,15 +23,33 @@ int main()
             return 0;
         },
         ""},
+        {"//[ -~]*\\\n", [&]() -> int
+        {
+            
+            return 0;
+        },
+        ""},
         {"[0-9]+(.[0-9]+)?", [&]() -> int
         {
             Token token(yytext, tokenFile, true);token.print_token();
             return 0;
         },
         "NUMBER"},
+        {"signed", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"unsigned", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
         {"int", [&]() -> int
         {
-            Token token(yytext, tokenFile, true);token.print_token();
+            Token token(yytext, tokenFile, false);token.print_token();
             return 0;
         },
         "KEYWORD"},
@@ -47,7 +65,43 @@ int main()
             return 0;
         },
         "KEYWORD"},
+        {"char", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
         {"long", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"short", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"static", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"const", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"extern", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"enum", [&]() -> int
         {
             Token token(yytext, tokenFile, false);token.print_token();
             return 0;
@@ -60,6 +114,30 @@ int main()
         },
         "KEYWORD"},
         {"else", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"goto", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"switch", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"case", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"default", [&]() -> int
         {
             Token token(yytext, tokenFile, false);token.print_token();
             return 0;
@@ -281,6 +359,18 @@ int main()
             return 0;
         },
         ""},
+        {"&", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        ""},
+        {"!", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        ""},
         {"\\|\\|", [&]() -> int
         {
             Token token(yytext, tokenFile, false);token.print_token();
@@ -293,6 +383,30 @@ int main()
             return 0;
         },
         "IDENTIFIER"},
+        {"struct", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"typedef", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        "KEYWORD"},
+        {"\"", [&]() -> int
+        {
+            Token token(yytext, tokenFile, false);token.print_token();
+            return 0;
+        },
+        ""},
+        {"[0-9]+[a-zA-Z]+", [&]() -> int
+        {
+            tokenFile << "[ERROR] at line " << yylineno<< " position " << yypos << ":[" << "error identifier:" << yytext << "]" << std::endl;
+            return 0;
+        },
+        ""},
     };
     zlex.buildAndAnalysis(printFA, paVec, FAFile, tokenFile, sourceFile);
     SymbolTable::printSymbolTable(symbolTableFile);

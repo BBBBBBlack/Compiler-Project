@@ -12,7 +12,7 @@ cd zlex/build
 cmake ..
 
 # 编译项目
-make
+make zlex
 
 # 运行项目（假设生成的可执行文件名为my_project）
 ./zlex

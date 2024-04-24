@@ -1,12 +1,12 @@
-< num, int>
+<int>
 <main>
 <(>
 <)>
 <{>
-< num, int>
+<int>
 < id, i>
 <;>
-< num, int>
+<int>
 < id, j>
 <;>
 < id, i>
