@@ -2,6 +2,7 @@
 #define PARSE_TAB_HPP
 
 #include "Struct.hpp"
+#include "FAStruct.hpp"
 
 class ParseTab
 {

@@ -30,6 +30,9 @@ void Parser::grammarAnalysis(std::string tokenFile, ParseTab &parseTab)
         perror("Token File打开失败");
     }
 
+    std::stack<int> stateStack;
+    stateStack.push(0);
+
     std::string line;
     while (std::getline(tokenStream, line))
     {

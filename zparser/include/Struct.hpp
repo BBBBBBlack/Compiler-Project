@@ -19,7 +19,7 @@ enum ActionType : short
 struct Action
 {
     ActionType type; // action的类型
-    int data;        // action的数据
+    int data;        // action的数据 (shift: stateId, reduce: productionId)
     friend std::ostream &operator<<(std::ostream &os, Action &action)
     {
         switch (action.type)
