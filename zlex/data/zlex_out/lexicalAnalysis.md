@@ -51,9 +51,15 @@
 <=>
 < id, j>
 <->
-< num, 1>
+< num, 1, lineno, pos>
 <;>
 <return>
 < num, 0>
 <;>
 <}>
+
+<NUMBER, 1, lineno, pos>
+<KEYWORD, if, lineno, pos>
+<IDENTIFIER, true, lineno, pos>
+<DELIMITER, }, lineno, pos>
+<OPERATOR, +, lineno, pos>

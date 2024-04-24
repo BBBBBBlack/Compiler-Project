@@ -1,17 +1,19 @@
-#ifndef STRUCT_HPP
-#define STRUCT_HPP
+#ifndef PARSE_TAB_STRUCT_HPP
+#define PARSE_TAB_STRUCT_HPP
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <fstream>
-#include <sstream>
+#include "pch.hpp"
+
+// enum class Symbol;
+// std::unordered_map<Symbol, std::string> symbolToString;
+// std::unordered_map<std::string, Symbol> stringToSymbol;
+
+typedef std::string Symbol;
 
 enum ActionType : short
 {
     A_Shift = 1,
     A_Reduce,
+    A_Goto,
     A_Accept,
     A_Error
 };
@@ -20,6 +22,7 @@ struct Action
 {
     ActionType type; // action的类型
     int data;        // action的数据 (shift: stateId, reduce: productionId)
+
     friend std::ostream &operator<<(std::ostream &os, Action &action)
     {
         switch (action.type)
@@ -29,6 +32,9 @@ struct Action
             break;
         case A_Reduce:
             os << "R" << action.data;
+            break;
+        case A_Goto:
+            os << "G" << action.data;
             break;
         case A_Accept:
             os << "ACC";
@@ -62,6 +68,11 @@ struct Action
             // 读取 reduce 数据
             in >> action.data;
             break;
+        case 'G':
+            action.type = A_Goto;
+            // 读取 goto 数据
+            in >> action.data;
+            break;
         case 'A':
             // 假设输入为 "ACC" 表示 A_Accept
             if (in.get() == 'C' && in.get() == 'C')
@@ -77,6 +88,7 @@ struct Action
         default:
             // 如果输入的字符不是 S、R 或 A，可以将其视为 A_Error 或其他适当的错误处理
             action.type = A_Error;
+            action.data = -1;
             break;
         }
 
@@ -94,17 +106,33 @@ struct Action
     }
 };
 
+// TODO 产生式动作的save和load
+using ActionFunction = std::function<int()>;
+struct Production
+{
+    Symbol left;               // 产生式左部
+    std::vector<Symbol> right; // 产生式右部
+    ActionFunction action;     // 产生式对应的动作
+};
+
 /**
  * @brief 分析表中状态
  */
 struct State
 {
-    std::unordered_map<int, Action> actions; // action表 (key: TermType, value: Action)
-    std::unordered_map<int, int> gotos;      // goto表 (key: NonTermType, value: StateId(-1:error))
+    std::unordered_map<Symbol, Action> actions; // action表 (key: TermType, value: Action)
 
-    State(const std::unordered_map<int, Action> &actions, const std::unordered_map<int, int> &gotos)
-        : actions(actions), gotos(gotos) {}
+    State(const std::unordered_map<Symbol, Action> &actions)
+        : actions(actions) {}
     State() {}
 };
 
-#endif // !STRUCT_HPP
+struct Token
+{
+    std::string type;  // such as: NUM, ID, IF, ELSE, ...
+    std::string value; // NUM, ID有value
+    int lineno;
+    int pos;
+};
+
+#endif // !PARSE_TAB_STRUCT_HPP

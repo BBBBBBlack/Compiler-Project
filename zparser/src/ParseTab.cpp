@@ -14,7 +14,7 @@ int ParseTab::saveParseTab(const std::string &filename)
     if (!out.is_open())
     {
         std::cerr << "Error: cannot open file " << filename << std::endl;
-        return;
+        return -1;
     }
 
     // 表头action / goto
@@ -52,13 +52,13 @@ int ParseTab::saveParseTab(const std::string &filename)
 
     // 符号行
     out << "| | ";
-    for (auto &str : termVec)
+    for (auto &symbol : termVec)
     {
-        out << str << " | ";
+        out << symbol << " | ";
     }
-    for (auto &str : nonTermVec)
+    for (auto &symbol : nonTermVec)
     {
-        out << str << " | ";
+        out << symbol << " | ";
     }
     out << std::endl;
 
@@ -68,9 +68,9 @@ int ParseTab::saveParseTab(const std::string &filename)
         out << "| " << i << " | ";
         for (int j = 0; j < termVec.size(); j++)
         {
-            if (state.actions.find(j) != state.actions.end())
+            if (state.actions.find(termVec[j]) != state.actions.end())
             {
-                out << state.actions[j] << " | ";
+                out << state.actions[termVec[j]] << " | ";
             }
             else
             {
@@ -79,9 +79,9 @@ int ParseTab::saveParseTab(const std::string &filename)
         }
         for (int j = 0; j < nonTermVec.size(); j++)
         {
-            if (state.gotos.find(j) != state.gotos.end())
+            if (state.actions.find(nonTermVec[j]) != state.actions.end())
             {
-                out << ((state.gotos[j] == -1) ? " " : std::to_string(state.gotos[j])) << " | ";
+                out << state.actions[nonTermVec[j]] << " | ";
             }
             else
             {
@@ -93,6 +93,7 @@ int ParseTab::saveParseTab(const std::string &filename)
     }
 
     out.close();
+    return 1;
 }
 
 int ParseTab::loadParseTab(const std::string &filename)
@@ -158,6 +159,19 @@ int ParseTab::loadParseTab(const std::string &filename)
             }
             temp_count++;
         }
+        // // 打印符号行
+        // std::cout << "termVec: ";
+        // for (auto &symbol : termVec)
+        // {
+        //     std::cout << symbol << " ";
+        // }
+        // std::cout << std::endl;
+        // std::cout << "nonTermVec: ";
+        // for (auto &symbol : nonTermVec)
+        // {
+        //     std::cout << symbol << " ";
+        // }
+        // std::cout << std::endl;
 
         // 读取状态行
         while (std::getline(in, line))
@@ -166,35 +180,42 @@ int ParseTab::loadParseTab(const std::string &filename)
             std::getline(iss, token, '|'); // 跳过状态编号
             std::getline(iss, token, '|'); // 跳过状态编号
             State state;
-            int i = 0;
+            int i = 0; // 计数器 兼 状态编号
             while (std::getline(iss, token, '|'))
             {
                 token.erase(std::remove_if(token.begin(), token.end(), ::isspace), token.end());
-                if (!token.empty())
+                if (i < termCount)
                 {
-                    if (i < termVec.size())
+                    if (token == "")
                     {
-                        state.actions[i] = Action(token);
+                        state.actions[termVec[i]] = Action(A_Error);
                     }
-                    else if (i < termVec.size() + nonTermVec.size())
+                    else
                     {
-                        state.gotos[i - termVec.size()] = std::stoi(token);
+                        state.actions[termVec[i]] = Action(token);
+                    }
+                }
+                else if (i < termCount + nonTermCount)
+                {
+                    if (token == "")
+                    {
+                        state.actions[nonTermVec[i - termCount]] = Action(A_Error);
+                    }
+                    else
+                    {
+                        state.actions[nonTermVec[i - termCount]] = Action(token);
                     }
                 }
                 i++;
             }
             states.push_back(state);
 
-            // 打印state
-            std::cout << "state: " << states.size() - 1 << state.actions.size() << " " << state.gotos.size() << std::endl;
-            for (auto &action : state.actions)
-            {
-                std::cout << "<" << action.first << "," << action.second << "> " << std::endl;
-            }
-            for (auto &goto_ : state.gotos)
-            {
-                std::cout << "<" << goto_.first << "," << goto_.second << "> " << std::endl;
-            }
+            // // 打印state
+            // std::cout << "state: " << states.size() - 1 << std::endl;
+            // for (auto &action : state.actions)
+            // {
+            //     std::cout << "<" << action.first << "," << action.second << "> " << std::endl;
+            // }
         }
     }
     catch (const std::exception &e)
@@ -206,4 +227,9 @@ int ParseTab::loadParseTab(const std::string &filename)
         in.close();
     }
     return 1;
+}
+
+Action ParseTab::getNextAction(int stateId, Symbol symbol)
+{
+    return states[stateId].actions[symbol];
 }

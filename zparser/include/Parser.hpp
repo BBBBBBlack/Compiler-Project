@@ -9,8 +9,7 @@
     "/____|_| /_/   \\_\\_| \\_\\____/|_____|_| \\_\\\n"
 
 #include "ParseTab.hpp"
-#include <filesystem>
-#include <fstream>
+#include "pch.hpp"
 
 class Parser
 {
