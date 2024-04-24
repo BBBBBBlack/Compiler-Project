@@ -1,5 +1,7 @@
-#ifndef STRUCT_HPP
-#define STRUCT_HPP
+#ifndef FA_STRUCT_HPP
+#define FA_STRUCT_HPP
+
+// NOTE: 备用struct文件 方便复制, 随意修改
 
 #include <map>
 #include <vector>
@@ -123,4 +125,4 @@ struct pair_hash
         return h1 ^ h2;
     }
 };
-#endif // STRUCT_HPP
+#endif // FA_STRUCT_HPP

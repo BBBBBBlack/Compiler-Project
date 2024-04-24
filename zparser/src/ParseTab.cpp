@@ -6,7 +6,7 @@ ParseTab::ParseTab() {}
 
 ParseTab::~ParseTab() {}
 
-void ParseTab::saveParseTab(const std::string &filename)
+int ParseTab::saveParseTab(const std::string &filename)
 {
     std::string folderPath = filename.substr(0, filename.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);
@@ -95,7 +95,7 @@ void ParseTab::saveParseTab(const std::string &filename)
     out.close();
 }
 
-void ParseTab::loadParseTab(const std::string &filename)
+int ParseTab::loadParseTab(const std::string &filename)
 {
     std::ifstream in(filename);
     try
@@ -103,7 +103,7 @@ void ParseTab::loadParseTab(const std::string &filename)
         if (!in.is_open())
         {
             std::cerr << "Error: cannot open file " << filename << std::endl;
-            return;
+            return -1;
         }
 
         std::string line;
@@ -205,4 +205,5 @@ void ParseTab::loadParseTab(const std::string &filename)
     {
         in.close();
     }
+    return 1;
 }

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "ParseTab.hpp"
 
-TEST(ParseTabTest, testSaveAndLoad)
+TEST(ParseTabTest, testSave)
 {
     ParseTab parseTab;
     parseTab.setTermVec({"x", "y", "$"});
@@ -33,4 +33,12 @@ TEST(ParseTabTest, testLoad)
     ParseTab parseTab;
     parseTab.loadParseTab("test/out/testSaveAndLoad.md");
     parseTab.saveParseTab("test/out/testSaveAndLoad2.md");
+    // Compare the contents of two files
+    std::ifstream file1("test/out/testSaveAndLoad.md");
+    std::ifstream file2("test/out/testSaveAndLoad2.md");
+
+    std::string content1((std::istreambuf_iterator<char>(file1)), std::istreambuf_iterator<char>());
+    std::string content2((std::istreambuf_iterator<char>(file2)), std::istreambuf_iterator<char>());
+
+    EXPECT_EQ(content1, content2);
 }
