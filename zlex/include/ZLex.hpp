@@ -6,10 +6,6 @@
 extern std::string yytext; // 当前识别的字符串
 extern int yylineno;       // 当前识别的行号
 extern int yypos;          // 当前识别的位置
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 class ZLex
 {
 public:
