@@ -7,26 +7,26 @@
         "printFA": true
     },
     "grammar": [
-	{
-	    "pattern": "\\\\\\t|\\\\\\n| ",
-	    "action": "",
-	    "note": ""
-	},
-	{
-	    "pattern": "//[ -~]*\\\\\\n",
-	    "action": "",
-	    "note": ""
-	},
+		{
+			"pattern": "\\\\\\t|\\\\\\n| ",
+			"action": "",
+			"note": ""
+		},
+		{
+			"pattern": "//[ -~]*\\\\\\n",
+			"action": "",
+			"note": ""
+		},
         {
             "pattern": "[0-9]+(.[0-9]+)?",
             "action": "Token token(yytext, tokenFile, true);token.print_token();",
             "note": "NUMBER"
         },
-	{
-	    "pattern": "signed",
-	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
-	    "note": "KEYWORD"
-	},
+		{
+			"pattern": "signed",
+			"action": "Token token(yytext, tokenFile, false);token.print_token();",
+			"note": "KEYWORD"
+		},
         {
             "pattern": "unsigned",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
@@ -47,7 +47,7 @@
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
         },
-	{
+		{
             "pattern": "char",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
@@ -67,7 +67,7 @@
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
         },
-	{
+		{
             "pattern": "const",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
@@ -77,7 +77,7 @@
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
         },
-	{
+		{
             "pattern": "enum",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "KEYWORD"
@@ -292,12 +292,12 @@
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": ""
         },
-	{
-	    "pattern": "&",
-	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
-	    "note": ""
-	},
-	{
+		{
+			"pattern": "&",
+			"action": "Token token(yytext, tokenFile, false);token.print_token();",
+			"note": ""
+		},
+		{
             "pattern": "!",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": ""
@@ -312,21 +312,21 @@
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": "IDENTIFIER"
         },
-	{
-	    "pattern": "struct",
-	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
-	    "note": "KEYWORD"
-	},
-	{
-	    "pattern": "typedef",
-	    "action": "Token token(yytext, tokenFile, false);token.print_token();",
-	    "note": "KEYWORD"
-	},
-	{
-	    "pattern": "\\\"",
-            "action": "Token token(yytext, tokenFile, false);token.print_token();",
-            "note": ""
-	},
+		{
+			"pattern": "struct",
+			"action": "Token token(yytext, tokenFile, false);token.print_token();",
+			"note": "KEYWORD"
+		},
+		{
+			"pattern": "typedef",
+			"action": "Token token(yytext, tokenFile, false);token.print_token();",
+			"note": "KEYWORD"
+		},
+		{
+			"pattern": "\\\"",
+				"action": "Token token(yytext, tokenFile, false);token.print_token();",
+				"note": ""
+		},
         {
             "pattern": "[0-9]+[a-zA-Z]+",
             "action": "tokenFile << \"[ERROR] at line \" << yylineno<< \" position \" << yypos << \":[\" << \"error identifier:\" << yytext << \"]\" << std::endl;",
