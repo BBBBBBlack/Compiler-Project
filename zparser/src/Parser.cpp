@@ -22,6 +22,19 @@ void Parser::setOutputFile(std::string fileName)
     outputFile->flush();
 }
 
+void readInputToken(std::list<Token> &inputTokens, std::ifstream &tokenStream)
+{
+    std::string line;
+
+    while (std::getline(tokenStream, line))
+    {
+        std::stringstream ss(line);
+        Token token;
+        ss >> token;
+        inputTokens.push_back(token);
+    }
+}
+
 void Parser::grammarAnalysis(std::string tokenFile, ParseTab &parseTab)
 {
     std::ifstream tokenStream(tokenFile);
@@ -31,16 +44,33 @@ void Parser::grammarAnalysis(std::string tokenFile, ParseTab &parseTab)
     }
 
     std::stack<int> stateStack;
+    std::stack<Token> tokenStack;
+    std::list<Token> inputTokens;
     stateStack.push(0);
+    tokenStack.push(Token(END_SYMBOL, "", 0, 0));
 
-    std::string line;
-    while (std::getline(tokenStream, line))
+    readInputToken(inputTokens, tokenStream);
+    inputTokens.push_back(Token(END_SYMBOL, "", 0, 0));
+
+    while (true)
     {
-        std::istringstream iss(line);
-        std::string token;
-        while (iss >> token)
+        int currentState = stateStack.top();
+        Token token = inputTokens.front();
+
+        Action action = parseTab.getNextAction(currentState, token.type);
+        if (action.type == ActionType::A_Shift) // 移入
         {
-            // TODO
+            stateStack.push(action.data);
+            tokenStack.push(token);
+            inputTokens.pop_front();
+        }
+        else if (action.type == ActionType::A_Reduce) // 规约
+        {
+                }
+        else if (action.type == ActionType::A_Error)
+        {
+            *outputFile << "Error!" << std::endl;
+            break;
         }
     }
 }

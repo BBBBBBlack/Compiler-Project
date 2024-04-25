@@ -10,6 +10,7 @@
 
 #include "ParseTab.hpp"
 #include "pch.hpp"
+#include "Token.hpp"
 
 class Parser
 {

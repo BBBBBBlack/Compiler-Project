@@ -6,6 +6,7 @@
 #include <string>
 
 // 容器库
+#include <list>
 #include <vector>
 #include <stack>
 #include <unordered_map>

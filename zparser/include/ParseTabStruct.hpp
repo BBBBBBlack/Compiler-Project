@@ -3,6 +3,8 @@
 
 #include "pch.hpp"
 
+#define PRODUCTION_CONCAT "->"
+
 // enum class Symbol;
 // std::unordered_map<Symbol, std::string> symbolToString;
 // std::unordered_map<std::string, Symbol> stringToSymbol;
@@ -48,7 +50,6 @@ struct Action
 
         return os;
     }
-
     friend std::istream &operator>>(std::istream &in, Action &action)
     {
         char ch;
@@ -112,7 +113,9 @@ struct Production
 {
     Symbol left;               // 产生式左部
     std::vector<Symbol> right; // 产生式右部
-    ActionFunction action;     // 产生式对应的动作
+    // note: $1引用到的是产生式右部的第一个符号的值, 而非符号本身
+    // TODO 捕获left, right对应的值
+    ActionFunction action; // 产生式对应的动作
 };
 
 /**
@@ -125,14 +128,6 @@ struct State
     State(const std::unordered_map<Symbol, Action> &actions)
         : actions(actions) {}
     State() {}
-};
-
-struct Token
-{
-    std::string type;  // such as: NUM, ID, IF, ELSE, ...
-    std::string value; // NUM, ID有value
-    int lineno;
-    int pos;
 };
 
 #endif // !PARSE_TAB_STRUCT_HPP
