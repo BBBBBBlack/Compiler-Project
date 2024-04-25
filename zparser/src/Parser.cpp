@@ -76,7 +76,7 @@ void Parser::writeProcess(std::ofstream &processFile, const std::stack<int> &sta
         processFile << "Shift " << action.data;
         break;
     case ActionType::A_Reduce:
-        processFile << "Reduce " << parseTab.getProduction(action.data);
+        processFile << "Reduce " << parseTab.getRule(action.data);
         break;
     case ActionType::A_Accept:
         processFile << "Accept";
@@ -137,11 +137,11 @@ void Parser::grammarAnalysis(std::string tokenFile, bool needProcess, std::strin
         }
         else if (action.type == ActionType::A_Reduce) // 规约
         {
-            Production production = parseTab.getProduction(action.data);
-            int productionSize = production.right.size();
-            Token leftToken(production.left, "", -1, -1); // 产生式左部Token(未初始化行号和位置)
+            Rule rule = parseTab.getRule(action.data);
+            int ruleSize = rule.right.size();
+            Token leftToken(rule.left, "", -1, -1); // 产生式左部Token(未初始化行号和位置)
             std::vector<Token> rightTokens;
-            for (int i = 0; i < productionSize; i++)
+            for (int i = 0; i < ruleSize; i++)
             {
                 stateStack.pop();
                 Token topToken = tokenStack.top();
@@ -154,7 +154,7 @@ void Parser::grammarAnalysis(std::string tokenFile, bool needProcess, std::strin
                 tokenStack.pop();
             }
             // 执行产生式动作
-            production.action(leftToken, rightTokens);
+            rule.action(leftToken, rightTokens);
             // 更新状态
             tokenStack.push(leftToken);
             stateStack.push(parseTab.getNextAction(stateStack.top(), leftToken.type).data);

@@ -4,8 +4,6 @@
 #include "pch.hpp"
 #include "Token.hpp"
 
-#define PRODUCTION_CONCAT "->"
-
 // enum class Symbol;
 // std::unordered_map<Symbol, std::string> symbolToString;
 // std::unordered_map<std::string, Symbol> stringToSymbol;
@@ -108,26 +106,26 @@ struct Action
     }
 };
 
-// TODO 产生式动作的save和load
-using ActionFunction = std::function<int(Token &leftToken, std::vector<Token> &rightTokens)>;
-struct Production
-{
-    Symbol left;               // 产生式左部
-    std::vector<Symbol> right; // 产生式右部
-    // note: $1引用到的是产生式右部的第一个符号的值, 而非符号本身
-    // TODO 捕获left, right对应的值
-    ActionFunction action; // 产生式对应的动作
+// // TODO 产生式动作的save和load
+// using ActionFunction = std::function<int(Token &leftToken, std::vector<Token> &rightTokens)>;
+// struct Production
+// {
+//     Symbol left;               // 产生式左部
+//     std::vector<Symbol> right; // 产生式右部
+//     // note: $1引用到的是产生式右部的第一个符号的值, 而非符号本身
+//     // TODO 捕获left, right对应的值
+//     ActionFunction action; // 产生式对应的动作
 
-    friend std::ostream &operator<<(std::ostream &os, const Production &production)
-    {
-        os << production.left << PRODUCTION_CONCAT;
-        for (auto &symbol : production.right)
-        {
-            os << symbol << " ";
-        }
-        return os;
-    }
-};
+//     friend std::ostream &operator<<(std::ostream &os, const Production &production)
+//     {
+//         os << production.left << PRODUCTION_CONCAT;
+//         for (auto &symbol : production.right)
+//         {
+//             os << symbol << " ";
+//         }
+//         return os;
+//     }
+// };
 
 /**
  * @brief 分析表中状态

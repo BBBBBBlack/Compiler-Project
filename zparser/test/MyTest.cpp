@@ -37,12 +37,12 @@ TEST(ParseTabTest, testLoad)
     EXPECT_EQ(action.data, 3);
 
     ParseTab parseTab;
-    std::vector<Production> productions;
-    productions.push_back(Production({"S", {"x", "x", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                                      { return 0; }}));
-    productions.push_back(Production({"T", {"y"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                                      { return 0; }}));
-    parseTab.setProductions(productions);
+    std::vector<Rule> rules;
+    rules.push_back(Rule({"S", {"x", "x", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          { return 0; }}));
+    rules.push_back(Rule({"T", {"y"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          { return 0; }}));
+    parseTab.setRules(rules);
 
     EXPECT_EQ(1, parseTab.loadFromFile("test/out/testSave.md"));
     std::remove("test/out/testLoad.md");
@@ -94,14 +94,14 @@ void saveTest1(ParseTab &parseTab, std::string filename)
     parseTab.saveToFile(filename);
 }
 
-void setTest1Production(ParseTab &parseTab)
+void setTest1Rule(ParseTab &parseTab)
 {
-    std::vector<Production> productions;
-    productions.push_back(Production({"S", {"x", "x", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                                      { return 0; }}));
-    productions.push_back(Production({"T", {"y"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                                      { return 0; }}));
-    parseTab.setProductions(productions);
+    std::vector<Rule> rules;
+    rules.push_back(Rule({"S", {"x", "x", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          { return 0; }}));
+    rules.push_back(Rule({"T", {"y"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          { return 0; }}));
+    parseTab.setRules(rules);
 }
 
 void compareSaveAndLoad(const std::string &file, ParseTab &tab)
@@ -124,7 +124,7 @@ TEST(ParseTest, test1)
     std::string tabFile = "test/out/test1.md";
     saveTest1(tab1, tabFile);
 
-    setTest1Production(tab2);
+    setTest1Rule(tab2);
     tab2.loadFromFile(tabFile);
     compareSaveAndLoad(tabFile, tab2);
 
