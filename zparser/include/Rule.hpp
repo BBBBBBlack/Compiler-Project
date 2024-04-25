@@ -1,10 +1,12 @@
 #ifndef RULE_HPP
 #define RULE_HPP
+
 #include <vector>
 #include <string>
 #include <unordered_set>
 #include "ParseTabStruct.hpp"
 #include "Token.hpp"
+
 #define PRODUCTION_CONCAT "->"
 
 // TODO 产生式动作的save和load
@@ -14,7 +16,7 @@ using ActionFunction = std::function<int(Token &leftToken, std::vector<Token> &r
  */
 class Rule
 {
-private:
+public:
     // 产生式编号
     int id;
     // 产生式左部
@@ -34,6 +36,16 @@ public:
     std::vector<Symbol> getRight() const;
     void addRight(Symbol right);
     void print();
+
+    friend std::ostream &operator<<(std::ostream &os, const Rule &rule)
+    {
+        os << rule.left << PRODUCTION_CONCAT;
+        for (auto &symbol : rule.right)
+        {
+            os << symbol << " ";
+        }
+        return os;
+    }
 };
 
 class SubRule : public Rule
@@ -75,4 +87,4 @@ namespace Rules
     void printTermVec();
     void printRules();
 }
-#endif
+#endif // !RULE_HPP

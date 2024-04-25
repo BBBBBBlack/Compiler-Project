@@ -3,6 +3,7 @@
 
 #include "ParseTabStruct.hpp"
 #include "FAStruct.hpp"
+#include "Rule.hpp"
 
 #define END_SYMBOL "$"
 #define PARSE_TAB_HEADING "## Parse Table"
@@ -22,6 +23,11 @@ public:
 
     Action getNextAction(int stateId, Symbol symbol);
 
+    Rule getRule(int RuleId)
+    {
+        return rules[RuleId];
+    }
+
     void setTermVec(const std::vector<Symbol> &termVec)
     {
         this->termVec = termVec;
@@ -30,16 +36,16 @@ public:
     {
         this->nonTermVec = nonTermVec;
     }
-    void setProductions(std::vector<Production> productions)
+    void setRules(std::vector<Rule> rules)
     {
-        this->productions = productions;
+        this->rules = rules;
     }
 
 private:
-    std::vector<State> states;           // 状态
-    std::vector<Production> productions; // 产生式
-    std::vector<Symbol> termVec;         // 终结符
-    std::vector<Symbol> nonTermVec;      // 非终结符
+    std::vector<State> states;      // 状态
+    std::vector<Rule> rules;        // 产生式
+    std::vector<Symbol> termVec;    // 终结符
+    std::vector<Symbol> nonTermVec; // 非终结符
 
     /**
      * @brief 保存分析表到文件
@@ -59,12 +65,12 @@ private:
      * @param filename 文件名
      * @return 0: 保存失败, 1: 保存成功
      */
-    int saveProduction(std::ofstream &out);
+    int saveRules(std::ofstream &out);
     /**
      * @brief 检查产生式是否正确
      * @return 0: 产生式错误, 1: 产生式正确
      */
-    int checkProduction();
+    int checkRules();
 };
 
 #endif // !PARSE_TAB_HPP

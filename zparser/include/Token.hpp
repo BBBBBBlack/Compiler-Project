@@ -32,6 +32,7 @@ struct Token
     Token(std::string type, std::string value, int lineno, int pos)
         : type(type), value(value), lineno(lineno), pos(pos) {}
     Token() = default;
+    Token(std::string type) : type(type) {}
 };
 
 #endif // TOKEN

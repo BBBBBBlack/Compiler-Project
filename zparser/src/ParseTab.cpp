@@ -244,14 +244,14 @@ int ParseTab::loadParseTab(std::ifstream &in)
         // }
     }
 
-    return checkProduction();
+    return checkRules();
 }
 
-int ParseTab::saveProduction(std::ofstream &out)
+int ParseTab::saveRules(std::ofstream &out)
 {
     out << "Productions:" << std::endl;
     int i = 0;
-    for (auto &production : productions)
+    for (auto &production : rules)
     {
         // 输出产生式序号
         out << "(" << i << "): ";
@@ -267,7 +267,7 @@ int ParseTab::saveProduction(std::ofstream &out)
     return 1;
 }
 
-int ParseTab::checkProduction()
+int ParseTab::checkRules()
 {
     for (auto &state : states)
     {
@@ -275,7 +275,7 @@ int ParseTab::checkProduction()
         {
             if (action.second.type == ActionType::A_Reduce)
             {
-                if (!(0 < action.second.data && action.second.data <= productions.size()))
+                if (!(0 < action.second.data && action.second.data <= rules.size()))
                 {
                     std::cerr << "[Error]: 分析表中指定了不存在的产生式(" << action.second.data << ")" << std::endl;
 
