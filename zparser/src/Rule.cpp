@@ -1,8 +1,11 @@
 #include "Rule.hpp"
 #include <stdio.h>
 
+/**
+ * @brief 产生式们
+ */
 // 终结符
-std::set<Symbol> Rules::termVec;
+std::unordered_set<Symbol> Rules::termVec;
 void Rules::printTermVec()
 {
     printf("TermVec: ");
@@ -13,7 +16,7 @@ void Rules::printTermVec()
     printf("\n");
 }
 // 非终结符
-std::set<Symbol> Rules::nonTermVec;
+std::unordered_set<Symbol> Rules::nonTermVec;
 void Rules::printNonTermVec()
 {
     printf("NonTermVec: ");
@@ -32,17 +35,35 @@ void Rules::printRules()
         rule.print();
     }
 }
-
-Rule::Rule()
+/**
+ * @brief 产生式类
+ */
+Rule::Rule(int id)
 {
+    this->id = id;
 }
-Rule::Rule(Symbol left)
+Rule::Rule(int id, Symbol left)
 {
+    this->id = id;
     this->left = left;
 }
-Symbol Rule::getLeft()
+Rule::Rule(int id, Symbol left, std::vector<Symbol> right)
+{
+    this->id = id;
+    this->left = left;
+    this->right = right;
+}
+int Rule::getId() const
+{
+    return this->id;
+}
+Symbol Rule::getLeft() const
 {
     return this->left;
+}
+std::vector<Symbol> Rule::getRight() const
+{
+    return right;
 }
 void Rule::addRight(Symbol right)
 {
@@ -58,6 +79,33 @@ void Rule::print()
     for (const auto &symbol : right)
     {
         printf("%s ", symbol.c_str());
+    }
+    printf("\n");
+}
+
+/**
+ * @brief 子产生式类（带dot）
+ */
+SubRule::SubRule(const Rule &rule, int dotPos) : Rule(rule.getId(), rule.getLeft(), rule.getRight())
+{
+    this->dotPos = dotPos;
+}
+int SubRule::getDotPos() const
+{
+    return this->dotPos;
+}
+void SubRule::print()
+{
+    printf("Left: %s\t", this->getLeft().c_str());
+    std::vector<Symbol> right = this->getRight();
+    printf("Right: ");
+    for (int i = 0; i < right.size(); i++)
+    {
+        if (i == this->dotPos)
+        {
+            printf(".");
+        }
+        printf("%s ", right[i].c_str());
     }
     printf("\n");
 }

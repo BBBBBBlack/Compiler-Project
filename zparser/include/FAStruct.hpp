@@ -12,12 +12,9 @@
 #include <iostream>
 #include <any>
 #include <functional>
+#include "Rule.hpp"
+#include "pch.hpp"
 
-/**
- * @brief action
- * @return token类型 (0表示无返回值)
- */
-using ActionFunction = std::function<int()>;
 
 // 空的动作函数
 inline int NullAction()
@@ -36,10 +33,12 @@ struct PatternAction
 
 typedef PatternAction PA;
 typedef std::vector<PatternAction> PAVec;
-
+typedef std::vector<std::string> RegexVec;
+typedef std::unordered_set<SubRule, SubRuleHash> SubRuleSet;
 struct FAState
 {
     int stateID;
+    SubRuleSet subRules;
     // TODO 重构为<char, int>
     std::unordered_map<std::string, int> trans; // 映射字符到下一个状态集合
     std::vector<int> epsilonTrans;              // 空边
@@ -50,12 +49,38 @@ struct FAState
 
     FAState(int stateID, std::unordered_map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting, ActionFunction action)
         : stateID(stateID), trans(trans), epsilonTrans(epsilonTrans), isAccepting(isAccepting), action(action) {}
-
+    FAState(int stateID, SubRuleSet subRules)
+        : stateID(stateID), subRules(subRules) {}
     bool operator==(const FAState &other) const
     {
         return stateID == other.stateID && trans == other.trans && epsilonTrans == other.epsilonTrans && isAccepting == other.isAccepting;
     }
+    static void closure(SubRuleSet &I);
+    static SubRuleSet Goto(SubRuleSet &I, Symbol X);
 };
+
+/**
+ * @brief 有限自动机
+ */
+typedef std::vector<FAState> FAStateVec;
+class FA
+{
+private:
+    FAStateVec states;
+
+public:
+    FA() {}
+    FA(FAStateVec states) : states(states) {}
+    void create(std::vector<Rule> rules);
+    void print()
+    {
+        for (FAState state : states)
+        {
+            std::cout << "StateID: " << state.stateID << std::endl;
+        }
+    }
+};
+
 
 struct FAStateBlock
 {
@@ -70,7 +95,6 @@ struct StateSet
     bool isAccepting = false;
     int stateID; // DFA中的stateID
     std::unordered_set<int> set;
-
     friend std::ostream &operator<<(std::ostream &os, const StateSet &stateSet)
     {
         std::string isAccepting = stateSet.isAccepting ? "T" : "F";
@@ -101,7 +125,6 @@ struct StateSet
             return hash;
         }
     };
-
     // Equality comparison for StateSet
     struct Equal
     {
@@ -111,7 +134,6 @@ struct StateSet
         }
     };
 };
-
 struct pair_hash
 {
     template <class T1, class T2>
@@ -119,7 +141,6 @@ struct pair_hash
     {
         auto h1 = std::hash<T1>{}(p.first);
         auto h2 = std::hash<T2>{}(p.second);
-
         // Mainly for demonstration purposes, i.e. works but is overly simple
         // In the real world, use sth. like boost.hash_combine
         return h1 ^ h2;

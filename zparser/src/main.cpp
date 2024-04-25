@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <nlohmann/json.hpp>
 #include <Rule.hpp>
+#include "FAStruct.hpp"
 using json = nlohmann::json;
 int main(int argc, char *argv[])
 {
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
     {
         // 读入产生式
         json rules = config["rules"];
+        int cnt = 0;
         for (const auto &item : rules)
         {
             std::string pattern = item["pattern"];
@@ -38,7 +40,7 @@ int main(int argc, char *argv[])
                 }
                 else if (pattern[i] == ':')
                 {
-                    Rules::rules.push_back(Rule(father));
+                    Rules::rules.push_back(Rule(cnt++, father));
                     Rules::nonTermVec.insert(father);
                     break;
                 }
@@ -75,7 +77,7 @@ int main(int argc, char *argv[])
                 }
                 else if (pattern[j] == '|')
                 {
-                    Rules::rules.push_back(Rule(father));
+                    Rules::rules.push_back(Rule(cnt++, father));
                 }
                 else
                 {
@@ -92,16 +94,16 @@ int main(int argc, char *argv[])
 
         // 增廣文法
         std::string start = Rules::rules[0].getLeft();
-        Rules::rules.push_back(Rule("S'"));
+        Rules::rules.push_back(Rule(cnt++, "S'"));
         Rules::rules[Rules::rules.size() - 1].addRight(start);
         Rules::nonTermVec.insert("S'");
-        // Rules::printRules();
-        // Rules::printNonTermVec();
-        // Rules::printTermVec();
+        Rules::printRules();
+        Rules::printNonTermVec();
+        Rules::printTermVec();
 
         // 构造自动机
-        
-
+        FA fa;
+        fa.create(Rules::rules);
     }
     return 0;
 }

@@ -9,7 +9,7 @@
 		"action": ""
 	},
 	{
-		"pattern": "T : '(' E ')' | 'id'",
+		"pattern": "F : '(' E ')' | 'id'",
 		"action": ""
 	}]
 }
