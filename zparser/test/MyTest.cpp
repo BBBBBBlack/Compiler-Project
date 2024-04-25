@@ -136,20 +136,26 @@ TEST(ParseTest, test1)
 void setTest2Rule(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
-    rules.push_back(Rule({"S", {"S", "E"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"S", {"x", "x", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
-                              std::cout << "ans = " << rightTokens[1].value << std::endl;
+                              leftToken.value = "S";
+                              std::cout << leftToken.value << PRODUCTION_CONCAT
+                                        << rightTokens[0].value << " " << rightTokens[1].value << " " << rightTokens[2].value << std::endl;
                               return 0;
                           }}));
     rules.push_back(Rule({"T", {"y"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          { return 0; }}));
+                          {
+                              std::cout << rightTokens[0].value << std::endl;
+                              leftToken.value = rightTokens[0].value;
+                              return 0;
+                          }}));
     parseTab.setRules(rules);
 }
 
 TEST(ParseTest, test2)
 {
     ParseTab tab;
-    std::string tabFile = "test/out/test2.md";
+    std::string tabFile = "test/in/test2tab.md";
 
     setTest2Rule(tab);
     tab.loadFromFile(tabFile);
@@ -157,5 +163,5 @@ TEST(ParseTest, test2)
 
     Parser parser(tab);
     // parser.setOutputFile("test/out/test2_process.md");
-    parser.grammarAnalysis("test/in/token2.txt", true, "test/out/test2_process.md");
+    parser.grammarAnalysis("test/in/test2token.txt", true, "test/out/test2_process.md");
 }
