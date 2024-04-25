@@ -25,7 +25,7 @@ public:
 
     Rule getRule(int RuleId)
     {
-        return rules[RuleId];
+        return rules[RuleId - 1];
     }
 
     void setTermVec(const std::vector<Symbol> &termVec)

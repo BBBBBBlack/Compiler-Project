@@ -132,3 +132,30 @@ TEST(ParseTest, test1)
     // parser.setOutputFile("test/out/test1_process.md");
     parser.grammarAnalysis("test/in/token.txt", true, "test/out/test1_process.md");
 }
+
+void setTest2Rule(ParseTab &parseTab)
+{
+    std::vector<Rule> rules;
+    rules.push_back(Rule({"S", {"S", "E"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              std::cout << "ans = " << rightTokens[1].value << std::endl;
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"T", {"y"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          { return 0; }}));
+    parseTab.setRules(rules);
+}
+
+TEST(ParseTest, test2)
+{
+    ParseTab tab;
+    std::string tabFile = "test/out/test2.md";
+
+    setTest2Rule(tab);
+    tab.loadFromFile(tabFile);
+    compareSaveAndLoad(tabFile, tab);
+
+    Parser parser(tab);
+    // parser.setOutputFile("test/out/test2_process.md");
+    parser.grammarAnalysis("test/in/token2.txt", true, "test/out/test2_process.md");
+}
