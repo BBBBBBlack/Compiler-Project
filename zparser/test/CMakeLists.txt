@@ -1,12 +1,12 @@
 # 设置测试文件
-set(TEST_INCLUDE_FILES  ${SOURCE_DIR}/ParseTab.cpp
+set(TEST_INCLUDE_FILES  ${SOURCE_DIR}/ParseTab.cpp ${SOURCE_DIR}/Parser.cpp
         )
 
-set(FA_TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} MyTest.cpp)
+set(TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} MyTest.cpp)
 # set(ZLEX_TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} ZLexTest.cpp)
 
 # 添加测试执行文件
-add_executable(MyTest ${FA_TEST_SOURCE_FILES})
+add_executable(MyTest ${TEST_SOURCE_FILES})
 # add_executable(ZLexTest ${ZLEX_TEST_SOURCE_FILES})
 
 # target_compile_options(MyTest PRIVATE -fno-access-control -O2)

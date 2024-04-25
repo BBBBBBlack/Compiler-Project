@@ -13,11 +13,11 @@
 #include <any>
 #include <functional>
 
-/**
- * @brief action
- * @return token类型 (0表示无返回值)
- */
-using ActionFunction = std::function<int()>;
+// /**
+//  * @brief action
+//  * @return token类型 (0表示无返回值)
+//  */
+// using ActionFunction = std::function<int()>;
 
 // 空的动作函数
 inline int NullAction()

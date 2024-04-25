@@ -18,7 +18,7 @@ void Parser::setOutputFile(std::string fileName)
 
     // 向outFile写入当前时间
     std::time_t currentTime = std::time(nullptr);
-    *outputFile << "Generate time: " << std::asctime(std::localtime(&currentTime));
+    *outputFile << "Generate time: " << std::asctime(std::localtime(&currentTime)) << std::endl;
     outputFile->flush();
 }
 
@@ -35,13 +35,71 @@ void readInputToken(std::list<Token> &inputTokens, std::ifstream &tokenStream)
     }
 }
 
-void Parser::grammarAnalysis(std::string tokenFile, ParseTab &parseTab)
+void Parser::writeProcess(std::ofstream &processFile, const std::stack<int> &stateStack,
+                          const std::stack<Token> &tokenStack, const std::list<Token> &inputTokens,
+                          const Action &action, bool writeHeader)
+{
+    if (writeHeader)
+    {
+        processFile << "## 分析过程\n";
+        processFile << "| 状态栈 | 符号栈 | 输入串 | 动作 |\n";
+        processFile << "| --- | --- | --- | --- |\n";
+    }
+    // 状态栈
+    processFile << "| ";
+    std::stack<int> stateStackCopy = stateStack;
+    while (!stateStackCopy.empty())
+    {
+        processFile << stateStackCopy.top() << " ";
+        stateStackCopy.pop();
+    }
+    processFile << "| ";
+    // 符号栈
+    std::stack<Token> tokenStackCopy = tokenStack;
+    while (!tokenStackCopy.empty())
+    {
+        processFile << tokenStackCopy.top().type << " ";
+        tokenStackCopy.pop();
+    }
+    processFile << "| ";
+    // 输入串
+    for (auto &token : inputTokens)
+    {
+        processFile << token.type << " ";
+    }
+    processFile << "| ";
+
+    // 动作
+    switch (action.type)
+    {
+    case ActionType::A_Shift:
+        processFile << "Shift " << action.data;
+        break;
+    case ActionType::A_Reduce:
+        processFile << "Reduce " << parseTab.getProduction(action.data);
+        break;
+    case ActionType::A_Accept:
+        processFile << "Accept";
+        break;
+    case ActionType::A_Error:
+        processFile << "Error";
+        break;
+    default:
+        processFile << " ";
+        break;
+    }
+
+    processFile << "|" << std::endl;
+}
+
+void Parser::grammarAnalysis(std::string tokenFile, bool needProcess, std::string processFileName)
 {
     std::ifstream tokenStream(tokenFile);
     if (!tokenStream.is_open())
     {
         perror("Token File打开失败");
     }
+    std::ofstream processFile;
 
     std::stack<int> stateStack;
     std::stack<Token> tokenStack;
@@ -52,6 +110,19 @@ void Parser::grammarAnalysis(std::string tokenFile, ParseTab &parseTab)
     readInputToken(inputTokens, tokenStream);
     inputTokens.push_back(Token(END_SYMBOL, "", 0, 0));
 
+    if (needProcess)
+    {
+        std::string folderPath = processFileName.substr(0, processFileName.find_last_of("/\\"));
+        std::filesystem::create_directories(folderPath);
+        processFile.open(processFileName, std::ios::trunc);
+        if (!processFile.is_open())
+        {
+            perror("分析过程输出文件打开失败");
+        }
+
+        writeProcess(processFile, stateStack, tokenStack, inputTokens, Action(), true); // 写入表头
+        writeProcess(processFile, stateStack, tokenStack, inputTokens, Action(), false);
+    }
     while (true)
     {
         int currentState = stateStack.top();
@@ -66,11 +137,37 @@ void Parser::grammarAnalysis(std::string tokenFile, ParseTab &parseTab)
         }
         else if (action.type == ActionType::A_Reduce) // 规约
         {
+            Production production = parseTab.getProduction(action.data);
+            int productionSize = production.right.size();
+            Token leftToken(production.left, "", -1, -1); // 产生式左部Token(未初始化行号和位置)
+            std::vector<Token> rightTokens;
+            for (int i = 0; i < productionSize; i++)
+            {
+                stateStack.pop();
+                Token topToken = tokenStack.top();
+                rightTokens.push_back(topToken);
+                if (leftToken.lineno == -1) // 用产生式右部第一个Token的lineno和pos初始化产生式左部Token
+                {
+                    leftToken.lineno = topToken.lineno;
+                    leftToken.pos = topToken.pos;
                 }
+                tokenStack.pop();
+            }
+            // 执行产生式动作
+            production.action(leftToken, rightTokens);
+            // 更新状态
+            tokenStack.push(leftToken);
+            stateStack.push(parseTab.getNextAction(stateStack.top(), leftToken.type).data);
+        }
         else if (action.type == ActionType::A_Error)
         {
             *outputFile << "Error!" << std::endl;
             break;
+        }
+
+        if (needProcess)
+        {
+            writeProcess(processFile, stateStack, tokenStack, inputTokens, action, false);
         }
     }
 }

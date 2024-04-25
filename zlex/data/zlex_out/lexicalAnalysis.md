@@ -278,7 +278,7 @@
 <}>
 
 <NUMBER, 1, lineno, pos>
-<KEYWORD, if, lineno, pos>
+<IF, if, lineno, pos>
 <IDENTIFIER, true, lineno, pos>
 <DELIMITER, }, lineno, pos>
 <OPERATOR, +, lineno, pos>

@@ -22,6 +22,11 @@ public:
 
     Action getNextAction(int stateId, Symbol symbol);
 
+    Production getProduction(int productionId)
+    {
+        return productions[productionId];
+    }
+
     void setTermVec(const std::vector<Symbol> &termVec)
     {
         this->termVec = termVec;

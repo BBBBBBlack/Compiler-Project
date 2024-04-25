@@ -15,13 +15,26 @@
 class Parser
 {
 public:
+    Parser(ParseTab &parseTab) : parseTab(parseTab) {}
+    Parser(ParseTab &parseTab, std::string outputFile) : parseTab(parseTab)
+    {
+        setOutputFile(outputFile);
+    }
+
     void setOutputFile(std::string fileName);
 
-    void grammarAnalysis(std::string tokenFile, ParseTab &parseTab);
+    void grammarAnalysis(std::string tokenFile, bool needProcess, std::string processFileName);
+
+    void setParseTab(ParseTab &parseTab)
+    {
+        this->parseTab = parseTab;
+    }
 
 private:
-    std::ofstream *outputFile = nullptr;
-    ParseTab parseTab;
+    std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)
+    ParseTab &parseTab;                  // 语法分析表
+
+    void writeProcess(std::ofstream &processFile, const std::stack<int> &stateStack, const std::stack<Token> &tokenStack, const std::list<Token> &inputTokens, const Action &action, bool writeHeader);
 };
 
 #endif
