@@ -35,9 +35,7 @@ void readInputToken(std::list<Token> &inputTokens, std::istream &tokenStream)
     }
 }
 
-void Parser::writeProcess(std::ofstream &processFile, const std::vector<int> &stateStack,
-                          const std::vector<Token> &tokenStack, const std::list<Token> &inputTokens,
-                          const Action &action, bool writeHeader)
+void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader)
 {
     if (writeHeader)
     {
@@ -107,9 +105,6 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
 {
     std::ofstream processFile;
 
-    std::vector<int> stateStack;
-    std::vector<Token> tokenStack;
-    std::list<Token> inputTokens;
     stateStack.push_back(0);
     tokenStack.push_back(Token(END_SYMBOL, "", 0, 0));
 
@@ -126,7 +121,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
             perror("分析过程输出文件打开失败");
         }
 
-        writeProcess(processFile, stateStack, tokenStack, inputTokens, Action(), true); // 写入表头
+        writeProcess(processFile, Action(), true); // 写入表头
         // writeProcess(processFile, stateStack, tokenStack, inputTokens, Action(), false);
     }
 
@@ -166,22 +161,26 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
             tokenStack.push_back(leftToken);
             stateStack.push_back(parseTab.getNextAction(stateStack.back(), leftToken.type).data);
         }
+        else if (action.type == ActionType::A_Goto) // Goto
+        {
+            stateStack.push_back(action.data);
+        }
         else if (action.type == ActionType::A_Accept)
         {
             std::cout << "Accept!" << std::endl;
-            writeProcess(processFile, stateStack, tokenStack, inputTokens, action, false);
+            writeProcess(processFile, action, false);
             break;
         }
         else if (action.type == ActionType::A_Error)
         {
             std::cerr << "[Error]: Syntax error at <Line: " << token.lineno << ", Position: " << token.pos << ">" << std::endl;
-            writeProcess(processFile, stateStack, tokenStack, inputTokens, action, false);
+            writeProcess(processFile, action, false);
             break;
         }
 
         if (needProcess)
         {
-            writeProcess(processFile, stateStack, tokenStack, inputTokens, action, false);
+            writeProcess(processFile, action, false);
         }
     }
 }

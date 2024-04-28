@@ -38,9 +38,14 @@ public:
 private:
     std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)
     ParseTab &parseTab;                  // 语法分析表
+    std::vector<int> stateStack;
+    std::vector<Token> tokenStack;
+    std::list<Token> inputTokens;
 
     void grammarAnalysis(std::istream &tokenStream, bool needProcess, std::string processFileName);
-    void writeProcess(std::ofstream &processFile, const std::vector<int> &stateStack, const std::vector<Token> &tokenStack, const std::list<Token> &inputTokens, const Action &action, bool writeHeader);
+    void writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader);
+
+    void drawTree();
 };
 
 #endif
