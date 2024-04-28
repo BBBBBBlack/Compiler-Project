@@ -45,7 +45,9 @@ private:
     void grammarAnalysis(std::istream &tokenStream, bool needProcess, std::string processFileName);
     void writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader);
 
-    void drawTree();
+    void drawTreeBegin();
+    void drawTreeEnd();
+    void drawTreeNode(const Token &left, const std::vector<Token> &right);
 };
 
 #endif

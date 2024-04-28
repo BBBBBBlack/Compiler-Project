@@ -184,3 +184,39 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
         }
     }
 }
+
+void Parser::drawTreeBegin()
+{
+    {
+        *outputFile << "```mermaid" << std::endl;
+        *outputFile << "graph TD" << std::endl;
+    }
+}
+
+void Parser::drawTreeEnd()
+{
+    *outputFile << "```" << std::endl;
+    outputFile->flush();
+}
+
+void Parser::drawTreeNode(const Token &left, const std::vector<Token> &right)
+{
+    static int nodeCount = 0;
+    *outputFile << left.type << "(" << left.lineno << "," << left.pos << ")";
+    if (right.size() > 0)
+    {
+        *outputFile << "-->";
+        for (auto &token : right)
+        {
+            *outputFile << token.type << "(" << token.lineno << "," << token.pos << ")";
+            *outputFile << "-->";
+        }
+    }
+    else if (right.size() == 0)
+    {
+        // TODO 产生式右部为空
+        *outputFile << "-->ε";
+    }
+    *outputFile << std::endl;
+    outputFile->flush();
+}
