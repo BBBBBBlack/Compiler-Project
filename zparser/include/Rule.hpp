@@ -8,7 +8,7 @@
 #include "Token.hpp"
 
 #define PRODUCTION_CONCAT "->"
-#define EPSILON ""
+#define EPSILON "ε"
 // TODO 产生式动作的save和load
 using ActionFunction = std::function<int(Token &leftToken, std::vector<Token> &rightTokens)>;
 /*

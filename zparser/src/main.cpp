@@ -62,10 +62,6 @@ int main(int argc, char *argv[])
                         }
                         temp += pattern[k];
                     }
-                    if (isspace(temp[0]))
-                    {
-                        temp = EPSILON;
-                    }
                     Rules::termVec.insert(temp);
                     Rules::rules[Rules::rules.size() - 1].addRight(temp);
                     // printf("%s\n",temp.c_str());

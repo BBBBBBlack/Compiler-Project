@@ -11,14 +11,7 @@ void Rules::printTermVec()
     printf("TermVec: ");
     for (const auto &symbol : Rules::termVec)
     {
-        if (symbol != EPSILON)
-        {
-            printf("%s ", symbol.c_str());
-        }
-        else
-        {
-            printf("ε ");
-        }
+        printf("%s ", symbol.c_str());
     }
     printf("\n");
 }
@@ -29,14 +22,7 @@ void Rules::printNonTermVec()
     printf("NonTermVec: ");
     for (const auto &symbol : Rules::nonTermVec)
     {
-        if (symbol != EPSILON)
-        {
-            printf("%s ", symbol.c_str());
-        }
-        else
-        {
-            printf("ε ");
-        }
+        printf("%s ", symbol.c_str());
     }
     printf("\n");
 }
@@ -96,14 +82,7 @@ void Rule::print()
     printf("Right: ");
     for (const auto &symbol : right)
     {
-        if (symbol != EPSILON)
-        {
-            printf("%s ", symbol.c_str());
-        }
-        else
-        {
-            printf("ε ");
-        }
+        printf("%s ", symbol.c_str());
     }
     printf("\n");
 }
@@ -137,14 +116,7 @@ void SubRule::print()
         {
             printf(".");
         }
-        if (right[i] != EPSILON)
-        {
-            printf("%s ", right[i].c_str());
-        }
-        else
-        {
-            printf("ε ");
-        }
+        printf("%s ", right[i].c_str());
     }
     printf("\n");
 }
