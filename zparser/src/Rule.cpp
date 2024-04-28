@@ -11,7 +11,14 @@ void Rules::printTermVec()
     printf("TermVec: ");
     for (const auto &symbol : Rules::termVec)
     {
-        printf("%s ", symbol.c_str());
+        if (symbol != EPSILON)
+        {
+            printf("%s ", symbol.c_str());
+        }
+        else
+        {
+            printf("ε ");
+        }
     }
     printf("\n");
 }
@@ -22,7 +29,14 @@ void Rules::printNonTermVec()
     printf("NonTermVec: ");
     for (const auto &symbol : Rules::nonTermVec)
     {
-        printf("%s ", symbol.c_str());
+        if (symbol != EPSILON)
+        {
+            printf("%s ", symbol.c_str());
+        }
+        else
+        {
+            printf("ε ");
+        }
     }
     printf("\n");
 }
@@ -69,6 +83,10 @@ void Rule::addRight(Symbol right)
 {
     this->right.push_back(right);
 }
+bool Rule::isEpsilon() const
+{
+    return this->right.size() == 1 && this->right[0] == EPSILON;
+}
 void Rule::print()
 {
     // 打印左部
@@ -78,7 +96,14 @@ void Rule::print()
     printf("Right: ");
     for (const auto &symbol : right)
     {
-        printf("%s ", symbol.c_str());
+        if (symbol != EPSILON)
+        {
+            printf("%s ", symbol.c_str());
+        }
+        else
+        {
+            printf("ε ");
+        }
     }
     printf("\n");
 }
@@ -88,7 +113,14 @@ void Rule::print()
  */
 SubRule::SubRule(const Rule &rule, int dotPos) : Rule(rule.getId(), rule.getLeft(), rule.getRight())
 {
-    this->dotPos = dotPos;
+    if (rule.getRight().size() == 1 && rule.getRight()[0] == EPSILON)
+    {
+        this->dotPos = 1;
+    }
+    else
+    {
+        this->dotPos = dotPos;
+    }
 }
 int SubRule::getDotPos() const
 {
@@ -105,7 +137,14 @@ void SubRule::print()
         {
             printf(".");
         }
-        printf("%s ", right[i].c_str());
+        if (right[i] != EPSILON)
+        {
+            printf("%s ", right[i].c_str());
+        }
+        else
+        {
+            printf("ε ");
+        }
     }
     printf("\n");
 }

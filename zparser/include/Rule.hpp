@@ -8,7 +8,7 @@
 #include "Token.hpp"
 
 #define PRODUCTION_CONCAT "->"
-
+#define EPSILON ""
 // TODO 产生式动作的save和load
 using ActionFunction = std::function<int(Token &leftToken, std::vector<Token> &rightTokens)>;
 /*
@@ -35,6 +35,8 @@ public:
     Symbol getLeft() const;
     std::vector<Symbol> getRight() const;
     void addRight(Symbol right);
+    // 判断是否为ε产生式
+    bool isEpsilon() const;
     void print();
 
     friend std::ostream &operator<<(std::ostream &os, const Rule &rule)

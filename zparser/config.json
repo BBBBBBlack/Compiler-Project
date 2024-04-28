@@ -1,15 +1,16 @@
 {
 	"rules": [
-	{
-		"pattern": "E : E '+' T | T",
-		"action": ""
-	},
-	{
-		"pattern": "T : T '*' F | F",
-		"action": ""
-	},
-	{
-		"pattern": "F : '(' E ')' | 'id'",
-		"action": ""
-	}]
+		{
+			"pattern": "S : A B",
+			"action": ""
+		},
+		{
+			"pattern": "A : 'a' B 'a' | ' '",
+			"action": ""
+		},
+		{
+			"pattern": "B : 'b' A 'b' | ' '",
+			"action": ""
+		}
+	]
 }
