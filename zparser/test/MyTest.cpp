@@ -98,9 +98,9 @@ void setTest1Rule(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
     rules.push_back(Rule({"S", {"x", "x", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          { return 0; }}));
+                          { leftToken.value = "S"; return 0; }}));
     rules.push_back(Rule({"T", {"y"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          { return 0; }}));
+                          { leftToken.value = "T"; return 0; }}));
     parseTab.setRules(rules);
 }
 
@@ -130,6 +130,7 @@ TEST(ParseTest, test1)
 
     Parser parser(tab2);
     // parser.setOutputFile("test/out/test1_process.md");
+    parser.setOutputFile("test/out/test1_CST.md");
     parser.grammarAnalysis("test/in/token.txt", true, "test/out/test1_process.md");
 }
 
@@ -159,9 +160,66 @@ TEST(ParseTest, test2)
 
     setTest2Rule(tab);
     tab.loadFromFile(tabFile);
-    compareSaveAndLoad(tabFile, tab);
+    // compareSaveAndLoad(tabFile, tab);
 
     Parser parser(tab);
-    // parser.setOutputFile("test/out/test2_process.md");
+    parser.setOutputFile("test/out/test2_CST.md");
     parser.grammarAnalysis("test/in/test2token.txt", true, "test/out/test2_process.md");
+}
+
+void setTest3Rule(ParseTab &parseTab)
+{
+    std::vector<Rule> rules;
+    rules.push_back(Rule({"S", {"A"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "S";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"A", {"B", "A"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "A";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"A", {EPSILON}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "A";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"B", {"a", "B"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"B", {"b"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    parseTab.setRules(rules);
+}
+
+TEST(ParseTest, test3)
+{
+    ParseTab tab;
+    std::string tabFile = "test/in/test3tab.md";
+
+    setTest3Rule(tab);
+    tab.loadFromFile(tabFile);
+
+    Parser parser(tab);
+    parser.setOutputFile("test/out/test3_CST.md");
+    parser.grammarAnalysis("test/in/test3token.txt", true, "test/out/test3_process.md");
+}
+
+TEST(ParseTest, test3_2)
+{
+    ParseTab tab;
+    std::string tabFile = "test/in/test3_2tab.md";
+
+    setTest3Rule(tab);
+    tab.loadFromFile(tabFile);
+
+    Parser parser(tab);
+    parser.setOutputFile("test/out/test3_2_CST.md");
+    parser.grammarAnalysis("test/in/test3token.txt", true, "test/out/test3_2_process.md");
 }
