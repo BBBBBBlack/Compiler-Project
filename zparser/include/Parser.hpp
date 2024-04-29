@@ -11,6 +11,7 @@
 #include "ParseTab.hpp"
 #include "pch.hpp"
 #include "Token.hpp"
+#include "CST.hpp"
 
 class Parser
 {
@@ -34,32 +35,19 @@ public:
     {
         this->parseTab = parseTab;
     }
-    void setNeedCST(bool needCST)
-    {
-        this->cst.needCST = needCST;
-    }
 
 private:
     std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)
     ParseTab &parseTab;                  // 语法分析表
     std::vector<int> stateStack;
-    std::vector<std::pair<int, Token>> tokenStack; // TODO 加上id
+    // tokenStack[i].first: CST节点编号 tokenStack[i].second: token
+    std::vector<std::pair<int, Token>> tokenStack;
     std::list<Token> inputTokens;
-    int treeNoteCount = 0;
-    struct CST
-    {
-        std::vector<std::pair<int, Token>> tokens;
-        std::vector<int> children;
-        bool needCST = false;
-    } cst;
+    bool needCST = false, needProcess = false;
+    CST cst;
 
-    void grammarAnalysis(std::istream &tokenStream, bool needProcess, std::string processFileName);
+    void grammarAnalysis(std::istream &tokenStream, std::string processFileName);
     void writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader);
-
-    void drawTreeBegin();
-    void drawTreeEnd();
-    void drawCSTNode(const std::vector<std::pair<int, Token>> &tokens);
-    void drawCSTBranch(int left, const std::vector<int> &rights);
 };
 
 #endif
