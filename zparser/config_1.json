@@ -1,0 +1,15 @@
+{
+	"rules": [
+	{
+		"pattern": "E : E '+' T | T",
+		"action": ""
+	},
+	{
+		"pattern": "T : T '*' F | F",
+		"action": ""
+	},
+	{
+		"pattern": "F : '(' E ')' | 'id'",
+		"action": ""
+	}]
+}

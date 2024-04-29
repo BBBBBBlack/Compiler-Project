@@ -69,6 +69,10 @@ void Rule::addRight(Symbol right)
 {
     this->right.push_back(right);
 }
+bool Rule::isEpsilon() const
+{
+    return this->right.size() == 1 && this->right[0] == EPSILON;
+}
 void Rule::print()
 {
     // 打印左部
@@ -88,7 +92,14 @@ void Rule::print()
  */
 SubRule::SubRule(const Rule &rule, int dotPos) : Rule(rule.getId(), rule.getLeft(), rule.getRight())
 {
-    this->dotPos = dotPos;
+    if (rule.getRight().size() == 1 && rule.getRight()[0] == EPSILON)
+    {
+        this->dotPos = 1;
+    }
+    else
+    {
+        this->dotPos = dotPos;
+    }
 }
 int SubRule::getDotPos() const
 {

@@ -64,6 +64,10 @@ void FA::create(std::vector<Rule> rules)
         temp.insert(Rules::nonTermVec.begin(), Rules::nonTermVec.end());
         for (Symbol symbol : temp)
         {
+            if (symbol == EPSILON)
+            {
+                continue;
+            }
             SubRuleSet set = FAState::Goto(state.subRules, symbol);
             if (set.size() == 0)
             {
@@ -76,6 +80,8 @@ void FA::create(std::vector<Rule> rules)
                 if (s.subRules == set)
                 {
                     flag = true;
+                    // 加边
+                    states[i].trans[symbol] = s.stateID;
                     break;
                 }
             }
@@ -83,6 +89,8 @@ void FA::create(std::vector<Rule> rules)
             {
                 FAState newState(states.size(), set);
                 states.push_back(newState);
+                // 加边
+                states[i].trans[symbol] = states.size() - 1;
             }
         }
     }
