@@ -53,7 +53,7 @@ void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool
     // 符号栈
     for (auto &token : tokenStack)
     {
-        processFile << token.type << " ";
+        processFile << token.second.type << " ";
     }
     processFile << "| ";
     // 输入串
@@ -106,7 +106,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
     std::ofstream processFile;
 
     stateStack.push_back(0);
-    tokenStack.push_back(Token(END_SYMBOL, "", 0, 0));
+    tokenStack.push_back({treeNoteCount++, Token(END_SYMBOL, "", 0, 0)});
 
     readInputToken(inputTokens, tokenStream);
     inputTokens.push_back(Token(END_SYMBOL, "", 0, 0));
@@ -125,6 +125,11 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
         // writeProcess(processFile, stateStack, tokenStack, inputTokens, Action(), false);
     }
 
+    if (cst.needCST)
+    {
+        drawTreeBegin();
+    }
+
     while (true)
     {
         int currentState = stateStack.back();
@@ -134,7 +139,11 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
         if (action.type == ActionType::A_Shift) // 移入
         {
             stateStack.push_back(action.data);
-            tokenStack.push_back(token);
+            if (cst.needCST)
+            {
+                drawCSTNode({{treeNoteCount, token}}); // 画节点
+            }
+            tokenStack.push_back({treeNoteCount++, token});
             inputTokens.pop_front();
         }
         else if (action.type == ActionType::A_Reduce) // 规约
@@ -146,7 +155,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
             for (int i = 0; i < ruleSize; i++)
             {
                 stateStack.pop_back();
-                Token topToken = tokenStack.back();
+                Token topToken = tokenStack.back().second;
                 rightTokens.push_back(topToken);
                 if (leftToken.lineno == -1) // 用产生式右部第一个Token的lineno和pos初始化产生式左部Token
                 {
@@ -158,7 +167,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, bool needProcess, std::s
             // 执行产生式动作
             rule.action(leftToken, rightTokens);
             // 更新状态
-            tokenStack.push_back(leftToken);
+            tokenStack.push_back({treeNoteCount++, leftToken});
             stateStack.push_back(parseTab.getNextAction(stateStack.back(), leftToken.type).data);
         }
         else if (action.type == ActionType::A_Goto) // Goto
@@ -199,24 +208,20 @@ void Parser::drawTreeEnd()
     outputFile->flush();
 }
 
-void Parser::drawTreeNode(const Token &left, const std::vector<Token> &right)
+void Parser::drawCSTNode(const std::vector<std::pair<int, Token>> &tokens)
 {
-    static int nodeCount = 0;
-    *outputFile << left.type << "(" << left.lineno << "," << left.pos << ")";
-    if (right.size() > 0)
+    for (auto &token : tokens)
     {
-        *outputFile << "-->";
-        for (auto &token : right)
-        {
-            *outputFile << token.type << "(" << token.lineno << "," << token.pos << ")";
-            *outputFile << "-->";
-        }
+        *outputFile << "\t" << token.first << "(" << token.second.type << ")" << std::endl;
     }
-    else if (right.size() == 0)
+    outputFile->flush();
+}
+
+void Parser::drawCSTBranch(int left, const std::vector<int> &rights)
+{
+    for (auto &right : rights)
     {
-        // TODO 产生式右部为空
-        *outputFile << "-->ε";
+        *outputFile << "\t" << left << " --- " << right << std::endl;
     }
-    *outputFile << std::endl;
     outputFile->flush();
 }

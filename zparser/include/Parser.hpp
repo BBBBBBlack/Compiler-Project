@@ -34,20 +34,32 @@ public:
     {
         this->parseTab = parseTab;
     }
+    void setNeedCST(bool needCST)
+    {
+        this->cst.needCST = needCST;
+    }
 
 private:
     std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)
     ParseTab &parseTab;                  // 语法分析表
     std::vector<int> stateStack;
-    std::vector<Token> tokenStack;
+    std::vector<std::pair<int, Token>> tokenStack; // TODO 加上id
     std::list<Token> inputTokens;
+    int treeNoteCount = 0;
+    struct CST
+    {
+        std::vector<std::pair<int, Token>> tokens;
+        std::vector<int> children;
+        bool needCST = false;
+    } cst;
 
     void grammarAnalysis(std::istream &tokenStream, bool needProcess, std::string processFileName);
     void writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader);
 
     void drawTreeBegin();
     void drawTreeEnd();
-    void drawTreeNode(const Token &left, const std::vector<Token> &right);
+    void drawCSTNode(const std::vector<std::pair<int, Token>> &tokens);
+    void drawCSTBranch(int left, const std::vector<int> &rights);
 };
 
 #endif
