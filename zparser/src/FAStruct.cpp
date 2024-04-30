@@ -9,7 +9,7 @@ void FAState::closure(SubRuleSet &I)
     {
         int dotPos = rule.getDotPos();
         if (dotPos < rule.getRight().size() &&
-            Rules::nonTermVec.find(rule.getRight()[dotPos]) != Rules::nonTermVec.end())
+            Rules::NonTermVec.find(rule.getRight()[dotPos]) != Rules::NonTermVec.end())
         {
             for (Rule r : Rules::rules)
             {
@@ -60,8 +60,8 @@ void FA::create(std::vector<Rule> rules)
     {
         FAState state = states[i];
         std::unordered_set<Symbol> temp;
-        temp.insert(Rules::termVec.begin(), Rules::termVec.end());
-        temp.insert(Rules::nonTermVec.begin(), Rules::nonTermVec.end());
+        temp.insert(Rules::TermVec.begin(), Rules::TermVec.end());
+        temp.insert(Rules::NonTermVec.begin(), Rules::NonTermVec.end());
         for (Symbol symbol : temp)
         {
             if (symbol == EPSILON)

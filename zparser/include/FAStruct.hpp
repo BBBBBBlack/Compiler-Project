@@ -13,6 +13,7 @@
 #include <any>
 #include <functional>
 #include "Rule.hpp"
+#include "Rules.hpp"
 #include "pch.hpp"
 
 

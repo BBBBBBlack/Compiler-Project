@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <nlohmann/json.hpp>
-#include <Rule.hpp>
+#include "Rule.hpp"
+#include "Rules.hpp"
 #include "FAStruct.hpp"
 using json = nlohmann::json;
 int main(int argc, char *argv[])
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
                 else if (pattern[i] == ':')
                 {
                     Rules::rules.push_back(Rule(cnt++, father));
-                    Rules::nonTermVec.insert(father);
+                    Rules::NonTermVec.insert(father);
                     break;
                 }
             }
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
                         }
                         temp += pattern[k];
                     }
-                    Rules::termVec.insert(temp);
+                    Rules::TermVec.insert(temp);
                     Rules::rules[Rules::rules.size() - 1].addRight(temp);
                     // printf("%s\n",temp.c_str());
                     temp = "";
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
                 {
                     if (temp != "")
                     {
-                        Rules::nonTermVec.insert(temp);
+                        Rules::NonTermVec.insert(temp);
                         Rules::rules[Rules::rules.size() - 1].addRight(temp);
                         // printf("%s\n",temp.c_str());
                         temp = "";
@@ -87,19 +88,20 @@ int main(int argc, char *argv[])
                 }
                 if (j == pattern.size() - 1 && temp != "")
                 {
-                    Rules::nonTermVec.insert(temp);
+                    Rules::NonTermVec.insert(temp);
                     Rules::rules[Rules::rules.size() - 1].addRight(temp);
                     // printf("%s\n",temp.c_str());
                 }
             }
         }
-
+        // 消除左递归
+        Rules::d_eliminateLeftRecursion();
         // 增廣文法
         std::string start = Rules::rules[0].getLeft();
         Rules::rules.push_back(Rule(cnt++, "S'"));
         Rules::rules[Rules::rules.size() - 1].addRight(start);
-        Rules::nonTermVec.insert("S'");
-        Rules::eliminateLeftRecursion();
+        Rules::NonTermVec.insert("S'");
+
         Rules::printRules();
         Rules::printNonTermVec();
         Rules::printTermVec();

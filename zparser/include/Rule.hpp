@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <unordered_set>
+#include <stack>
 #include "ParseTabStruct.hpp"
 #include "Token.hpp"
 
@@ -79,24 +80,4 @@ struct SubRuleHash
         return h1 ^ (h2 << 1);
     }
 };
-
-namespace Rules
-{
-    // 终结符
-    extern std::unordered_set<Symbol> termVec;
-    // 非终结符
-    extern std::unordered_set<Symbol> nonTermVec;
-    // 产生式集合
-    extern std::vector<Rule> rules;
-    void printNonTermVec();
-    void printTermVec();
-    void printRules();
-
-    std::unordered_set<Symbol> Rules::dfs();
-    // 直接左递归的消除（可能有用）
-    void d_eliminateLeftRecursion();
-    // 间接左递归的消除（可能有用）
-    void i_eliminateLeftRecursion();
-    void dfs(Symbol symbol, std::unordered_set<Symbol> &visited);
-}
 #endif // !RULE_HPP

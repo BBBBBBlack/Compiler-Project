@@ -5,11 +5,7 @@
 			"action": ""
 		},
 		{
-			"pattern": "A : 'a' B 'a' | 'ε'",
-			"action": ""
-		},
-		{
-			"pattern": "B : 'b' A 'b' | 'ε'",
+			"pattern": "A : A 'a' | 'ε'",
 			"action": ""
 		}
 	]
