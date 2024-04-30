@@ -52,18 +52,20 @@ int main(int argc, char *argv[])
             {
                 if (pattern[j] == '\'')
                 {
-                    if (flag)
+                    // 读到下一个\'为止
+                    for (int k = j + 1; k < pattern.size(); k++)
                     {
-                        Rules::termVec.insert(temp);
-                        Rules::rules[Rules::rules.size() - 1].addRight(temp);
-                        // printf("%s\n",temp.c_str());
-                        flag = false;
-                        temp = "";
+                        if (pattern[k] == '\'')
+                        {
+                            j = k;
+                            break;
+                        }
+                        temp += pattern[k];
                     }
-                    else
-                    {
-                        flag = true;
-                    }
+                    Rules::termVec.insert(temp);
+                    Rules::rules[Rules::rules.size() - 1].addRight(temp);
+                    // printf("%s\n",temp.c_str());
+                    temp = "";
                 }
                 else if (isspace(pattern[j]))
                 {
