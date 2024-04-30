@@ -11,6 +11,7 @@
 #include "ParseTab.hpp"
 #include "pch.hpp"
 #include "Token.hpp"
+#include "CST.hpp"
 
 class Parser
 {
@@ -38,9 +39,15 @@ public:
 private:
     std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)
     ParseTab &parseTab;                  // 语法分析表
+    std::vector<int> stateStack;
+    // tokenStack[i].first: CST节点编号 tokenStack[i].second: token
+    std::vector<std::pair<int, Token>> tokenStack;
+    std::list<Token> inputTokens;
+    bool needCST = false, needProcess = false;
+    CST cst;
 
-    void grammarAnalysis(std::istream &tokenStream, bool needProcess, std::string processFileName);
-    void writeProcess(std::ofstream &processFile, const std::vector<int> &stateStack, const std::vector<Token> &tokenStack, const std::list<Token> &inputTokens, const Action &action, bool writeHeader);
+    void grammarAnalysis(std::istream &tokenStream, std::string processFileName);
+    void writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader);
 };
 
 #endif

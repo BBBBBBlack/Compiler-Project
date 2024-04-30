@@ -289,5 +289,5 @@ int ParseTab::checkRules()
 
 Action ParseTab::getNextAction(int stateId, Symbol symbol)
 {
-    return states[stateId].actions[symbol];
+    return (0 <= stateId && stateId < states.size()) ? states[stateId].actions[symbol] : Action(A_Error);
 }

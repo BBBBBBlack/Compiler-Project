@@ -1,5 +1,5 @@
 # 设置测试文件
-set(TEST_INCLUDE_FILES  ${SOURCE_DIR}/ParseTab.cpp ${SOURCE_DIR}/Parser.cpp
+set(TEST_INCLUDE_FILES  ${SOURCE_DIR}/ParseTab.cpp ${SOURCE_DIR}/Parser.cpp ${SOURCE_DIR}/CST.cpp
         )
 
 set(TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} MyTest.cpp)
