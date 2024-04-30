@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
         Rules::rules.push_back(Rule(cnt++, "S'"));
         Rules::rules[Rules::rules.size() - 1].addRight(start);
         Rules::nonTermVec.insert("S'");
+        Rules::eliminateLeftRecursion();
         Rules::printRules();
         Rules::printNonTermVec();
         Rules::printTermVec();

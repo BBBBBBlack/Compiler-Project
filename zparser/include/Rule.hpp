@@ -25,6 +25,8 @@ public:
     std::vector<Symbol> right;
     // TODO action能否捕获left, right中对应的值
     ActionFunction action;
+    // 是否遍历过
+    bool visited = false;
 
 public:
     Rule(int id);
@@ -34,6 +36,7 @@ public:
     int getId() const;
     Symbol getLeft() const;
     std::vector<Symbol> getRight() const;
+    void setRight(std::vector<Symbol> right);
     void addRight(Symbol right);
     // 判断是否为ε产生式
     bool isEpsilon() const;
@@ -88,5 +91,12 @@ namespace Rules
     void printNonTermVec();
     void printTermVec();
     void printRules();
+
+    std::unordered_set<Symbol> Rules::dfs();
+    // 直接左递归的消除（可能有用）
+    void d_eliminateLeftRecursion();
+    // 间接左递归的消除（可能有用）
+    void i_eliminateLeftRecursion();
+    void dfs(Symbol symbol, std::unordered_set<Symbol> &visited);
 }
 #endif // !RULE_HPP
