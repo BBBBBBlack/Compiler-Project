@@ -154,13 +154,16 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             Token leftToken(rule.left, "", -1, -1); // 产生式左部Token(未初始化行号和位置)
             std::vector<Token> rightTokens;
             std::vector<int> rightIndexs;
+
+            if (rule.right[0] == EPSILON) // ε产生式特判, 插入一个空Token
+            {
+                stateStack.push_back(-1);
+                tokenStack.push_back({cst.addNode(Token::getEpsilon()), Token::getEpsilon()});
+            }
+
             // 产生式右部出栈
             for (int i = 0; i < ruleSize; i++)
             {
-                if (rule.right[i] == EPSILON) // ε产生式特判
-                {
-                    break;
-                }
                 stateStack.pop_back();
                 Token topToken = tokenStack.back().second;
                 rightTokens.push_back(topToken);
