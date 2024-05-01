@@ -1,12 +1,12 @@
 {
 	"rules": [
 		{
-			"pattern": "S : A B",
+			"pattern": "S : A 'a' | 'b'",
 			"action": ""
 		},
 		{
-			"pattern": "A : A 'a' | 'ε'",
-			"action": ""
+			"pattern": "A : A 'c' | S 'd' | 'ε'",
+			"actionP": ""
 		}
 	]
 }

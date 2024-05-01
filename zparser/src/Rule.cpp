@@ -46,13 +46,13 @@ bool Rule::isEpsilon() const
 void Rule::print()
 {
     // 打印左部
-    printf("Left: %s\n", left.c_str());
+    printf("%s", left.c_str());
 
     // 打印右部
-    printf("Right: ");
+    printf("->");
     for (const auto &symbol : right)
     {
-        printf("%s ", symbol.c_str());
+        printf("%s", symbol.c_str());
     }
     printf("\n");
 }

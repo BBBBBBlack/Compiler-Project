@@ -1,0 +1,16 @@
+{
+	"rules": [
+		{
+			"pattern": "S : Q 'c' | 'c'",
+			"action": ""
+		},
+		{
+			"pattern": "Q : R 'b' | 'b'",
+			"action": ""
+		},
+		{
+			"pattern": "R : S 'a' | 'a'",
+			"action": ""
+		}
+	]
+}

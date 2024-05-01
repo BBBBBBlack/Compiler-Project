@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
     {
         // 读入产生式
         json rules = config["rules"];
+        // 重要
+        Rules::rules.reserve(rules.size() * 50);
         int cnt = 0;
         for (const auto &item : rules)
         {
@@ -94,14 +96,16 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        // 消除左递归
-        Rules::d_eliminateLeftRecursion();
+        Rules::genRuleMap();
+
+        // // 消除左递归
+        // Rules::d_eliminateLeftRecursion();
         // 增廣文法
         std::string start = Rules::rules[0].getLeft();
-        Rules::rules.push_back(Rule(cnt++, "S'"));
+        Rules::rules.push_back(Rule(cnt++, "START"));
         Rules::rules[Rules::rules.size() - 1].addRight(start);
         Rules::NonTermVec.insert("S'");
-
+        Rules::i_eliminateLeftRecursion();
         Rules::printRules();
         Rules::printNonTermVec();
         Rules::printTermVec();
