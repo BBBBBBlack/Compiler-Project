@@ -131,7 +131,7 @@ TEST(ParseTest, test1)
     Parser parser(tab2);
     // parser.setOutputFile("test/out/test1_process.md");
     parser.setOutputFile("test/out/test1_CST.md");
-    parser.grammarAnalysis("test/in/token.txt", true, "test/out/test1_process.md");
+    parser.grammarAnalysis("test/in/token.txt", "test/out/test1_process.md");
 }
 
 void setTest2Rule(ParseTab &parseTab)
@@ -164,7 +164,7 @@ TEST(ParseTest, test2)
 
     Parser parser(tab);
     parser.setOutputFile("test/out/test2_CST.md");
-    parser.grammarAnalysis("test/in/test2token.txt", true, "test/out/test2_process.md");
+    parser.grammarAnalysis("test/in/test2token.txt", "test/out/test2_process.md");
 }
 
 void setTest3Rule(ParseTab &parseTab)
@@ -208,7 +208,7 @@ TEST(ParseTest, test3)
 
     Parser parser(tab);
     parser.setOutputFile("test/out/test3_CST.md");
-    parser.grammarAnalysis("test/in/test3token.txt", true, "test/out/test3_process.md");
+    parser.grammarAnalysis("test/in/test3token.txt", "test/out/test3_process.md");
 }
 
 TEST(ParseTest, test3_2)
@@ -221,5 +221,5 @@ TEST(ParseTest, test3_2)
 
     Parser parser(tab);
     parser.setOutputFile("test/out/test3_2_CST.md");
-    parser.grammarAnalysis("test/in/test3token.txt", true, "test/out/test3_2_process.md");
+    parser.grammarAnalysis("test/in/test3token.txt", "test/out/test3_2_process.md");
 }

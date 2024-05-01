@@ -24,10 +24,21 @@ public:
 
     void setOutputFile(std::string fileName);
 
-    void grammarAnalysis(std::string tokenFile, bool needProcess, std::string processFileName);
+    /**
+     * @brief 语法分析
+     * @param tokenFile token文件名
+     * @note 不需要输出分析过程
+     */
+    void grammarAnalysis(std::string tokenFile);
+    /**
+     * @brief 语法分析
+     * @param tokenFile token文件名
+     * @param processFileName 分析过程输出文件名
+     */
+    void grammarAnalysis(std::string tokenFile, std::string processFileName);
     /**
      * @brief 语法分析 从cin读取token流
-     * @deprecated 请使用grammarAnalysis(std::string tokenFile, bool needProcess, std::string processFileName)
+     * @deprecated 未测试, 不建议使用
      */
     void grammarAnalysis(bool needProcess, std::string processFileName);
 
