@@ -1,10 +1,19 @@
 #ifndef RULES_HPP
 #define RULES_HPP
+<<<<<<< HEAD
 #include <map>
 #include <vector>
 #include <list>
 #include "Rule.hpp"
 namespace Rules
+=======
+
+#include <vector>
+#include <list>
+#include "Rule.hpp"
+
+class Rules
+>>>>>>> 8ba16adaf245f71bca04435d1868ec3d275aa12c
 {
     typedef std::unordered_map<Symbol, std::vector<Rule *>> RuleMap;
     extern std::vector<Rule> rules;
@@ -30,4 +39,5 @@ namespace Rules
     std::unordered_set<Symbol> dfs();
     void dfs(Symbol start, std::list<Symbol> &temp);
 };
+
 #endif // !RULES_HPP

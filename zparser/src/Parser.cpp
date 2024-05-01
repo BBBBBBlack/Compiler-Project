@@ -92,14 +92,27 @@ void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool
     processFile << "|" << std::endl;
 }
 
-void Parser::grammarAnalysis(std::string tokenFile, bool needProcess, std::string processFileName)
+void Parser::grammarAnalysis(std::string tokenFile)
 {
     std::ifstream tokenStream(tokenFile);
     if (!tokenStream.is_open())
     {
         perror("打开文件失败");
     }
-    this->needProcess = needProcess;
+    grammarAnalysis(tokenStream, "");
+}
+
+void Parser::grammarAnalysis(std::string tokenFile, std::string processFileName)
+{
+    std::ifstream tokenStream(tokenFile);
+    if (!tokenStream.is_open())
+    {
+        perror("打开文件失败");
+    }
+    if (processFileName != "")
+    {
+        this->needProcess = true;
+    }
     grammarAnalysis(tokenStream, processFileName);
 }
 

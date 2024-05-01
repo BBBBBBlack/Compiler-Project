@@ -1,0 +1,54 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "S",
+            "rights": [
+                {
+                    "right": "A",
+                    "action": [
+                        "leftToken.value = \"S\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "A",
+            "rights": [
+                {
+                    "right": "B A",
+                    "action": [
+                        "leftToken.value = \"A\";"
+                    ]
+                },
+                {
+                    "right": "ε",
+                    "action": [
+                        "leftToken.value = \"A\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "B",
+            "rights": [
+                {
+                    "right": "a B",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "b",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        }
+    ]
+}
