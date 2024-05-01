@@ -28,3 +28,24 @@ TEST(ConfigTest, regex)
         searchStart = match.suffix().first;
     }
 }
+
+TEST(ConfigTest, jsonlib)
+{
+    std::string configFile = "test/config.json";
+    std::ifstream jfile(configFile);
+    json config = json::parse(jfile);
+    jfile.close();
+    std::cout << config.dump(4) << std::endl;
+    for (auto &item : config.items())
+    {
+        std::cout << item.key() << std::endl;
+    }
+}
+
+TEST(ConfigTest, json)
+{
+    std::string configFile = "test/config.json", outFileName = "test/out/config/parse.cpp";
+    Config myconfig(configFile);
+    myconfig.analysis(outFileName);
+    // config.analysis(outFileName);
+}

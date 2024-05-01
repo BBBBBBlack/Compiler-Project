@@ -1,8 +1,10 @@
 #ifndef RULES_HPP
 #define RULES_HPP
+
 #include <vector>
-#include<list>
+#include <list>
 #include "Rule.hpp"
+
 class Rules
 {
 public:
@@ -26,4 +28,5 @@ private:
     static std::unordered_set<Symbol> dfs();
     static void dfs(Symbol start, std::list<Symbol> &temp);
 };
+
 #endif // !RULES_HPP

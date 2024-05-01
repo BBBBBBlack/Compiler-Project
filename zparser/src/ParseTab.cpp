@@ -29,7 +29,7 @@ int ParseTab::loadFromFile(const std::string &filename)
     std::ifstream in(filename);
     if (!in.is_open())
     {
-        std::cerr << "Error: cannot open file " << filename << std::endl;
+        std::cerr << "Error: 未找到分析表文件 " << filename << std::endl;
         return 0;
     }
 

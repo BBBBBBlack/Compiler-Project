@@ -109,7 +109,10 @@ void Parser::grammarAnalysis(std::string tokenFile, std::string processFileName)
     {
         perror("打开文件失败");
     }
-    this->needProcess = true;
+    if (processFileName != "")
+    {
+        this->needProcess = true;
+    }
     grammarAnalysis(tokenStream, processFileName);
 }
 
