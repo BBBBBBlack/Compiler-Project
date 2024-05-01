@@ -131,6 +131,7 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "    {\"table\", optional_argument, 0, 't'}," << std::endl;
     outFile << "    {\"output\", optional_argument, 0, 'o'}," << std::endl;
     outFile << "    {\"process\", optional_argument, 0, 'p'}," << std::endl;
+    outFile << "    {\"help\", no_argument, 0, 'h'}," << std::endl;
     outFile << "    {0, 0, 0, 0} // 结束标志" << std::endl;
     outFile << "};" << std::endl;
     outFile << std::endl;
@@ -161,6 +162,7 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "        case 'p':\n";
     outFile << "            processFile = optarg;\n";
     outFile << "            break;\n";
+    outFile << "        case 'h':\n";
     outFile << "        default: // 打印帮助信息\n";
     outFile << "            std::cout << \"Usage: \" << argv[0] << std::endl;\n";
     outFile << "            std::cout << \" -i/--input \\t<token file>\" << std::endl;\n";

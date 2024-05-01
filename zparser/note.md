@@ -1,3 +1,26 @@
+## config使用说明
+### config.md
+参考test/config.json的结构, 需要配置
+- parseTabFile: string, 分析表文件位置
+- copy: \[可选项\] string array, 复制到parse.cpp的代码段
+- rules: 产生式
+  - left: 产生式左部
+  - rights: 相同左部下的右部
+    - right: string, 产生式右部内容, 终结符用`' '`进行包围
+    - action: string array, 产生式action
+
+会生成parse.cpp(可修改)用于保存产生式, 调用Parser
+TODO 修改CMakeLists.txt 为生成的.cpp添加可执行文件的编译项 (参考test)
+
+### parse.cpp
+Usage: ./GenParseTest
+ -i/--input     <token file>
+ -t/--table     <table file>
+ -o/--output    <output file>
+ -p/--process   <process file>
+
+也可以直接查看生成的.cpp 不算复杂
+
 ## 问题
 ### token与语法定义如何匹配
 

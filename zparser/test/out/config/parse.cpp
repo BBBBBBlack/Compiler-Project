@@ -39,6 +39,7 @@ static struct option long_options[] = {
     {"table", optional_argument, 0, 't'},
     {"output", optional_argument, 0, 'o'},
     {"process", optional_argument, 0, 'p'},
+    {"help", no_argument, 0, 'h'},
     {0, 0, 0, 0} // 结束标志
 };
 
@@ -68,6 +69,7 @@ int main(int argc, char *argv[])
         case 'p':
             processFile = optarg;
             break;
+        case 'h':
         default: // 打印帮助信息
             std::cout << "Usage: " << argv[0] << std::endl;
             std::cout << " -i/--input \t<token file>" << std::endl;
