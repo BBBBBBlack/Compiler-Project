@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
             int i;
             for (i = 0; i < pattern.size(); i++)
             {
-                if (isalpha(pattern[i]))
+                if (!isspace(pattern[i]) && pattern[i] != ':')
                 {
                     father += pattern[i];
                 }
@@ -104,8 +104,10 @@ int main(int argc, char *argv[])
         std::string start = Rules::rules[0].getLeft();
         Rules::rules.push_back(Rule(cnt++, "START"));
         Rules::rules[Rules::rules.size() - 1].addRight(start);
-        Rules::NonTermVec.insert("S'");
-        Rules::i_eliminateLeftRecursion();
+        Rules::NonTermVec.insert("START");
+        Rules::eliminateLeftRecursion();
+        Rules::getAllFirst();
+        Rules::getFollow();
         Rules::printRules();
         Rules::printNonTermVec();
         Rules::printTermVec();

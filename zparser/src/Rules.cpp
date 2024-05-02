@@ -1,5 +1,9 @@
 
 #include "Rules.hpp"
+
+bool compareFollowMap(Rules::SymbolSetMap originMap);
+void dfs(Symbol start, std::list<Symbol> &temp);
+
 /**
  * @brief 产生式们
  */
@@ -8,6 +12,8 @@ std::unordered_set<Symbol> Rules::TermVec;
 std::vector<Rule> Rules::rules;
 std::vector<std::list<Symbol>> Rules::Rings;
 Rules::RuleMap Rules::rules_map;
+Rules::SymbolSetMap Rules::First;
+Rules::SymbolSetMap Rules::Follow;
 
 // rules归类
 void Rules::genRuleMap()
@@ -57,6 +63,7 @@ void Rules::printRules()
         rule.print();
     }
 }
+
 // 直接左递归的消除（可能有用）
 void Rules::d_eliminateLeftRecursion()
 {
@@ -105,6 +112,7 @@ void Rules::d_eliminateLeftRecursion()
     }
     Rules::genRuleMap();
 }
+
 // 左递归的消除（可能有用）
 void Rules::eliminateLeftRecursion()
 {
@@ -113,7 +121,7 @@ void Rules::eliminateLeftRecursion()
     std::list<Symbol> temp;
     Symbol start = Rules::rules[0].left;
     // 判环
-    Rules::dfs(start, temp);
+    dfs(start, temp);
     // 消環
     for (int i = 0; i < Rules::Rings.size(); i++)
     {
@@ -176,7 +184,132 @@ void Rules::eliminateLeftRecursion()
         }
     }
 }
-void Rules::dfs(Symbol start, std::list<Symbol> &temp)
+
+// 所有first集
+void Rules::getAllFirst()
+{
+    for (Symbol Symbol : Rules::NonTermVec)
+    {
+        if (Symbol != "START" && Rules::First.find(Symbol) == Rules::First.end())
+        {
+            Rules::getFirst(Symbol);
+        }
+    }
+}
+
+// first集
+void Rules::getFirst(Symbol start)
+{
+    std::vector<Rule *> same_left_rules = Rules::rules_map[start];
+    for (int i = 0; i < same_left_rules.size(); i++)
+    {
+        Rule *rule = same_left_rules[i];
+        if (rule->isEpsilon())
+        {
+            Rules::First[start].insert(EPSILON);
+        }
+        else
+        {
+            Symbol right_fir = rule->right[0];
+            if (Rules::TermVec.find(right_fir) != Rules::TermVec.end())
+            {
+                Rules::First[start].insert(right_fir);
+            }
+            else
+            {
+                int cnt = 0;
+                while (1)
+                {
+                    cnt++;
+                    bool containEpsilon = false;
+                    Rules::getFirst(right_fir);
+                    for (Symbol symbol : Rules::First[right_fir])
+                    {
+                        if (symbol != EPSILON || cnt == rule->right.size())
+                        {
+                            Rules::First[start].insert(symbol);
+                        }
+                        else if (symbol == EPSILON)
+                        {
+                            containEpsilon = true;
+                            right_fir = rule->right[cnt];
+                        }
+                    }
+                    if (!containEpsilon || cnt >= rule->right.size())
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// follow集
+void Rules::getFollow()
+{
+    int i = 0;
+    Rules::SymbolSetMap originMap = Rules::Follow;
+    while (1)
+    {
+        if (rules[i].left != "START")
+        {
+            Rule rule = Rules::rules[i];
+            Symbol left = rule.left;
+            if (i == 0)
+            {
+                Rules::Follow[left].insert("$");
+            }
+
+            std::vector<Symbol> right = rule.right;
+            for (int j = 0; j < right.size(); j++)
+            {
+                Symbol symbol = right[j];
+                // 右部的非终结符
+                if (Rules::NonTermVec.find(symbol) != Rules::NonTermVec.end())
+                {
+                    if (j + 1 < right.size())
+                    {
+                        if (Rules::TermVec.find(right[j + 1]) != Rules::TermVec.end())
+                        {
+                            if (right[j + 1] != EPSILON)
+                            {
+                                Rules::Follow[symbol].insert(right[j + 1]);
+                            }
+                        }
+                        else
+                        {
+                            Rules::Follow[symbol].insert(Rules::First[right[j + 1]].begin(),
+                                                         Rules::First[right[j + 1]].end());
+                            Rules::Follow[symbol].erase(EPSILON);
+                        }
+                    }
+
+                    if (j == right.size() - 1 ||
+                        Rules::First[right[j + 1]].find(EPSILON) != Rules::First[right[j + 1]].end())
+                    {
+                        for (Symbol s : Rules::Follow[left])
+                        {
+                            Rules::Follow[symbol].insert(s);
+                        }
+                    }
+                }
+            }
+        }
+        i++;
+        i %= Rules::rules.size();
+        if (i == 0)
+        {
+            if (compareFollowMap(originMap))
+            {
+                break;
+            }
+            originMap = Rules::Follow;
+        }
+    }
+}
+
+void dfs(Symbol start, std::list<Symbol> &temp)
 {
     std::vector<Rule *> same_left_rules = Rules::rules_map[start];
     if (same_left_rules.size() == 0)
@@ -203,4 +336,17 @@ void Rules::dfs(Symbol start, std::list<Symbol> &temp)
         same_left_rules[i]->visited = false;
         temp.pop_front();
     }
+}
+
+bool compareFollowMap(Rules::SymbolSetMap originMap)
+{
+    // 在某个时间点，你想要检查map是否发生了改变
+    for (const auto &pair : Rules::Follow)
+    {
+        if (originMap.count(pair.first) == 0 || originMap[pair.first].size() != pair.second.size())
+        {
+            return false;
+        }
+    }
+    return true;
 }
