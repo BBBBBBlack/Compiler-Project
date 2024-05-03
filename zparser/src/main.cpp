@@ -96,25 +96,37 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        Rules::genRuleMap();
 
-        // // 消除左递归
-        // Rules::d_eliminateLeftRecursion();
+        /*
+        START
+        */
+        Rules::genRuleMap();
         // 增廣文法
         std::string start = Rules::rules[0].getLeft();
         Rules::rules.push_back(Rule(cnt++, "START"));
         Rules::rules[Rules::rules.size() - 1].addRight(start);
         Rules::NonTermVec.insert("START");
-        Rules::eliminateLeftRecursion();
+        // Rules::eliminateLeftRecursion();
         Rules::getAllFirst();
         Rules::getFollow();
-        Rules::printRules();
-        Rules::printNonTermVec();
-        Rules::printTermVec();
+        // Rules::printRules();
+        // Rules::printNonTermVec();
+        // Rules::printTermVec();
 
         // 构造自动机
         FA fa;
-        fa.create(Rules::rules);
+        fa.createFA(Rules::rules);
+        std::vector<State> res = fa.createTable();
+        ParseTab parseTab;
+        Rules::NonTermVec.erase("START");
+        parseTab.setNonTermVec(std::vector(Rules::NonTermVec.begin(), Rules::NonTermVec.end()));
+        Rules::TermVec.insert("$");
+        parseTab.setTermVec(std::vector(Rules::TermVec.begin(), Rules::TermVec.end()));
+        parseTab.setStates(res);
+        parseTab.saveToFile("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/data.md");
+        /*
+        END
+        */
     }
     return 0;
 }

@@ -1,0 +1,24 @@
+{
+	"rules": [
+		{
+			"pattern": "S : A B | 'b' C",
+			"action": ""
+		},
+		{
+			"pattern": "A : 'ε' | 'b'",
+			"actionP": ""
+		},
+		{
+			"pattern": "B : 'ε' | 'a' D",
+			"actionP": ""
+		},
+		{
+			"pattern": "C : A D | 'b'",
+			"actionP": ""
+		},
+		{
+			"pattern": "D : 'a' S | 'c'",
+			"actionP": ""
+		}
+	]
+}

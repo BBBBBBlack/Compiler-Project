@@ -41,7 +41,7 @@ SubRuleSet FAState::Goto(SubRuleSet &I, Symbol X)
     return J;
 }
 
-void FA::create(std::vector<Rule> rules)
+void FA::createFA(std::vector<Rule> rules)
 {
     // 构造初始状态
     Rule start = rules[rules.size() - 1];
@@ -94,4 +94,46 @@ void FA::create(std::vector<Rule> rules)
             }
         }
     }
+}
+
+//  创建分析表
+std::vector<State> FA::createTable()
+{
+    std::vector<State> res;
+    for (int i = 0; i < states.size(); i++)
+    {
+        std::unordered_map<Symbol, Action> actions;
+        for (const SubRule &sub_rule : states[i].subRules)
+        {
+            // 有归约项
+            if (sub_rule.right.size() == sub_rule.getDotPos())
+            {
+                if (sub_rule.left == "START")
+                {
+                    actions["$"] = Action(ActionType::A_Accept);
+                }
+                std::unordered_set<Symbol> follow_set = Rules::Follow[sub_rule.left];
+                for (Symbol symbol : follow_set)
+                {
+                    actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id);
+                }
+            }
+        }
+        for (auto &pair : states[i].trans)
+        {
+            // std::unordered_map<Symbol, int> trans;
+            Symbol symbol = pair.first;
+            int next_state = pair.second;
+            if (Rules::TermVec.find(symbol) != Rules::TermVec.end())
+            {
+                actions[symbol] = Action(ActionType::A_Shift, next_state);
+            }
+            else
+            {
+                actions[symbol] = Action(ActionType::A_Goto, next_state);
+            }
+        }
+        res.push_back(State(actions));
+    }
+    return res;
 }

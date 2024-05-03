@@ -15,7 +15,7 @@
 #include "Rule.hpp"
 #include "Rules.hpp"
 #include "pch.hpp"
-
+#include "ParseTabStruct.hpp"
 
 // 空的动作函数
 inline int NullAction()
@@ -41,12 +41,12 @@ struct FAState
     int stateID;
     SubRuleSet subRules;
     // TODO 重构为<char, int>
-    std::unordered_map<std::string, int> trans; // 映射字符到下一个状态集合
-    std::vector<int> epsilonTrans;              // 空边
-    bool isAccepting;                           // 是否为终节点
-    int priority;                               // 优先级
-    ActionFunction action;                      // 动作
-    std::string note;                           // 备注, 可为空
+    std::unordered_map<Symbol, int> trans; // 映射字符到下一个状态集合
+    std::vector<int> epsilonTrans;         // 空边
+    bool isAccepting;                      // 是否为终节点
+    int priority;                          // 优先级
+    ActionFunction action;                 // 动作
+    std::string note;                      // 备注, 可为空
 
     FAState(int stateID, std::unordered_map<std::string, int> trans, std::vector<int> epsilonTrans, bool isAccepting, ActionFunction action)
         : stateID(stateID), trans(trans), epsilonTrans(epsilonTrans), isAccepting(isAccepting), action(action) {}
@@ -72,7 +72,10 @@ private:
 public:
     FA() {}
     FA(FAStateVec states) : states(states) {}
-    void create(std::vector<Rule> rules);
+    // 创建自动机
+    void createFA(std::vector<Rule> rules);
+    //  创建分析表
+    std::vector<State> createTable();
     void print()
     {
         for (FAState state : states)
@@ -81,7 +84,6 @@ public:
         }
     }
 };
-
 
 struct FAStateBlock
 {

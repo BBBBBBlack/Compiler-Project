@@ -3,6 +3,7 @@
 
 bool compareFollowMap(Rules::SymbolSetMap originMap);
 void dfs(Symbol start, std::list<Symbol> &temp);
+int findIndex(std::list<Symbol> &myList, Symbol element);
 
 /**
  * @brief 产生式们
@@ -116,7 +117,7 @@ void Rules::d_eliminateLeftRecursion()
 // 左递归的消除（可能有用）
 void Rules::eliminateLeftRecursion()
 {
-    // 先消除直接左递归
+    // // 先消除直接左递归
     d_eliminateLeftRecursion();
     std::list<Symbol> temp;
     Symbol start = Rules::rules[0].left;
@@ -188,11 +189,27 @@ void Rules::eliminateLeftRecursion()
 // 所有first集
 void Rules::getAllFirst()
 {
-    for (Symbol Symbol : Rules::NonTermVec)
+    std::list<Symbol> temp;
+    Symbol start = Rules::rules[0].left;
+    dfs(start, temp);
+
+    for (Symbol symbol : Rules::NonTermVec)
     {
-        if (Symbol != "START" && Rules::First.find(Symbol) == Rules::First.end())
+        if (symbol != "START" && Rules::First.find(symbol) == Rules::First.end())
         {
-            Rules::getFirst(Symbol);
+            Rules::getFirst(symbol);
+            // 遇到间接左递归时，环中的左部有相同的first集
+            std::unordered_set<Symbol> max_set = Rules::First[symbol];
+            for (int i = 0; i < Rules::Rings.size(); i++)
+            {
+                if (findIndex(Rules::Rings[i], symbol) != -1)
+                {
+                    for (Symbol s : Rules::Rings[i])
+                    {
+                        Rules::First[s] = max_set;
+                    }
+                }
+            }
         }
     }
 }
@@ -222,7 +239,11 @@ void Rules::getFirst(Symbol start)
                 {
                     cnt++;
                     bool containEpsilon = false;
-                    Rules::getFirst(right_fir);
+                    if (!rule->visited)
+                    {
+                        rule->visited = true;
+                        Rules::getFirst(right_fir);
+                    }
                     for (Symbol symbol : Rules::First[right_fir])
                     {
                         if (symbol != EPSILON || cnt == rule->right.size())
@@ -240,6 +261,7 @@ void Rules::getFirst(Symbol start)
                         break;
                     }
                 }
+                rule->visited = false;
             }
         }
     }
@@ -323,7 +345,9 @@ void dfs(Symbol start, std::list<Symbol> &temp)
         if (rule.visited)
         {
             // 加入
-            Rules::Rings.push_back(temp);
+            int index = findIndex(temp, start);
+            auto end_it = std::next(temp.begin(), index);
+            Rules::Rings.push_back(std::list(temp.begin(), end_it));
             continue;
         }
         temp.push_front(rule.left);
@@ -349,4 +373,18 @@ bool compareFollowMap(Rules::SymbolSetMap originMap)
         }
     }
     return true;
+}
+
+int findIndex(std::list<Symbol> &myList, Symbol element)
+{
+    int index = myList.size();
+    for (auto it = myList.rbegin(); it != myList.rend(); ++it)
+    {
+        if (*it == element)
+        {
+            return index; // 返回找到的元素的下标
+        }
+        index--;
+    }
+    return -1; // 如果元素未找到，则返回 -1
 }

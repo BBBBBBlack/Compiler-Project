@@ -1,0 +1,12 @@
+{
+    "rules": [
+        {
+            "pattern": "S : 'x' 'x' T",
+            "action": ""
+        },
+        {
+            "pattern": "T : 'y'",
+            "action": ""
+        }
+    ]
+}
