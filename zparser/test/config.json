@@ -26,7 +26,7 @@
                     ]
                 },
                 {
-                    "right": "ε",
+                    "right": "'ε'",
                     "action": [
                         "leftToken.value = \"A\";"
                     ]
@@ -37,13 +37,13 @@
             "left": "B",
             "rights": [
                 {
-                    "right": "a B",
+                    "right": "'a' B",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]
                 },
                 {
-                    "right": "b",
+                    "right": "'b'",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]
