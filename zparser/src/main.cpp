@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     START
     */
     Config config("/usr/local/my_projects/c_project/Compiler-Project/zparser/test/config.json");
-    config.analysis("output.txt");
+    config.analysis("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/output.txt");
     Rules::genRuleMap();
     // 增廣文法
     std::string start = Rules::rules[0].getLeft();

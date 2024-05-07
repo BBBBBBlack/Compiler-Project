@@ -9,7 +9,7 @@
             "left": "S",
             "rights": [
                 {
-                    "right": "A",
+                    "right": "E",
                     "action": [
                         "leftToken.value = \"S\";"
                     ]
@@ -17,16 +17,16 @@
             ]
         },
         {
-            "left": "A",
+            "left": "E",
             "rights": [
                 {
-                    "right": "B A",
+                    "right": "T '+' E",
                     "action": [
                         "leftToken.value = \"A\";"
                     ]
                 },
                 {
-                    "right": "'ε'",
+                    "right": "T",
                     "action": [
                         "leftToken.value = \"A\";"
                     ]
@@ -34,16 +34,10 @@
             ]
         },
         {
-            "left": "B",
+            "left": "T",
             "rights": [
                 {
-                    "right": "'a' B",
-                    "action": [
-                        "leftToken.value = \"B\";"
-                    ]
-                },
-                {
-                    "right": "'b'",
+                    "right": "'n'",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]

@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <stack>
+#include <iostream>
 #include "ParseTabStruct.hpp"
 #include "Token.hpp"
 
@@ -69,6 +70,7 @@ public:
     SubRule(const Rule &rule, int dotPos);
     int getDotPos() const;
     void print();
+    void print(std::ofstream &outFile);
 };
 
 struct SubRuleHash

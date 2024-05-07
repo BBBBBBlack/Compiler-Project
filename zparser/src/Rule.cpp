@@ -49,7 +49,7 @@ void Rule::print()
     printf("%s", left.c_str());
 
     // 打印右部
-    printf("->");
+    printf(" → ");
     for (const auto &symbol : right)
     {
         printf("%s", symbol.c_str());
@@ -77,16 +77,32 @@ int SubRule::getDotPos() const
 }
 void SubRule::print()
 {
-    printf("Left: %s\t", this->getLeft().c_str());
+    printf("%s → ", this->getLeft().c_str());
     std::vector<Symbol> right = this->getRight();
-    printf("Right: ");
     for (int i = 0; i < right.size(); i++)
     {
         if (i == this->dotPos)
         {
-            printf(".");
+            printf("·");
         }
         printf("%s ", right[i].c_str());
     }
     printf("\n");
+}
+void SubRule::print(std::ofstream &outFile)
+{
+    outFile << this->getLeft() << " -> ";
+    std::vector<Symbol> right = this->getRight();
+    for (int i = 0; i < right.size(); i++)
+    {
+        if (i == this->dotPos)
+        {
+            outFile << ".";
+        }
+        outFile << right[i] << " ";
+    }
+    if (this->dotPos == right.size())
+    {
+        outFile << ".";
+    }
 }

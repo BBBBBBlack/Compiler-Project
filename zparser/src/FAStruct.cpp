@@ -94,8 +94,39 @@ void FA::createFA(std::vector<Rule> rules)
             }
         }
     }
+    drawFA("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/FA.md");
 }
 
+void FA::drawFA(std::string outFileName)
+{
+    std::string folderPath = outFileName.substr(0, outFileName.find_last_of("/\\"));
+    std::filesystem::create_directories(folderPath);
+    std::ofstream outFile(outFileName, std::ios::trunc);
+    // TODO
+    outFile << "```mermaid" << std::endl;
+    outFile << "graph LR" << std::endl;
+    for (int i = 0; i < states.size(); i++)
+    {
+        // 创建节点
+        outFile << "node" << i << "(<div>";
+        outFile << "I" << i << ":<br>";
+        for (SubRule rule : states[i].subRules)
+        {
+            rule.print(outFile);
+            outFile << "<br>";
+        }
+        outFile << "</div>)" << std::endl;
+        // 创建边
+        for (auto &pair : states[i].trans)
+        {
+            Symbol symbol = pair.first;
+            int next_state = pair.second;
+            outFile << "node" << i << "--> |" << symbol
+                    << "| node" << next_state << std::endl;
+        }
+    }
+    outFile.close();
+}
 //  创建分析表
 std::vector<State> FA::createTable()
 {

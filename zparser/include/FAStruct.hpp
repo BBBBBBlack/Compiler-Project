@@ -76,6 +76,7 @@ public:
     void createFA(std::vector<Rule> rules);
     //  创建分析表
     std::vector<State> createTable();
+    void drawFA(std::string outFileName);
     void print()
     {
         for (FAState state : states)
@@ -98,6 +99,7 @@ struct StateSet
     bool isAccepting = false;
     int stateID; // DFA中的stateID
     std::unordered_set<int> set;
+
     friend std::ostream &operator<<(std::ostream &os, const StateSet &stateSet)
     {
         std::string isAccepting = stateSet.isAccepting ? "T" : "F";
