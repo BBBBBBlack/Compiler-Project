@@ -91,18 +91,18 @@ void SubRule::print()
 }
 void SubRule::print(std::ofstream &outFile)
 {
-    outFile << this->getLeft() << " -> ";
+    outFile << this->getLeft() << " → ";
     std::vector<Symbol> right = this->getRight();
     for (int i = 0; i < right.size(); i++)
     {
         if (i == this->dotPos)
         {
-            outFile << ".";
+            outFile << "·";
         }
         outFile << right[i] << " ";
     }
     if (this->dotPos == right.size())
     {
-        outFile << ".";
+        outFile << "·";
     }
 }
