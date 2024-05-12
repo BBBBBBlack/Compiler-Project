@@ -105,23 +105,14 @@ int main(int argc, char *argv[])
     // Rules::eliminateLeftRecursion();
     Rules::getAllFirst();
     Rules::getFollow();
-    // Rules::printRules();
-    // Rules::printNonTermVec();
-    // Rules::printTermVec();
 
     // 构造自动机
     FA fa;
     fa.createFA(Rules::rules);
+    fa.drawFA("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/FA.md");
     std::vector<State> res = fa.createTable();
-    ParseTab parseTab;
-    {
-        Rules::NonTermVec.erase("START");
-        parseTab.setNonTermVec(std::vector(Rules::NonTermVec.begin(), Rules::NonTermVec.end()));
-        Rules::TermVec.insert("$");
-        Rules::TermVec.erase(EPSILON);
-    }
-    parseTab.setTermVec(std::vector(Rules::TermVec.begin(), Rules::TermVec.end()));
-    parseTab.setStates(res);
+    Rules::transForAnalysisTable();
+    ParseTab parseTab(res);
     parseTab.saveToFile("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/data.md");
     /*
     END

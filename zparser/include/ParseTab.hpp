@@ -14,6 +14,13 @@ class ParseTab
 public:
     ParseTab();
     ~ParseTab();
+    ParseTab(std::vector<State> states)
+    {
+        this->states = states;
+        this->rules = Rules::rules;
+        this->nonTermVec = std::vector(Rules::NonTermVec.begin(), Rules::NonTermVec.end());
+        this->termVec = std::vector(Rules::TermVec.begin(), Rules::TermVec.end());
+    }
     void setStates(std::vector<State> states)
     {
         this->states = states;

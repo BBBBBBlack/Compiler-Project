@@ -19,10 +19,10 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # 添加测试目录
 add_subdirectory(test)
 
-add_executable(zparser ${SOURCE_FILES})
+# add_executable(zparser ${SOURCE_FILES})
 
 # add_compile_options(zparser PRIVATE -O2 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-add_compile_options(zparser PRIVATE -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
+# add_compile_options(zparser PRIVATE -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
 
 # 启用测试
 enable_testing()

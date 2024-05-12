@@ -31,6 +31,9 @@ namespace Rules
     // 添加增广文法的产生式
     void addStart();
 
+    // 修改（非）终结符
+    void transForAnalysisTable();
+
     // 直接左递归的消除（可能有用）
     void d_eliminateLeftRecursion();
     // 左递归的消除（可能有用）

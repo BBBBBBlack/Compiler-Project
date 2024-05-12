@@ -94,7 +94,6 @@ void FA::createFA(std::vector<Rule> rules)
             }
         }
     }
-    drawFA("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/FA.md");
 }
 
 void FA::drawFA(std::string outFileName)
@@ -102,7 +101,6 @@ void FA::drawFA(std::string outFileName)
     std::string folderPath = outFileName.substr(0, outFileName.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);
     std::ofstream outFile(outFileName, std::ios::trunc);
-    // TODO
     outFile << "```mermaid" << std::endl;
     outFile << "graph LR" << std::endl;
     for (int i = 0; i < states.size(); i++)

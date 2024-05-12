@@ -76,6 +76,14 @@ void Rules::addStart()
     Rules::NonTermVec.insert("START");
 }
 
+// 修改（非）终结符
+void Rules::transForAnalysisTable()
+{
+    Rules::NonTermVec.erase("START");
+    Rules::TermVec.insert("$");
+    Rules::TermVec.erase(EPSILON);
+}
+
 // 直接左递归的消除（可能有用）
 void Rules::d_eliminateLeftRecursion()
 {
