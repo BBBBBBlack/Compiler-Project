@@ -15,3 +15,4 @@ node5--> |n| node4
 node5--> |T| node3
 node5--> |E| node6
 node6(<div>I6:<br>E -> T + E .<br></div>)
+```
