@@ -1,3 +1,5 @@
+#ifndef ZLEX_HPP
+#define ZLEX_HPP
 #include "NFA.hpp"
 #include "DFA.hpp"
 #include "Token.hpp"
@@ -37,3 +39,4 @@ protected:
      */
     int lexicalAnalysis(std::ostream &outputStream, std::string fileName);
 };
+#endif // ZLEX_HPP

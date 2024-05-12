@@ -1,4 +1,5 @@
 #include "Token.hpp"
+#include "ZLex.hpp"
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> SymbolTable::symbolTable;
 
@@ -93,14 +94,14 @@ void Token::print_token()
 {
     if (isDigit)
     {
-        tokenOut << "< num, " << character << ">" << std::endl;
+        tokenOut << "<num," << character << "," << yylineno << "," << yypos << ">" << std::endl;
     }
     else if (operatorMap.count(character))
     {
-        tokenOut << "<" << character << ">" << std::endl;
+        tokenOut << "<" << character << "," << character << "," << yylineno << "," << yypos << ">" << std::endl;
     }
     else
     {
-        tokenOut << "< id, " << character << ">" << std::endl;
+        tokenOut << "<variable," << character << "," << yylineno << "," << yypos << ">" << std::endl;
     }
 }
