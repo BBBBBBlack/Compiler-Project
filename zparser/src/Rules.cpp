@@ -1,6 +1,8 @@
 
 #include "Rules.hpp"
 
+#define START "START"
+
 bool compareFollowMap(Rules::SymbolSetMap originMap);
 void dfs(Symbol start, std::list<Symbol> &temp);
 int findIndex(std::list<Symbol> &myList, Symbol element);
@@ -63,6 +65,15 @@ void Rules::printRules()
     {
         rule.print();
     }
+}
+
+// 添加增广文法的产生式
+void Rules::addStart()
+{
+    std::string start = Rules::rules[0].getLeft();
+    Rules::rules.push_back(Rule(Rules::rules.size(), "START"));
+    Rules::rules[Rules::rules.size() - 1].addRight(start);
+    Rules::NonTermVec.insert("START");
 }
 
 // 直接左递归的消除（可能有用）

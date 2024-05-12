@@ -1,14 +1,13 @@
 #include <ParseTab.hpp>
-#include <iostream>
-#include <fstream>
 #include <stdio.h>
 #include <ctype.h>
-#include <nlohmann/json.hpp>
+
+#include "pch.hpp"
 #include "Rule.hpp"
 #include "Rules.hpp"
 #include "FAStruct.hpp"
 #include "Config.hpp"
-using json = nlohmann::json;
+
 int main(int argc, char *argv[])
 {
     // if (argc != 2)
@@ -102,10 +101,7 @@ int main(int argc, char *argv[])
     config.analysis("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/output.txt");
     Rules::genRuleMap();
     // 增廣文法
-    std::string start = Rules::rules[0].getLeft();
-    Rules::rules.push_back(Rule(Rules::rules.size(), "START"));
-    Rules::rules[Rules::rules.size() - 1].addRight(start);
-    Rules::NonTermVec.insert("START");
+    Rules::addStart();
     // Rules::eliminateLeftRecursion();
     Rules::getAllFirst();
     Rules::getFollow();
@@ -118,10 +114,12 @@ int main(int argc, char *argv[])
     fa.createFA(Rules::rules);
     std::vector<State> res = fa.createTable();
     ParseTab parseTab;
-    Rules::NonTermVec.erase("START");
-    parseTab.setNonTermVec(std::vector(Rules::NonTermVec.begin(), Rules::NonTermVec.end()));
-    Rules::TermVec.insert("$");
-    Rules::TermVec.erase(EPSILON);
+    {
+        Rules::NonTermVec.erase("START");
+        parseTab.setNonTermVec(std::vector(Rules::NonTermVec.begin(), Rules::NonTermVec.end()));
+        Rules::TermVec.insert("$");
+        Rules::TermVec.erase(EPSILON);
+    }
     parseTab.setTermVec(std::vector(Rules::TermVec.begin(), Rules::TermVec.end()));
     parseTab.setStates(res);
     parseTab.saveToFile("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/data.md");
