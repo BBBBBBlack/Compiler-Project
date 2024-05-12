@@ -108,21 +108,21 @@ void FA::drawFA(std::string outFileName)
     for (int i = 0; i < states.size(); i++)
     {
         // 创建节点
-        outFile << "node" << i << "(<div>";
+        outFile << "node" << i << "(\"<div>";
         outFile << "I" << i << ":<br>";
         for (SubRule rule : states[i].subRules)
         {
             rule.print(outFile);
             outFile << "<br>";
         }
-        outFile << "</div>)" << std::endl;
+        outFile << "\"</div>)" << std::endl;
         // 创建边
         for (auto &pair : states[i].trans)
         {
             Symbol symbol = pair.first;
             int next_state = pair.second;
-            outFile << "node" << i << "--> |" << symbol
-                    << "| node" << next_state << std::endl;
+            outFile << "node" << i << "--> |\"" << symbol
+                    << "\"| node" << next_state << std::endl;
         }
     }
     outFile.close();

@@ -6,21 +6,10 @@
     ],
     "rules": [
         {
-            "left": "S",
-            "rights": [
-                {
-                    "right": "E",
-                    "action": [
-                        "leftToken.value = \"S\";"
-                    ]
-                }
-            ]
-        },
-        {
             "left": "E",
             "rights": [
                 {
-                    "right": "T '+' E",
+                    "right": "E '+' T",
                     "action": [
                         "leftToken.value = \"A\";"
                     ]
@@ -37,7 +26,30 @@
             "left": "T",
             "rights": [
                 {
-                    "right": "'n'",
+                    "right": "T '*' F",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "F",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "F",
+            "rights": [
+                {
+                    "right": "'(' E ')'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "'digit'",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]
