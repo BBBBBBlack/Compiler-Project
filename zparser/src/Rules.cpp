@@ -369,23 +369,24 @@ void Rules::getFollow()
 
 void dfs(Symbol start, std::list<Symbol> &temp)
 {
+    int index = findIndex(temp, start);
+    // 有环
+    if (temp.size() != 0 && index != -1)
+    {
+        // 加入
+        auto end_it = std::next(temp.begin(), index);
+        Rules::Rings.push_back(std::list(temp.begin(), end_it));
+        return;
+    }
     std::vector<Rule *> same_left_rules = Rules::rules_map[start];
     if (same_left_rules.size() == 0)
     {
         return;
     }
+
     for (int i = 0; i < same_left_rules.size(); i++)
     {
         Rule rule = *same_left_rules[i];
-        // 有环
-        if (start == temp.front())
-        {
-            // 加入
-            int index = findIndex(temp, start);
-            auto end_it = std::next(temp.begin(), index);
-            Rules::Rings.push_back(std::list(temp.begin(), end_it));
-            continue;
-        }
         temp.push_front(rule.left);
         same_left_rules[i]->visited = true;
         Symbol right_fir = rule.right[0];
