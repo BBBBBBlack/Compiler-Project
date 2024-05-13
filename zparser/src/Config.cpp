@@ -76,7 +76,7 @@ void Config::analysisRule(std::ofstream &outFile)
     }
 
     json rules = config[CONFIG_RULES];
-    Rules::rules.reserve(rules.size() * 50);
+    Rules::rules.reserve(rules.size() * 5);
     int cnt = 0;
     std::regex rightRegex(RIGHT_REGEX);
     std::smatch match;
