@@ -50,6 +50,7 @@ void FA::createFA(std::vector<Rule> rules)
     FAState::closure(set);
     FAState state(0, set);
     states.push_back(state);
+
     for (SubRule rule : set)
     {
         rule.print();
@@ -101,12 +102,21 @@ void FA::drawFA(std::string outFileName)
     std::string folderPath = outFileName.substr(0, outFileName.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);
     std::ofstream outFile(outFileName, std::ios::trunc);
+    // 输出产生式
+    outFile << "## 产生式" << std::endl
+            << std::endl;
+    Rules::printRules(outFile);
+    outFile << std::endl;
+
+    // 输出FA图
+    outFile << "## FA Graph" << std::endl
+            << std::endl;
     outFile << "```mermaid" << std::endl;
-    outFile << "graph LR" << std::endl;
+    outFile << "\tgraph LR" << std::endl;
     for (int i = 0; i < states.size(); i++)
     {
         // 创建节点
-        outFile << "node" << i << "(\"<div>";
+        outFile << "\tnode" << i << "(\"<div>";
         outFile << "I" << i << ":<br>";
         for (SubRule rule : states[i].subRules)
         {
@@ -119,10 +129,11 @@ void FA::drawFA(std::string outFileName)
         {
             Symbol symbol = pair.first;
             int next_state = pair.second;
-            outFile << "node" << i << "--> |\"" << symbol
+            outFile << "\tnode" << i << "--> |\"" << symbol
                     << "\"| node" << next_state << std::endl;
         }
     }
+    outFile << "```" << std::endl;
     outFile.close();
 }
 //  创建分析表

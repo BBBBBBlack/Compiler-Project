@@ -26,7 +26,7 @@ namespace Rules
     void genRuleMap();
     void printNonTermVec();
     void printTermVec();
-    void printRules();
+    void printRules(std::ostream &os);
 
     // 添加增广文法的产生式
     void addStart();

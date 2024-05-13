@@ -9,7 +9,7 @@
 #include "ParseTabStruct.hpp"
 #include "Token.hpp"
 
-#define PRODUCTION_CONCAT "->"
+#define PRODUCTION_CONCAT " → "
 
 // TODO 产生式动作的save和load
 using ActionFunction = std::function<int(Token &leftToken, std::vector<Token> &rightTokens)>;
@@ -25,7 +25,7 @@ public:
     Symbol left;
     // 产生式右部
     std::vector<Symbol> right;
-    // TODO action能否捕获left, right中对应的值
+    // action能否捕获left, right中对应的值
     ActionFunction action;
     // 是否遍历过
     bool visited = false;

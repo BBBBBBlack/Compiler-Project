@@ -59,11 +59,11 @@ void Rules::printNonTermVec()
     printf("\n");
 }
 
-void Rules::printRules()
+void Rules::printRules(std::ostream &os)
 {
     for (Rule &rule : Rules::rules)
     {
-        rule.print();
+        os << "- " << rule << std::endl;
     }
 }
 
