@@ -1,3 +1,16 @@
+## zparser使用流程
+
+> v0.1, 待改进
+
+1. 编写config.json
+2. 运行自动机, 生成`parse.cpp`和`parseTab.md`
+   - `parse.cpp`: 保存产生式action, main函数调用
+   - `parseTab.md`: 保存分析表
+   - TODO: 将这个步骤封装成一个可执行文件: `ZTableGenerator`
+3. 编译`parse.cpp`为可执行文件`ZParser`
+   - TODO: 将这步也封到`ZTableGenerator`
+4. 运行`ZParser`
+
 ## config使用说明
 ### config.md
 参考test/config.json的结构, 需要配置
@@ -46,4 +59,4 @@ Usage: ./GenParseTest
    3. 规约的action
       - TODO 在action中实现对产生式右项的引用
 3. 分析结果输出位置
-4. 
+

@@ -12,6 +12,9 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 # 设置源文件目录
 set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
 file(GLOB SOURCE_FILES ${SOURCE_DIR}/*.cpp)
+list(REMOVE_ITEM SOURCE_FILES "${SOURCE_DIR}/main.cpp" "${SOURCE_DIR}/ZTableGenerator.cpp")
+# zTableGenerator源文件
+file(GLOB ZTABLE_GENERATOR_SOURCE_FILES ${SOURCE_FILES} "${SOURCE_DIR}/ZTableGenerator.cpp")
 
 # 添加 include 目录
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -19,6 +22,8 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # 添加测试目录
 add_subdirectory(test)
 
+add_executable(ZTableGenerator ${ZTABLE_GENERATOR_SOURCE_FILES})
+add_compile_options(ZTableGenerator PRIVATE -O2 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
 # add_executable(zparser ${SOURCE_FILES})
 
 # add_compile_options(zparser PRIVATE -O2 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)

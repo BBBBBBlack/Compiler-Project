@@ -1,30 +1,27 @@
 #include <gtest/gtest.h>
 #include "Config.hpp"
 #include <ParseTab.hpp>
-#include <stdio.h>
-#include <ctype.h>
-#include "pch.hpp"
-#include "Rule.hpp"
-#include "Rules.hpp"
+// #include <ctype.h>
 #include "FAStruct.hpp"
 
+// ./build/ZTableGenerator -c test/config.json -f test/test1/FA.md -t test/test1/parseTable.md -p test/test1/parse.cpp
 TEST(FATest, test1_generateFA)
 {
-    std::string configFile = "/usr/local/my_projects/c_project/Compiler-Project/zparser/test/config.json", 
-    outFileName = "test1/out/parse.cpp";
+    std::string configFile = "test/config.json",
+                outFileName = "test/test1/parse.cpp";
     Config myconfig(configFile);
     myconfig.analysis(outFileName);
     Rules::genRuleMap();
-    // 增廣文法
+    // 增广文法
     Rules::addStart();
     Rules::getAllFirst();
     Rules::getFollow();
     // 构造自动机
     FA fa;
     fa.createFA(Rules::rules);
-    fa.drawFA("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/FA.md");
+    fa.drawFA("test/test1/out/FA.md");
     std::vector<State> res = fa.createTable();
     Rules::transForAnalysisTable();
     ParseTab parseTab(res);
-    parseTab.saveToFile("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/data.md");
+    parseTab.saveToFile("test/test1/parseTable.md");
 }

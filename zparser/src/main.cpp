@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
     Config config("/usr/local/my_projects/c_project/Compiler-Project/zparser/test/config.json");
     config.analysis("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/output.txt");
     Rules::genRuleMap();
-    // 增廣文法
+    // 增广文法
     Rules::addStart();
     // Rules::eliminateLeftRecursion();
     Rules::getAllFirst();

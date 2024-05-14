@@ -1,6 +1,6 @@
 # 设置测试文件
 file(GLOB TEST_INCLUDE_FILES "${SOURCE_DIR}/*.cpp")
-list(REMOVE_ITEM TEST_INCLUDE_FILES "${SOURCE_DIR}/main.cpp")
+list(REMOVE_ITEM TEST_INCLUDE_FILES "${SOURCE_DIR}/main.cpp" "${SOURCE_DIR}/ZTableGenerator.cpp")
 
 set(MY_TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} MyTest.cpp)
 set(CONFIG_TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} ConfigTest.cpp)
@@ -45,6 +45,12 @@ set(PARSE_TEST_SOURCE_FILES ${TEST_INCLUDE_FILES} ParseTest.cpp)
 add_executable(ParseTest ${PARSE_TEST_SOURCE_FILES})
 target_compile_options(ParseTest PRIVATE -fno-access-control -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
 
+# 一个测试文件
 if(EXISTS "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
         add_executable(GenParseTest ${TEST_INCLUDE_FILES} "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
+endif()
+
+# test1
+if(EXISTS "${CMAKE_SOURCE_DIR}/test/test1/parse.cpp")
+        add_executable(ParseTest1 ${TEST_INCLUDE_FILES} "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
 endif()

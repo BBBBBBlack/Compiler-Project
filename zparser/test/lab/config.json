@@ -1,0 +1,290 @@
+{
+    "parseTabFile": "test/lab/parseTable.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "program",
+            "rights": [
+                {
+                    "right": "basic id '(' ')' block",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "block",
+            "rights": [
+                {
+                    "right": "'{' decls stmts '}'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "decls",
+            "rights": [
+                {
+                    "right": "decls decl",
+                    "action": []
+                },
+                {
+                    "right": "ε",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "decl",
+            "rights": [
+                {
+                    "right": "type id ';'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "type",
+            "rights": [
+                {
+                    "right": "type '[' num ']'",
+                    "action": []
+                },
+                {
+                    "right": "basic",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "basic",
+            "rights": [
+                {
+                    "right": "float",
+                    "action": []
+                },
+                {
+                    "right": "int",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "stmts stmt",
+                    "action": []
+                },
+                {
+                    "right": "ε",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "id '=' expr ';'",
+                    "action": []
+                },
+                {
+                    "right": "loc '=' expr ';'",
+                    "action": []
+                },
+                {
+                    "right": "if '(' bool ')' stmt",
+                    "action": []
+                },
+                {
+                    "right": "if '(' bool ')' stmt else stmt",
+                    "action": []
+                },
+                {
+                    "right": "while '(' bool ')' stmt",
+                    "action": []
+                },
+                {
+                    "right": "'do' stmt while '(' bool ')' ';'",
+                    "action": []
+                },
+                {
+                    "right": "break ';'",
+                    "action": []
+                },
+                {
+                    "right": "block",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "loc",
+            "rights": [
+                {
+                    "right": "loc '[' num ']'",
+                    "action": []
+                },
+                {
+                    "right": "id",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "bool",
+            "rights": [
+                {
+                    "right": "bool '||' join",
+                    "action": []
+                },
+                {
+                    "right": "join",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "join",
+            "rights": [
+                {
+                    "right": "join '&&' equality",
+                    "action": []
+                },
+                {
+                    "right": "equality",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "equality",
+            "rights": [
+                {
+                    "right": "equality '==' rel",
+                    "action": []
+                },
+                {
+                    "right": "equality '!=' rel",
+                    "action": []
+                },
+                {
+                    "right": "rel",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "rel",
+            "rights": [
+                {
+                    "right": "expr '<' expr",
+                    "action": []
+                },
+                {
+                    "right": "expr '<=' expr",
+                    "action": []
+                },
+                {
+                    "right": "expr '>=' expr",
+                    "action": []
+                },
+                {
+                    "right": "expr '>' expr",
+                    "action": []
+                },
+                {
+                    "right": "expr",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "expr '+' term",
+                    "action": []
+                },
+                {
+                    "right": "expr '-' term",
+                    "action": []
+                },
+                {
+                    "right": "term",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "term",
+            "rights": [
+                {
+                    "right": "term '*' unary",
+                    "action": []
+                },
+                {
+                    "right": "term '/' unary",
+                    "action": []
+                },
+                {
+                    "right": "unary",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "unary",
+            "rights": [
+                {
+                    "right": "'!' unary",
+                    "action": []
+                },
+                {
+                    "right": "'-' unary",
+                    "action": []
+                },
+                {
+                    "right": "factor",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "factor",
+            "rights": [
+                {
+                    "right": " '(' expr ')'",
+                    "action": []
+                },
+                {
+                    "right": "loc",
+                    "action": []
+                },
+                {
+                    "right": "'id'",
+                    "action": []
+                },
+                {
+                    "right": "'num'",
+                    "action": []
+                },
+                {
+                    "right": "'real'",
+                    "action": []
+                },
+                {
+                    "right": "'true'",
+                    "action": []
+                },
+                {
+                    "right": "'false'",
+                    "action": []
+                }
+            ]
+        }
+    ]
+}
