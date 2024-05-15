@@ -13,19 +13,18 @@ struct Token
 
     friend std::istream &operator>>(std::istream &in, Token &token)
     {
-        char ch;
-        in >> ch; // 读取 '<'
-
+        std::regex pattern("<(.*?),(.*?),(.*?),(.*?)>");
+        std::smatch matches;
         std::string line;
-        std::getline(in, line, '>'); // 读取到 '>'
+        std::getline(in, line);
 
-        std::stringstream ss(line);
-        std::getline(ss >> std::ws, token.type, ',');  // 读取类型
-        std::getline(ss >> std::ws, token.value, ','); // 读取值
-
-        ss >> token.lineno; // 读取行号
-        ss.ignore(1);       // 忽略 ','
-        ss >> token.pos;    // 读取位置
+        if (std::regex_match(line, matches, pattern))
+        {
+            token.type = matches[1];
+            token.value = matches[2];
+            token.lineno = std::stoi(matches[3]);
+            token.pos = std::stoi(matches[4]);
+        }
 
         return in;
     }
