@@ -28,7 +28,7 @@ enable_testing()
 
 # 创建静态库
 add_library(zparser_lib STATIC ${SOURCE_FILES})
-target_compile_options(zparser_lib PRIVATE -O2)
+target_compile_options(zparser_lib PRIVATE -O0 -g)
 target_link_options(zparser_lib PRIVATE -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
 
 # ZTableGenerator可执行文件
