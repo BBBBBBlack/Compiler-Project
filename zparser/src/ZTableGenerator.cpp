@@ -81,4 +81,12 @@ int main(int argc, char *argv[])
     }
 
     // TODO 编译出ZParser
+    std::string command = "g++ -I ../include -o ZParser " + parseCpp + " libzparser_lib.a";
+    int result = system(command.c_str());
+    if (result != 0)
+    {
+        std::cerr << "Failed to compile ZParser" << std::endl;
+        return 1;
+    }
+    std::cout << "ZParser compiled successfully" << std::endl;
 }

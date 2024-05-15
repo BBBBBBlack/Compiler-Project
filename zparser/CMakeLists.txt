@@ -23,28 +23,33 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # 添加测试目录
 add_subdirectory(test)
-
-add_executable(ZTableGenerator ${ZTABLE_GENERATOR_SOURCE_FILES})
-target_compile_options(ZTableGenerator PRIVATE -O2)
-target_link_options(ZTableGenerator PRIVATE -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-# add_executable(zparser ${SOURCE_FILES})
-
-# add_compile_options(zparser PRIVATE -O2 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-# add_compile_options(zparser PRIVATE -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-
 # 启用测试
 enable_testing()
 
-add_executable(ZParser ${SOURCE_FILES})
-# 检查PARSE_CPP是否存在
-if(EXISTS ${PARSE_CPP})
-    # 如果PARSE_CPP存在，声明ZParser这个目标并向它添加源文件
-    message("PARSE_CPP: ${PARSE_CPP}")
-    target_sources(ZParser PRIVATE ${PARSE_CPP})
-    target_compile_options(ZParser PRIVATE -O0 -g)
-    # target_compile_options(ZParser PRIVATE -O2)
-    target_link_options(ZParser PRIVATE -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-else()
-    message("File not found: ${PARSE_CPP} 文件不存在\nZParser未成功构建\n")
-endif()
+# 创建静态库
+add_library(zparser_lib STATIC ${SOURCE_FILES})
+target_compile_options(zparser_lib PRIVATE -O2)
+target_link_options(zparser_lib PRIVATE -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
+
+# ZTableGenerator可执行文件
+add_executable(ZTableGenerator ${ZTABLE_GENERATOR_SOURCE_FILES})
+# target_compile_options(ZTableGenerator PRIVATE -O2)
+target_compile_options(ZTableGenerator PRIVATE -O0 -g)
+target_link_options(ZTableGenerator PRIVATE -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
+
+# 可以在build目录下使用 
+# g++ -I ../include -o ZParser ../test/test1/parse.cpp libzparser_lib.a
+# 进行编译
+# add_executable(ZParser ${SOURCE_FILES})
+# # 检查PARSE_CPP是否存在
+# if(EXISTS ${PARSE_CPP})
+#     # 如果PARSE_CPP存在，声明ZParser这个目标并向它添加源文件
+#     message("PARSE_CPP: ${PARSE_CPP}")
+#     target_sources(ZParser PRIVATE ${PARSE_CPP})
+#     target_compile_options(ZParser PRIVATE -O0 -g)
+#     # target_compile_options(ZParser PRIVATE -O2)
+#     target_link_options(ZParser PRIVATE -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
+# else()
+#     message("File not found: ${PARSE_CPP} 文件不存在\nZParser未成功构建\n")
+# endif()
 
