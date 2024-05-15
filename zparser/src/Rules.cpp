@@ -209,14 +209,20 @@ void Rules::eliminateLeftRecursion()
 void Rules::getAllFirst()
 {
     std::list<Symbol> temp;
-    Symbol start = Rules::rules[0].left;
-    dfs(start, temp);
-
+    // Symbol start = Rules::rules[0].left;
+    for (Symbol start : Rules::NonTermVec)
+    {
+        dfs(start, temp);
+        temp.clear();
+    }
+    std::unordered_set<Symbol> temp2;
     for (Symbol symbol : Rules::NonTermVec)
     {
         if (symbol != "START" && Rules::First.find(symbol) == Rules::First.end())
         {
-            Rules::getFirst(symbol);
+
+            Rules::getFirst(symbol, temp2);
+            temp2.clear();
             // 遇到间接左递归时，环中的左部有相同的first集
             std::unordered_set<Symbol> max_set = Rules::First[symbol];
             for (int i = 0; i < Rules::Rings.size(); i++)
@@ -234,8 +240,17 @@ void Rules::getAllFirst()
 }
 
 // first集
-void Rules::getFirst(Symbol start)
+void Rules::getFirst(Symbol start, std::unordered_set<Symbol> &temp)
 {
+    bool flag = false; // 是否重复
+    if (temp.find(start) == temp.end())
+    {
+        temp.insert(start);
+    }
+    else
+    {
+        flag = true;
+    }
     std::vector<Rule *> same_left_rules = Rules::rules_map[start];
     for (int i = 0; i < same_left_rules.size(); i++)
     {
@@ -258,10 +273,9 @@ void Rules::getFirst(Symbol start)
                 {
                     cnt++;
                     bool containEpsilon = false;
-                    if (!rule->visited)
+                    if (!flag)
                     {
-                        rule->visited = true;
-                        Rules::getFirst(right_fir);
+                        Rules::getFirst(right_fir, temp);
                     }
                     for (Symbol symbol : Rules::First[right_fir])
                     {
@@ -280,9 +294,12 @@ void Rules::getFirst(Symbol start)
                         break;
                     }
                 }
-                rule->visited = false;
             }
         }
+    }
+    if (!flag)
+    {
+        temp.erase(start);
     }
 }
 
@@ -352,23 +369,24 @@ void Rules::getFollow()
 
 void dfs(Symbol start, std::list<Symbol> &temp)
 {
+    int index = findIndex(temp, start);
+    // 有环
+    if (temp.size() != 0 && index != -1)
+    {
+        // 加入
+        auto end_it = std::next(temp.begin(), index);
+        Rules::Rings.push_back(std::list(temp.begin(), end_it));
+        return;
+    }
     std::vector<Rule *> same_left_rules = Rules::rules_map[start];
     if (same_left_rules.size() == 0)
     {
         return;
     }
+
     for (int i = 0; i < same_left_rules.size(); i++)
     {
         Rule rule = *same_left_rules[i];
-        // 有环
-        if (rule.visited)
-        {
-            // 加入
-            int index = findIndex(temp, start);
-            auto end_it = std::next(temp.begin(), index);
-            Rules::Rings.push_back(std::list(temp.begin(), end_it));
-            continue;
-        }
         temp.push_front(rule.left);
         same_left_rules[i]->visited = true;
         Symbol right_fir = rule.right[0];

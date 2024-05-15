@@ -6,32 +6,272 @@
 void setRules(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
-    rules.push_back(Rule({"E", {"E", "+", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"S", {"program"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "A";
                               return 0;
                           }}));
-    rules.push_back(Rule({"E", {"T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              leftToken.value = "A";
-                              return 0;
-                          }}));
-    rules.push_back(Rule({"T", {"T", "*", "F"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"program", {"basics", "id", "(", ")", "block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "B";
                               return 0;
                           }}));
-    rules.push_back(Rule({"T", {"F"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"block", {"{", "declarations", "stmts", "}"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "B";
                               return 0;
                           }}));
-    rules.push_back(Rule({"F", {"(", "E", ")"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"declarations", {"declaration", "declarations"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "B";
                               return 0;
                           }}));
-    rules.push_back(Rule({"F", {"digit"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"declarations", {"ε"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"declaration", {"basics", "id", ";"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"declaration", {"array_declaration", ";"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"basics", {"int"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"basics", {"float"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmts", {"stmt", "stmts"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmts", {"ε"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"assignment"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"declaration"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"array_assignment"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"while_loop"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"if_stmt"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"break_stmt"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"assignment", {"id", "=", "expr", ";"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"array_declaration", {"basics", "id", "[", "num", "]"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"array_assignment", {"id", "[", "num", "]", "=", "expr", ";"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"while_loop", {"while", "(", "bool", ")", "stmt_or_block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt_or_block", {"stmt"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt_or_block", {"block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"if_stmt", {"if", "(", "bool", ")", "stmt_or_block", "block_tail"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"block_tail", {"ε"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"block_tail", {"else", "stmt_or_block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"bool", "||", "join"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"join"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"join", {"join", "&&", "equality"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"join", {"equality"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"equality", {"equality", "==", "rel"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"equality", {"equality", "!=", "rel"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"equality", {"rel"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"rel", {"expr", "<", "expr"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"rel", {"expr", "<=", "expr"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"rel", {"expr", ">", "expr"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"rel", {"expr", ">=", "expr"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"rel", {"expr"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"expr", "+", "term"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"expr", "-", "term"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"term"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"term", {"term", "*", "unary"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"term", {"term", "/", "unary"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"term", {"unary"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"unary", {"!", "unary"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"unary", {"-", "unary"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"unary", {"factor"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"factor", {"(", "expr", ")"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"factor", {"id"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"factor", {"id", "[", "num", "]"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"factor", {"num"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"factor", {"true"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"factor", {"false"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = "B";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"break_stmt", {"break", ";"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "B";
                               return 0;

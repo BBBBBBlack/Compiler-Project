@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <list>
+#include<set>
 #include "Rule.hpp"
 namespace Rules
 {
@@ -40,7 +41,7 @@ namespace Rules
     void eliminateLeftRecursion();
     // first集
     void getAllFirst();
-    void getFirst(Symbol start);
+    void getFirst(Symbol start, std::unordered_set<Symbol> &temp);
     // follow集
     void getFollow();
 

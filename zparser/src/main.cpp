@@ -97,15 +97,16 @@ int main(int argc, char *argv[])
     /*
     START
     */
-    Config config("/usr/local/my_projects/c_project/Compiler-Project/zparser/test/config.json");
-    config.analysis("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/output.txt");
+    printf("111111");
+    std::string configFile = "/usr/local/my_projects/c_project/Compiler-Project/zparser/test/config.json",
+                outFileName = "/usr/local/my_projects/c_project/Compiler-Project/zparser/test/test1/out/parse.cpp";
+    Config myconfig(configFile);
+    myconfig.analysis(outFileName);
     Rules::genRuleMap();
     // 增广文法
     Rules::addStart();
-    // Rules::eliminateLeftRecursion();
     Rules::getAllFirst();
     Rules::getFollow();
-
     // 构造自动机
     FA fa;
     fa.createFA(Rules::rules);

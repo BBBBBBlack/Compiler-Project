@@ -123,7 +123,7 @@ void FA::drawFA(std::string outFileName)
             rule.print(outFile);
             outFile << "<br>";
         }
-        outFile << "\"</div>)" << std::endl;
+        outFile << "</div>\")" << std::endl;
         // 创建边
         for (auto &pair : states[i].trans)
         {
