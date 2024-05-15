@@ -1,2 +1,0 @@
-./ZTableGenerator -c ../data_in/config.json -f zparser/out/FA.md
-./ZParser -i ../data_in/lexicalAnalysis.md
