@@ -60,12 +60,14 @@ int main(int argc, char *argv[])
 	// write include
 	/*
 		#include <iostream>
+		#include <unistd.h>
 		#include "ZLex.hpp"
 		#include "Token.hpp"
 		#include <nlohmann/json.hpp>
 		using json = nlohmann::json;
 	*/
 	source << "#include <iostream>" << std::endl;
+	source << "#include <unistd.h>" << std::endl;
 	source << "#include \"ZLex.hpp\"" << std::endl;
 	source << "#include \"Token.hpp\"" << std::endl;
 
@@ -78,7 +80,7 @@ int main(int argc, char *argv[])
 				std::string sourceFile;
 				bool printFA;
 	*/
-	source << "int main()" << std::endl;
+	source << "int main(int argc, char *argv[])" << std::endl;
 	source << "{" << std::endl;
 	source << "    std::string tokenTableOutput=\"" << tokenTableOutput << "\";" << std::endl;
 	source << "    std::string FAFile=\"" << FAFile << "\";" << std::endl;
@@ -105,6 +107,35 @@ int main(int argc, char *argv[])
 	source << "    std::ofstream symbolTableFile(symbolTable, std::ios::trunc);" << std::endl;
 	source << "    ZLex zlex;" << std::endl;
 	source << "    std::string &yytext_ref = yytext;" << std::endl;
+
+	/**
+		char option[] = "i:";
+		int opt;
+		while ((opt = getopt(argc, argv, option)) != -1)
+		{
+			switch (opt)
+			{
+			case 'i':
+				sourceFile = optarg;
+				break;
+			default:
+				break;
+			}
+		}
+	*/
+	source << "    char option[] = \"i:\";" << std::endl;
+	source << "    int opt;" << std::endl;
+	source << "    while ((opt = getopt(argc, argv, option)) != -1)" << std::endl;
+	source << "    {" << std::endl;
+	source << "        switch (opt)" << std::endl;
+	source << "        {" << std::endl;
+	source << "            case 'i':" << std::endl;
+	source << "                sourceFile = optarg;" << std::endl;
+	source << "                break;" << std::endl;
+	source << "            default:" << std::endl;
+	source << "                break;" << std::endl;
+	source << "        }" << std::endl;
+	source << "    }" << std::endl;
 
 	// write PAVec
 	/*

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# g++ run_zlex.cpp -o run_zlex -std=c++17 -lstdc++fs -I/usr/local/include/nlohmann
+
 ./run_zlex config.json
 # 创建一个名为build的目录，如果它不存在的话
 rm -rf build
