@@ -1,0 +1,60 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "E",
+            "rights": [
+                {
+                    "right": "E '+' T",
+                    "action": [
+                        "leftToken.value = \"A\";"
+                    ]
+                },
+                {
+                    "right": "T",
+                    "action": [
+                        "leftToken.value = \"A\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "T",
+            "rights": [
+                {
+                    "right": "T '*' F",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "F",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "F",
+            "rights": [
+                {
+                    "right": "'(' E ')'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "'digit'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        }
+    ]
+}

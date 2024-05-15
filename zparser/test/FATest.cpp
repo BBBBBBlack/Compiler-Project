@@ -4,10 +4,10 @@
 // #include <ctype.h>
 #include "FAStruct.hpp"
 
-// ./build/ZTableGenerator -c test/config.json -f test/test1/FA.md -t test/test1/parseTable.md -p test/test1/parse.cpp
+// ./build/ZTableGenerator -c test/test1/config.json -f test/test1/FA.md -t test/test1/parseTable.md -p test/test1/parse.cpp
 TEST(FATest, test1_generateFA)
 {
-    std::string configFile = "test/config.json",
+    std::string configFile = "test/test1/config.json",
                 outFileName = "test/test1/parse.cpp";
     Config myconfig(configFile);
     myconfig.analysis(outFileName);
