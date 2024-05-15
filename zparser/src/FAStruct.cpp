@@ -155,7 +155,7 @@ std::vector<State> FA::createTable()
                 std::unordered_set<Symbol> follow_set = Rules::Follow[sub_rule.left];
                 for (Symbol symbol : follow_set)
                 {
-                    actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id);
+                    actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id + 1);
                 }
             }
         }
