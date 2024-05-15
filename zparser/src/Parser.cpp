@@ -107,7 +107,9 @@ void Parser::grammarAnalysis(std::string tokenFile, std::string processFileName)
     std::ifstream tokenStream(tokenFile);
     if (!tokenStream.is_open())
     {
+        fprintf(stderr, "[ERROR] Token文件(%s)读入失败\n", tokenFile.c_str());
         perror("打开文件失败");
+        return;
     }
     if (processFileName != "")
     {

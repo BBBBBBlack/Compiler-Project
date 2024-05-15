@@ -15,7 +15,7 @@
 void setRules(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
-    rules.push_back(Rule({"E", {"E", "+", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"E", {"", "E", "+", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "A";
                               return 0;

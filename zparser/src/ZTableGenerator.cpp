@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     Config myconfig(configFile);
     myconfig.analysis(parseCpp);
     Rules::genRuleMap();
-    Rules::addStart();
+    // Rules::addStart();
     Rules::getAllFirst();
     Rules::getFollow();
 
@@ -79,4 +79,6 @@ int main(int argc, char *argv[])
     {
         std::cout << "FA file: " << FAFile << std::endl;
     }
+
+    // TODO 编译出ZParser
 }
