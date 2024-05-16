@@ -2,7 +2,8 @@
     "parseTabFile": "test/in/test3_2tab.md",
     "copy": [
         "#include <iostream>",
-        "#include <string>"
+        "#include <string>",
+        "using namespace std;"
     ],
     "rules": [
         {
@@ -11,13 +12,13 @@
                 {
                     "right": "E '+' T",
                     "action": [
-                        "leftToken.value = \"A\";"
+                        "$$ = to_string(stoi($0) + stoi($2));"
                     ]
                 },
                 {
                     "right": "T",
                     "action": [
-                        "leftToken.value = \"A\";"
+                        "$$ = $0;"
                     ]
                 }
             ]
@@ -28,13 +29,13 @@
                 {
                     "right": "T '*' F",
                     "action": [
-                        "leftToken.value = \"B\";"
+                        "$$ = to_string(stoi($0) * stoi($2));"
                     ]
                 },
                 {
                     "right": "F",
                     "action": [
-                        "leftToken.value = \"B\";"
+                        "$$ = $0;"
                     ]
                 }
             ]
@@ -45,13 +46,13 @@
                 {
                     "right": "'(' E ')'",
                     "action": [
-                        "leftToken.value = \"B\";"
+                        "$$ = $1;"
                     ]
                 },
                 {
                     "right": "'digit'",
                     "action": [
-                        "leftToken.value = \"B\";"
+                        "$$ = $0;"
                     ]
                 }
             ]

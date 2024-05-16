@@ -44,7 +44,7 @@ TEST(ConfigTest, jsonlib)
 
 TEST(ConfigTest, json)
 {
-    std::string configFile = "test/config.json", outFileName = "test/out/config/parse.cpp";
+    std::string configFile = "test/test1/config.json", outFileName = "test/test1/out/parse.cpp";
     Config myconfig(configFile);
     myconfig.analysis(outFileName);
     // config.analysis(outFileName);
