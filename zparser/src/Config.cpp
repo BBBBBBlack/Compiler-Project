@@ -11,6 +11,7 @@ void Config::analysis(std::string outFileName)
 
 void Config::analysis(std::ofstream &outFile)
 {
+    // TODO 解析config.json中的输出文件配置
     initOutFile(outFile);
     analysisCopy(outFile);
     analysisRule(outFile);
