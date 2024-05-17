@@ -78,6 +78,26 @@ TEST(ParseTabTest, testTokenRead)
     }
 }
 
+TEST(ParseTabTest, testTokenRead_sample_in1)
+{
+    // <NUM, 123.45, 2, 4>
+    std::string tokenFile = "lab/in/sample_in1_token.txt";
+    std::ifstream tokenStream(tokenFile);
+    if (!tokenStream.is_open())
+    {
+        perror("Token File打开失败");
+    }
+
+    std::string line;
+    while (std::getline(tokenStream, line))
+    {
+        std::istringstream iss(line);
+        Token token;
+        iss >> token;
+        std::cout << token.type << "," << token.value << "," << token.lineno << "," << token.pos << std::endl;
+    }
+}
+
 void saveTest1(ParseTab &parseTab, std::string filename)
 {
     parseTab.setTermVec({"x", "y", "$"});

@@ -14,6 +14,8 @@
 #define CONFIG_ACTION "action"
 
 #define RIGHT_REGEX "'([^']*)'|([^\\s']+)"
+#define RIGHT_VALUE_REGEX "\\$(\\d+)"
+#define LEFT_VALUE_REGEX "\\$\\$"
 
 class Config
 {

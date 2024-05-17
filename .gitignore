@@ -3,6 +3,7 @@
 **/build/**
 **/output/**
 /mytest/**
+ZParser
 
 # Compiled Object files
 *.slo

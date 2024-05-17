@@ -1,8 +1,11 @@
 #include "Config.hpp"
 #include "FAStruct.hpp"
 #include "ParseTab.hpp"
+#include <limits.h>
+#include <filesystem>
 
 static struct option long_options[] = {
+    {"include_path", required_argument, 0, 'i'},
     {"config", required_argument, 0, 'c'},
     {"fa", optional_argument, 0, 'f'},
     {"table", optional_argument, 0, 't'},
@@ -13,8 +16,9 @@ static struct option long_options[] = {
 
 int main(int argc, char *argv[])
 {
-    char options[] = "h:f:c:t:p:";
+    char options[] = "i:h:f:c:t:p:";
 
+    std::string includePath;
     std::string configFile;
     std::string FAFile;
     std::string tableFile = DEFAULT_TABLE_FILE;
@@ -24,6 +28,9 @@ int main(int argc, char *argv[])
     {
         switch (opt)
         {
+        case 'i':
+            includePath = optarg;
+            break;
         case 'c':
             configFile = optarg;
             break;
@@ -39,6 +46,7 @@ int main(int argc, char *argv[])
         case 'h':
         default:
             std::cout << "Usage: " << argv[0] << std::endl;
+            std::cout << "[REQUIRED] -i/--include_path \t<include path>" << std::endl;
             std::cout << "[REQUIRED] -c/--config \t<config file>" << std::endl;
             std::cout << "[OPTIONAL] -f/--fa \t<fa file>" << std::endl;
             std::cout << "[OPTIONAL] -t/--table \t<table file>" << std::endl;
@@ -80,10 +88,23 @@ int main(int argc, char *argv[])
         std::cout << "FA file: " << FAFile << std::endl;
     }
 
-    // TODO 编译出ZParser
-    std::string command = "g++ -I ../include -o ZParser " + parseCpp + " libzparser_lib.a";
-    int result = system(command.c_str());
-    if (result != 0)
+    // 获取当前可执行文件的路径
+    char result[PATH_MAX];
+    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+    std::string full_path(result, (count > 0) ? count : 0);
+
+    // 获取路径中的目录部分
+    std::filesystem::path p(full_path);
+    std::string directory = p.parent_path();
+
+    // 将目录添加到 "libzparser_lib.a" 前面
+    std::string lib_path = directory + "/libzparser_lib.a";
+
+    std::string command = "g++ -I " + includePath +
+                          " -o ZParser " + parseCpp + " " + lib_path +
+                          " -std=c++17 -O0 -g";
+    int cli_res = system(command.c_str());
+    if (cli_res != 0)
     {
         std::cerr << "Failed to compile ZParser" << std::endl;
         return 1;

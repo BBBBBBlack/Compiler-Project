@@ -11,6 +11,7 @@ void Config::analysis(std::string outFileName)
 
 void Config::analysis(std::ofstream &outFile)
 {
+    // TODO 解析config.json中的输出文件配置
     initOutFile(outFile);
     analysisCopy(outFile);
     analysisRule(outFile);
@@ -70,6 +71,18 @@ void writeRule(std::ofstream &outFile, const std::string &left, const std::vecto
     outFile << "                          }}));" << std::endl;
 }
 
+void replaceTokens(std::vector<std::string> &actionStrVec)
+{
+    std::regex rightRegex(RIGHT_VALUE_REGEX), leftRegex(LEFT_VALUE_REGEX);
+
+    for (std::string &actionStr : actionStrVec)
+    {
+        actionStr = std::regex_replace(actionStr, rightRegex, "rightTokens[$1].value", std::regex_constants::match_default);
+
+        actionStr = std::regex_replace(actionStr, leftRegex, "leftToken.value");
+    }
+}
+
 void Config::analysisRule(std::ofstream &outFile)
 {
     outFile << "void setRules(ParseTab &parseTab)" << std::endl;
@@ -123,6 +136,8 @@ void Config::analysisRule(std::ofstream &outFile)
                 searchStart = match.suffix().first;
             }
 
+            // 进行引用替换
+            replaceTokens(actionStrVec);
             // 输出rule为.cpp
             writeRule(outFile, left, Rules::rules[cnt - 1].getRight(), actionStrVec);
         }

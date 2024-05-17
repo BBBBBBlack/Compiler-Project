@@ -19,7 +19,7 @@ void CST::printCST(std::ostream &os)
     os << "\tgraph TD\n";
     for (int i = 1; i < nodes.size(); i++)
     {
-        os << "\t" << i << "(" << nodes[i].type << ",val=" << nodes[i].value << ")\n";
+        os << "\t" << i << "(\"" << nodes[i].type << ",val=" << nodes[i].value << "\")\n";
     }
     os << "\n";
     for (int i = 1; i < nodes.size(); i++)

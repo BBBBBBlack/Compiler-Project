@@ -11,10 +11,12 @@
 
 #include <iostream>
 #include <string>
+using namespace std;
 
 void setRules(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
+<<<<<<< HEAD
     rules.push_back(Rule({"program", {"basic", "id", "(", ")", "block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               return 0;
@@ -209,6 +211,36 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"factor", {"false"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+=======
+    rules.push_back(Rule({"E", {"E", "+", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = to_string(stoi(rightTokens[0].value) + stoi(rightTokens[2].value));
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"E", {"T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = rightTokens[0].value;
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"T", {"T", "*", "F"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = to_string(stoi(rightTokens[0].value) * stoi(rightTokens[2].value));
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"T", {"F"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = rightTokens[0].value;
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"F", {"(", "E", ")"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = rightTokens[1].value;
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"F", {"digit"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              leftToken.value = rightTokens[0].value;
+>>>>>>> 40ac2c40f0e1ec0d706fd0110af3f6570b85f561
                               return 0;
                           }}));
     parseTab.setRules(rules);
