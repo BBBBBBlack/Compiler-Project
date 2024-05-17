@@ -45,7 +45,7 @@ std::map<std::string, int> Token::operatorMap = {
     {"continue", T_Continue},
     {"return", T_Return},
     {"void", T_Void},
-    {"main", T_Main},
+    // {"main", T_Main},
     {"{", '{'},
     {"}", '}'},
     {"(", '('},
@@ -102,6 +102,6 @@ void Token::print_token()
     }
     else
     {
-        tokenOut << "<variable," << character << "," << yylineno << "," << yypos << ">" << std::endl;
+        tokenOut << "<id," << character << "," << yylineno << "," << yypos << ">" << std::endl;
     }
 }

@@ -23,7 +23,7 @@ typedef enum
     T_Continue,
     T_Return,
     T_Void,
-    T_Main,
+    // T_Main,
     T_Le,
     T_Ge,
     T_Equal,

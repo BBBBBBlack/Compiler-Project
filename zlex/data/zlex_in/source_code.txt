@@ -1,60 +1,19 @@
-//quick sort
-void quick_sort(int num[], int low, int high )
+int main()
 {
-    int i,j,temp;
-    int tmp;
-
-    i = low;
-    j = high;
-    tmp = num[low];   //boundary line
-    // create another error
-    if(i > j)
-    {
-        return;
-    }
-
-    while(i != j)
-    {
-        while(num[j] >= tmp && j > i)   
-        {
-            j--;
-        }
-
-        while(num[i] <= tmp && j > i)
-        {
-            i++;
-        }
-
-        if(j > i)
-        {
-            temp = num[j];
-            num[j] = num[i];
-            num[i] = temp;
-        }
-    }
-
-    num[low] = num[i];
-    num[i] = tmp;
-
-    quick_sort(num,low,i-1);
-    quick_sort(num,i+1,high);
-}
-
-int main(int argc , char **argv)
-{
-    //create an array
-    int num[SIZE] ={0};
     int i;
-    //input number
-    for(i =0; i < SIZE; i++)
-    {
-        scanf("%d",&num[i]);
+    int j;
+    int cnt;
+    i=3.85+9*11;
+    j=50;
+    cnt=0;
+    While (true)  
+    {      
+	cnt=cnt+1;
+        if (i == j)
+	    break;
+	else if (i>j)
+	    j=j+1;
+	else
+	    j=j-1;
     }
-    quick_sort(num, 0, SIZE-1);
-    for(i = 0; i < SIZE; i++)
-    {
-        printf(" %d ", num[i]);
-    }
-    return 0;
 }
-

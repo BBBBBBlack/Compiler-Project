@@ -148,11 +148,6 @@
             "note": "KEYWORD"
         },
         {
-            "pattern": "main",
-            "action": "Token token(yytext, tokenFile, false);token.print_token();",
-            "note": "IDENTIFIER"
-        },
-        {
             "pattern": "{",
             "action": "Token token(yytext, tokenFile, false);token.print_token();",
             "note": ""
