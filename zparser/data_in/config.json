@@ -165,10 +165,51 @@
             ]
         },
         {
+            "left": "array_init",
+            "rights": [
+                {
+                    "right": "array_init ',' num",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "num",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "array_init ',' id",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "id",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        },
+        {
             "left": "array_declaration",
             "rights": [
                 {
                     "right": "basics 'id' '[' 'num' ']'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "basics 'id' '[' 'num' ']' '=' '{' array_init '}'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "basics 'id' '[' 'id' ']' '=' '{' array_init '}'",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]
@@ -180,6 +221,12 @@
             "rights": [
                 {
                     "right": "'id' '[' 'num' ']' '=' expr ';'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "'id' '[' 'id' ']' '=' expr ';'",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]
@@ -236,6 +283,12 @@
                 },
                 {
                     "right": "'else' stmt_or_block",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "'else' 'if' '(' bool ')' stmt_or_block block_tail",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]
@@ -332,6 +385,12 @@
             "left": "expr",
             "rights": [
                 {
+                    "right": "'{' expr '}'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
                     "right": "expr '+' term",
                     "action": [
                         "leftToken.value = \"B\";"
@@ -414,6 +473,12 @@
                 },
                 {
                     "right": "'id' '[' 'num' ']'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "'id' '[' 'id' ']'",
                     "action": [
                         "leftToken.value = \"B\";"
                     ]
