@@ -220,27 +220,12 @@ int main(int argc, char *argv[])
          },
          "KEYWORD"},
         {"void", [&]() -> int
-<<<<<<< HEAD
-        {
-            Token token(yytext, tokenFile, false);token.print_token();
-            return 0;
-        },
-        "KEYWORD"},
-=======
          {
              Token token(yytext, tokenFile, false);
              token.print_token();
              return 0;
          },
          "KEYWORD"},
-        {"main", [&]() -> int
-         {
-             Token token(yytext, tokenFile, false);
-             token.print_token();
-             return 0;
-         },
-         "IDENTIFIER"},
->>>>>>> 40ac2c40f0e1ec0d706fd0110af3f6570b85f561
         {"{", [&]() -> int
          {
              Token token(yytext, tokenFile, false);

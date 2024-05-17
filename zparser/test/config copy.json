@@ -1,0 +1,566 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "S",
+            "rights": [
+                {
+                    "right": "program",
+                    "action": [
+                        "$$ = \"Start\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "program",
+            "rights": [
+                {
+                    "right": "basics 'id' '(' ')' block",
+                    "action": [
+                        "$$ = \"program\";"
+                    ]
+                },
+                {
+                    "right": "basics 'id' '(' block",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "block",
+            "rights": [
+                {
+                    "right": "'{' declarations stmts '}'",
+                    "action": [
+                        "$$ = \"block\";"
+                    ]
+                },
+                {
+                    "right": "'{' declarations stmts",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右'}'\" << std::endl;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "declarations",
+            "rights": [
+                {
+                    "right": "declaration declarations",
+                    "action": [
+                        "$$ = \"declarations\";"
+                    ]
+                },
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "$$ = \"declarations\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "declaration",
+            "rights": [
+                {
+                    "right": "basics 'id' ';'",
+                    "action": [
+                        "$$ = \"declaration\";"
+                    ]
+                },
+                {
+                    "right": "array_declaration ';'",
+                    "action": [
+                        "$$ = \"declaration\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "basics",
+            "rights": [
+                {
+                    "right": "'void'",
+                    "action": [
+                        "$$ = \"basics\";"
+                    ]
+                },
+                {
+                    "right": "'int'",
+                    "action": [
+                        "$$ = \"basics\";"
+                    ]
+                },
+                {
+                    "right": "'float'",
+                    "action": [
+                        "$$ = \"basics\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "stmt stmts",
+                    "action": [
+                        "$$ = \"stmts\";"
+                    ]
+                },
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "$$ = \"stmts\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "assignment",
+                    "action": [
+                        "$$ = \"stmt\";"
+                    ]
+                },
+                {
+                    "right": "declaration",
+                    "action": [
+                        "$$ = \"stmt\";"
+                    ]
+                },
+                {
+                    "right": "array_assignment",
+                    "action": [
+                        "$$ = \"stmt\";"
+                    ]
+                },
+                {
+                    "right": "while_loop",
+                    "action": [
+                        "$$ = \"stmt\";"
+                    ]
+                },
+                {
+                    "right": "if_stmt",
+                    "action": [
+                        "$$ = \"stmt\";"
+                    ]
+                },
+                {
+                    "right": "break_stmt",
+                    "action": [
+                        "$$ = \"stmt\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "assignment",
+            "rights": [
+                {
+                    "right": "'id' '=' expr ';'",
+                    "action": [
+                        "$$ = \"assignment\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "array_init",
+            "rights": [
+                {
+                    "right": "array_init ',' num",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "num",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "array_init ',' id",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "id",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "array_declaration",
+            "rights": [
+                {
+                    "right": "basics 'id' '[' 'num' ']'",
+                    "action": [
+                        "$$ = \"array_declaration\";"
+                    ]
+                },
+                {
+                    "right": "basics 'id' '[' 'num' ']' '=' '{' array_init '}'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "basics 'id' '[' 'id' ']' '=' '{' array_init '}'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "array_assignment",
+            "rights": [
+                {
+                    "right": "'id' '[' 'num' ']' '=' expr ';'",
+                    "action": [
+                        "$$ = \"array_assignment\";"
+                    ]
+                },
+                {
+                    "right": "'id' '[' 'id' ']' '=' expr ';'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "while_loop",
+            "rights": [
+                {
+                    "right": "'while' '(' bool ')' stmt_or_block",
+                    "action": [
+                        "$$ = \"while_loop\";"
+                    ]
+                },
+                {
+                    "right": "'while' '(' bool stmt_or_block",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右'}'\" << std::endl;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt_or_block",
+            "rights": [
+                {
+                    "right": "stmt",
+                    "action": [
+                        "$$ = \"stmt_or_block\";"
+                    ]
+                },
+                {
+                    "right": "block",
+                    "action": [
+                        "$$ = \"stmt_or_block\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "if_stmt",
+            "rights": [
+                {
+                    "right": "'if' '(' bool ')' stmt_or_block block_tail",
+                    "action": [
+                        "$$ = \"if_stmt\";"
+                    ]
+                },
+                {
+                    "right": "'if' '(' bool stmt_or_block block_tail",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "block_tail",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "$$ = \"block_tail\";"
+                    ]
+                },
+                {
+                    "right": "'else' stmt_or_block",
+                    "action": [
+                        "$$ = \"block_tail\";"
+                    ]
+                },
+                {
+                    "right": "'else' 'if' '(' bool ')' stmt_or_block block_tail",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "'else' 'if' '(' bool stmt_or_block block_tail",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "bool",
+            "rights": [
+                {
+                    "right": "join",
+                    "action": [
+                        "$$ = \"bool\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "join",
+            "rights": [
+                {
+                    "right": "join '&&' equality",
+                    "action": [
+                        "$$ = \"join\";"
+                    ]
+                },
+                {
+                    "right": "equality",
+                    "action": [
+                        "$$ = \"join\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "equality",
+            "rights": [
+                {
+                    "right": "equality '==' rel",
+                    "action": [
+                        "$$ = \"equality\";"
+                    ]
+                },
+                {
+                    "right": "equality '!=' rel",
+                    "action": [
+                        "$$ = \"equality\";"
+                    ]
+                },
+                {
+                    "right": "rel",
+                    "action": [
+                        "$$ = \"equality\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "rel",
+            "rights": [
+                {
+                    "right": "expr '<' expr",
+                    "action": [
+                        "$$ = \"rel\";"
+                    ]
+                },
+                {
+                    "right": "expr '<=' expr",
+                    "action": [
+                        "$$ = \"rel\";"
+                    ]
+                },
+                {
+                    "right": "expr '>' expr",
+                    "action": [
+                        "$$ = \"rel\";"
+                    ]
+                },
+                {
+                    "right": "expr '>=' expr",
+                    "action": [
+                        "$$ = \"rel\";"
+                    ]
+                },
+                {
+                    "right": "expr",
+                    "action": [
+                        "$$ = \"rel\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "'{' expr '}'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "expr '+' term",
+                    "action": [
+                        "$$ = \"expr\";"
+                    ]
+                },
+                {
+                    "right": "expr '-' term",
+                    "action": [
+                        "$$ = \"expr\";"
+                    ]
+                },
+                {
+                    "right": "term",
+                    "action": [
+                        "$$ = \"expr\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "term",
+            "rights": [
+                {
+                    "right": "term '*' unary",
+                    "action": [
+                        "$$ = \"term\";"
+                    ]
+                },
+                {
+                    "right": "term '/' unary",
+                    "action": [
+                        "$$ = \"term\";"
+                    ]
+                },
+                {
+                    "right": "unary",
+                    "action": [
+                        "$$ = \"term\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "unary",
+            "rights": [
+                {
+                    "right": "'!' unary",
+                    "action": [
+                        "$$ = \"unary\";"
+                    ]
+                },
+                {
+                    "right": "'-' unary",
+                    "action": [
+                        "$$ = \"unary\";"
+                    ]
+                },
+                {
+                    "right": "factor",
+                    "action": [
+                        "$$ = \"unary\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "factor",
+            "rights": [
+                {
+                    "right": "'(' expr ')'",
+                    "action": [
+                        "$$ = \"factor\";"
+                    ]
+                },
+                {
+                    "right": "'(' expr",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
+                    ]
+                },
+                {
+                    "right": "'id'",
+                    "action": [
+                        "$$ = \"factor\";"
+                    ]
+                },
+                {
+                    "right": "'id' '[' 'num' ']'",
+                    "action": [
+                        "$$ = \"factor\";"
+                    ]
+                },
+                {
+                    "right": "'id' '[' 'num'",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右']'\" << std::endl;"
+                    ]
+                },
+                {
+                    "right": "'id' '[' 'id' ']'",
+                    "action": [
+                        "leftToken.value = \"B\";"
+                    ]
+                },
+                {
+                    "right": "'id' '[' 'id' ']'",
+                    "action": [
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右']'\" << std::endl;"
+                    ]
+                },
+                {
+                    "right": "'num'",
+                    "action": [
+                        "$$ = \"factor\";"
+                    ]
+                },
+                {
+                    "right": "'true'",
+                    "action": [
+                        "$$ = \"factor\";"
+                    ]
+                },
+                {
+                    "right": "'false'",
+                    "action": [
+                        "$$ = \"factor\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "break_stmt",
+            "rights": [
+                {
+                    "right": "'break' ';'",
+                    "action": [
+                        "$$ = \"break_stmt\";"
+                    ]
+                }
+            ]
+        }
+    ]
+}
