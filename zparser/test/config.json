@@ -240,12 +240,6 @@
             "left": "bool",
             "rights": [
                 {
-                    "right": "bool '||' join",
-                    "action": [
-                        "leftToken.value = \"B\";"
-                    ]
-                },
-                {
                     "right": "join",
                     "action": [
                         "leftToken.value = \"B\";"

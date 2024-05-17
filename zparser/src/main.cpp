@@ -97,9 +97,8 @@ int main(int argc, char *argv[])
     /*
     START
     */
-    printf("111111");
-    std::string configFile = "/usr/local/my_projects/c_project/Compiler-Project/zparser/test/config.json",
-                outFileName = "/usr/local/my_projects/c_project/Compiler-Project/zparser/test/test1/out/parse.cpp";
+    std::string configFile = "test/lab/config.json",
+                outFileName = "test/test1/parse.cpp";
     Config myconfig(configFile);
     myconfig.analysis(outFileName);
     Rules::genRuleMap();
@@ -110,11 +109,11 @@ int main(int argc, char *argv[])
     // 构造自动机
     FA fa;
     fa.createFA(Rules::rules);
-    fa.drawFA("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/FA.md");
+    fa.drawFA("test/test1/out/FA.md");
     std::vector<State> res = fa.createTable();
     Rules::transForAnalysisTable();
     ParseTab parseTab(res);
-    parseTab.saveToFile("/usr/local/my_projects/c_project/Compiler-Project/zparser/data/data.md");
+    parseTab.saveToFile("test/test1/parseTable.md");
     /*
     END
     */
