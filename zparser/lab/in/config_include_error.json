@@ -1,5 +1,4 @@
 {
-    "parseTabFile": "test/in/test3_2tab.md",
     "copy": [
         "#include <iostream>",
         "#include <string>"

@@ -198,12 +198,6 @@ int main(int argc, char *argv[])
             return 0;
         },
         "KEYWORD"},
-        {"main", [&]() -> int
-        {
-            Token token(yytext, tokenFile, false);token.print_token();
-            return 0;
-        },
-        "IDENTIFIER"},
         {"{", [&]() -> int
         {
             Token token(yytext, tokenFile, false);token.print_token();
