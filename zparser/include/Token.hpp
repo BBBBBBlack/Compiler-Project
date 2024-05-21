@@ -4,10 +4,22 @@
 #include "pch.hpp"
 #define EPSILON "ε"
 
+struct TokenValue;
+
+struct TokenType
+{
+    enum type;
+    std::string typeValue;
+};
+
 struct Token
 {
-    std::string type;  // such as: NUM, ID, IF, ELSE, ...
-    std::string value; // NUM, ID有value
+    std::string type; // such as: NUM, ID, IF, ELSE, ...
+    /**
+     * @description: Token的属性值
+     * @note: 因为Value具体结构由用户定义，所以这里使用指针(否则报错)
+     */
+    TokenValue *value;
     int lineno;
     int pos;
 
@@ -29,11 +41,11 @@ struct Token
         return in;
     }
 
-    Token(std::string type, std::string value, int lineno, int pos)
+    Token(std::string type, TokenValue *value, int lineno, int pos)
         : type(type), value(value), lineno(lineno), pos(pos) {}
     Token() = default;
     Token(std::string type) : type(type) {}
-    Token(std::string type, std::string value) : type(type), value(value) {}
+    Token(std::string type, TokenValue *value) : type(type), value(value) {}
 
     Token static getEpsilon()
     {
