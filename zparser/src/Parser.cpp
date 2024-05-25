@@ -208,7 +208,10 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
         }
         else if (action.type == ActionType::A_Accept)
         {
-            std::cout << "Accept!" << std::endl;
+            if (!error_flag)
+            {
+                std::cout << "Accept!" << std::endl;
+            }
             break;
         }
         else if (action.type == ActionType::A_Error)

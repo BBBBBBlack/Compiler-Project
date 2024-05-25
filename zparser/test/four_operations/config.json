@@ -1,0 +1,58 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;"
+    ],
+    "rules": [
+        {
+            "left": "E",
+            "rights": [
+                {
+                    "right": "E '+' E",
+                    "action": [
+                        "$$ = to_string(stoi($0) + stoi($2));"
+                    ]
+                },
+                {
+                    "right": "E '-' E",
+                    "action": [
+                        "$$ = to_string(stoi($0) - stoi($2));"
+                    ]
+                },
+                {
+                    "right": "E '*' E",
+                    "action": [
+                        "$$ = to_string(stoi($0) * stoi($2));"
+                    ]
+                },
+                {
+                    "right": "E '/' E",
+                    "action": [
+                        "$$ = to_string(stoi($0) / stoi($2));"
+                    ]
+                },
+                {
+                    "right": "'(' E ')'",
+                    "action": [
+                        "$$ = $1;"
+                    ]
+                },
+                {
+                    "right": "'(' E",
+                    "action": [
+                        "// error_flag=true;",
+                        "std::cout << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
+                    ]
+                },
+                {
+                    "right": "'digit'",
+                    "action": [
+                        "$$ = $0;"
+                    ]
+                }
+            ]
+        }
+    ]
+}
