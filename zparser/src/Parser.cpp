@@ -192,6 +192,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             }
             // 执行产生式动作
             // TODO: 因为入栈顺序是反的, 所以这里的rightTokens是反的, 是否需要reverse?
+            std::reverse(rightTokens.begin(), rightTokens.end());
             rule.action(leftToken, rightTokens);
 
             // 更新状态
