@@ -27,6 +27,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"program", {"basics", "id", "(", "block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
                               return 0;
                           }}));
@@ -37,6 +38,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"block", {"{", "declarations", "stmts"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右'}'" << std::endl;
                               return 0;
                           }}));
@@ -172,6 +174,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"while_loop", {"while", "(", "bool", "stmt_or_block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右'}'" << std::endl;
                               return 0;
                           }}));
@@ -192,6 +195,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"if_stmt", {"if", "(", "bool", "stmt_or_block", "block_tail"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
                               return 0;
                           }}));
@@ -212,6 +216,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"block_tail", {"else", "if", "(", "bool", "stmt_or_block", "block_tail"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
                               return 0;
                           }}));
@@ -327,6 +332,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"factor", {"(", "expr"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
                               return 0;
                           }}));
@@ -342,6 +348,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"factor", {"id", "[", "num"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右']'" << std::endl;
                               return 0;
                           }}));
@@ -352,6 +359,7 @@ void setRules(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"factor", {"id", "[", "id", "]"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
+                              error_flag=true;
                               std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右']'" << std::endl;
                               return 0;
                           }}));
@@ -378,6 +386,7 @@ void setRules(ParseTab &parseTab)
     parseTab.setRules(rules);
 }
 
+bool error_flag = false;
 static struct option long_options[] = {
     {"input", required_argument, 0, 'i'},
     {"table", optional_argument, 0, 't'},

@@ -6,6 +6,8 @@
 #include "Token.hpp"
 #include "CST.hpp"
 
+extern bool error_flag;
+
 class Parser
 {
 public:
