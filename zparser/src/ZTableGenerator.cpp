@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
 {
     char options[] = "i:h:f:c:t:p:";
 
-    std::string includePath = "../include";
-    std::string configFile = "./in/semantic/test1.json";
-    std::string FAFile = "./out/FA.md";
+    std::string includePath;
+    std::string configFile;
+    std::string FAFile;
     std::string tableFile = DEFAULT_TABLE_FILE;
     std::string parseCpp = DEFAULT_PARSE_CPP;
     int opt;
