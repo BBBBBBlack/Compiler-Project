@@ -175,6 +175,13 @@
                     "action": [
                         "$$ = \"assignment\";"
                     ]
+                },
+                {
+                    "right": "'id' '=' ';'",
+                    "action": [
+                        "error_flag=true;",
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少'='右式\" << std::endl;"
+                    ]
                 }
             ]
         },
