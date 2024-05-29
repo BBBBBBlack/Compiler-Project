@@ -337,8 +337,14 @@ void Rules::getFollow()
                         }
                         else
                         {
-                            Rules::Follow[symbol].insert(Rules::First[right[j + 1]].begin(),
-                                                         Rules::First[right[j + 1]].end());
+                            int temp = j;
+                            do
+                            {
+                                temp++;
+                                Rules::Follow[symbol].insert(Rules::First[right[temp]].begin(),
+                                                             Rules::First[right[temp]].end());
+                            } while ((temp + 1 < right.size()) &&
+                                     Rules::First[right[temp]].find(EPSILON) != Rules::First[right[temp]].end());
                             Rules::Follow[symbol].erase(EPSILON);
                         }
                     }

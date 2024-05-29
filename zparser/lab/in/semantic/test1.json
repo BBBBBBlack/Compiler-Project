@@ -1,0 +1,108 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "P",
+            "rights": [
+                {
+                    "right": "M D",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "M",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "D",
+            "rights": [
+                {
+                    "right": "T 'id' ';' A D",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "A",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "D",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "T",
+            "rights": [
+                {
+                    "right": "B E C",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "E",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "B",
+            "rights": [
+                {
+                    "right": "'int'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "B",
+            "rights": [
+                {
+                    "right": "'real'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "C",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "C",
+            "rights": [
+                {
+                    "right": "'[' 'num' ']' C",
+                    "action": []
+                }
+            ]
+        }
+    ]
+}

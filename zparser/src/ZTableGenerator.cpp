@@ -13,14 +13,25 @@ static struct option long_options[] = {
     {"help", no_argument, 0, 'h'},
     {0, 0, 0, 0} // 结束标志
 };
+// 去除字符串中的空格
+void removeSpaces(char *str)
+{
+    // 将 char* 转换为 std::string
+    std::string strValue = str;
 
+    // 使用算法去除空格
+    strValue.erase(std::remove_if(strValue.begin(), strValue.end(), ::isspace), strValue.end());
+
+    // 将处理后的字符串复制回 char*
+    strcpy(str, strValue.c_str());
+}
 int main(int argc, char *argv[])
 {
     char options[] = "i:h:f:c:t:p:";
 
-    std::string includePath;
-    std::string configFile;
-    std::string FAFile;
+    std::string includePath = "../include";
+    std::string configFile = "./in/semantic/test1.json";
+    std::string FAFile = "./out/FA.md";
     std::string tableFile = DEFAULT_TABLE_FILE;
     std::string parseCpp = DEFAULT_PARSE_CPP;
     int opt;
@@ -29,18 +40,23 @@ int main(int argc, char *argv[])
         switch (opt)
         {
         case 'i':
+            removeSpaces(optarg);
             includePath = optarg;
             break;
         case 'c':
+            removeSpaces(optarg);
             configFile = optarg;
             break;
         case 'f':
+            removeSpaces(optarg);
             FAFile = optarg;
             break;
         case 't':
+            removeSpaces(optarg);
             tableFile = optarg;
             break;
         case 'p':
+            removeSpaces(optarg);
             parseCpp = optarg;
             break;
         case 'h':
