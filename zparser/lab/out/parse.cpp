@@ -122,6 +122,12 @@ void setRules(ParseTab &parseTab)
                               leftToken.value = "assignment";
                               return 0;
                           }}));
+    rules.push_back(Rule({"assignment", {"id", "=", ";"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+                          {
+                              error_flag=true;
+                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少'='右式" << std::endl;
+                              return 0;
+                          }}));
     rules.push_back(Rule({"array_init", {"array_init", ",", "num"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "B";
