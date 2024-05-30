@@ -1,8 +1,11 @@
-token file: ./in/sample_in1_token.txt
+token file: ./in/semantic/sample_in1_token.txt
 table file: ./out/table.md
 output file: ./out/CST.md
 process file: ./out/process.md
-termCount: 33 nonTermCount: 27 stateCount: 141
-[Error]: Syntax error at <Line: 8, Position: 8>缺少'='右式
-[Error]: Syntax error at <Line: 19, Position: 3>缺少右')'
-[Error]: Syntax error at <Line: 0, Position: 0>缺少右'}'
+termCount: 8 nonTermCount: 8 stateCount: 18
+Accept!
+Symbol Table
+Lexeme	Type	Offset
+x	real	0
+i	int	8
+arr	array(5, int)	12

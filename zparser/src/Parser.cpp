@@ -1,5 +1,8 @@
 #include "Parser.hpp"
 
+int offset;
+std::string t;
+int w;
 void Parser::setOutputFile(std::string fileName)
 {
     outputFile = new std::ofstream(); // 申请内存
@@ -131,7 +134,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
     stateStack.push_back(0);
     Token token0(END_SYMBOL, "", 0, 0);
     tokenStack.push_back({cst.addNode(token0), token0});
-
+    // 所有token流
     readInputToken(inputTokens, tokenStream);
     inputTokens.push_back(Token(END_SYMBOL, "", 0, 0));
 
@@ -193,7 +196,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             // 执行产生式动作
             // TODO: 因为入栈顺序是反的, 所以这里的rightTokens是反的, 是否需要reverse?
             std::reverse(rightTokens.begin(), rightTokens.end());
-            rule.action(leftToken, rightTokens);
+            rule.action(leftToken, rightTokens, tokenStack, tempToken);
 
             // 更新状态
             int leftIndex = cst.addNode(leftToken);
@@ -220,6 +223,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             break;
         }
     }
+    SymbolTable::print_symbol_table();
     if (needCST)
     {
         cst.printCST(*outputFile);

@@ -1,6 +1,7 @@
 #include "Config.hpp"
 #include "FAStruct.hpp"
 #include "ParseTab.hpp"
+#include "Tool.hpp"
 #include <limits.h>
 #include <filesystem>
 
@@ -13,18 +14,7 @@ static struct option long_options[] = {
     {"help", no_argument, 0, 'h'},
     {0, 0, 0, 0} // 结束标志
 };
-// 去除字符串中的空格
-void removeSpaces(char *str)
-{
-    // 将 char* 转换为 std::string
-    std::string strValue = str;
 
-    // 使用算法去除空格
-    strValue.erase(std::remove_if(strValue.begin(), strValue.end(), ::isspace), strValue.end());
-
-    // 将处理后的字符串复制回 char*
-    strcpy(str, strValue.c_str());
-}
 int main(int argc, char *argv[])
 {
     char options[] = "i:h:f:c:t:p:";

@@ -19,7 +19,9 @@
             "rights": [
                 {
                     "right": "'ε'",
-                    "action": []
+                    "action": [
+                        "offset = 0;"
+                    ]
                 }
             ]
         },
@@ -37,7 +39,12 @@
             "rights": [
                 {
                     "right": "'ε'",
-                    "action": []
+                    "action": [
+                        "std::string lexeme = SymbolTable::get_token_stack(tokenStack, 2)[\"lexeme\"];",
+                        "std::string type = SymbolTable::get_token_stack(tokenStack, 3)[\"type\"];",
+                        "SymbolTable::put_to_symbol_table(lexeme, type, offset);",
+                        "offset += std::stoi(SymbolTable::get_token_stack(tokenStack, 3)[\"width\"]);"
+                    ]
                 }
             ]
         },
@@ -55,7 +62,10 @@
             "rights": [
                 {
                     "right": "B E C",
-                    "action": []
+                    "action": [
+                        "leftToken[\"type\"] = rightTokens[2][\"type\"];",
+                        "leftToken[\"width\"] = rightTokens[2][\"width\"];"
+                    ]
                 }
             ]
         },
@@ -64,7 +74,10 @@
             "rights": [
                 {
                     "right": "'ε'",
-                    "action": []
+                    "action": [
+                        "t = SymbolTable::get_token_stack(tokenStack, 1)[\"type\"];",
+                        "w = std::stoi(SymbolTable::get_token_stack(tokenStack, 1)[\"width\"]);"
+                    ]
                 }
             ]
         },
@@ -73,7 +86,10 @@
             "rights": [
                 {
                     "right": "'int'",
-                    "action": []
+                    "action": [
+                        "leftToken[\"type\"] = \"int\";",
+                        "leftToken[\"width\"] = \"4\";"
+                    ]
                 }
             ]
         },
@@ -82,7 +98,10 @@
             "rights": [
                 {
                     "right": "'real'",
-                    "action": []
+                    "action": [
+                        "leftToken[\"type\"] = \"real\";",
+                        "leftToken[\"width\"] = \"8\";"
+                    ]
                 }
             ]
         },
@@ -91,7 +110,10 @@
             "rights": [
                 {
                     "right": "'ε'",
-                    "action": []
+                    "action": [
+                        "leftToken[\"type\"] = t;",
+                        "leftToken[\"width\"] = std::to_string(w);"
+                    ]
                 }
             ]
         },
@@ -100,7 +122,10 @@
             "rights": [
                 {
                     "right": "'[' 'num' ']' C",
-                    "action": []
+                    "action": [
+                        "leftToken[\"type\"] = \"array(\" + rightTokens[1][\"val\"] + \", \" + rightTokens[3][\"type\"] + \")\";",
+                        "leftToken[\"width\"] = std::to_string(std::stoi(rightTokens[1][\"val\"]) * std::stoi(rightTokens[3][\"width\"]));"
+                    ]
                 }
             ]
         }
