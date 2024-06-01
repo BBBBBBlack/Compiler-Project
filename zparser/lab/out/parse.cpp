@@ -25,19 +25,9 @@ void setRules(ParseTab &parseTab)
                               leftToken.value = "program";
                               return 0;
                           }}));
-    rules.push_back(Rule({"program", {"basics", "id", "(", "block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
-                              return 0;
-                          }}));
     rules.push_back(Rule({"block", {"{", "declarations", "stmts", "}"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "block";
-                              return 0;
-                          }}));
-    rules.push_back(Rule({"block", {"{", "declarations", "stmts"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右'}'" << std::endl;
                               return 0;
                           }}));
     rules.push_back(Rule({"declarations", {"declaration", "declarations"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
@@ -170,11 +160,6 @@ void setRules(ParseTab &parseTab)
                               leftToken.value = "while_loop";
                               return 0;
                           }}));
-    rules.push_back(Rule({"while_loop", {"while", "(", "bool", "stmt_or_block"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右'}'" << std::endl;
-                              return 0;
-                          }}));
     rules.push_back(Rule({"stmt_or_block", {"stmt"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "stmt_or_block";
@@ -190,11 +175,6 @@ void setRules(ParseTab &parseTab)
                               leftToken.value = "if_stmt";
                               return 0;
                           }}));
-    rules.push_back(Rule({"if_stmt", {"if", "(", "bool", "stmt_or_block", "block_tail"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
-                              return 0;
-                          }}));
     rules.push_back(Rule({"block_tail", {"ε"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "block_tail";
@@ -208,11 +188,6 @@ void setRules(ParseTab &parseTab)
     rules.push_back(Rule({"block_tail", {"else", "if", "(", "bool", ")", "stmt_or_block", "block_tail"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "B";
-                              return 0;
-                          }}));
-    rules.push_back(Rule({"block_tail", {"else", "if", "(", "bool", "stmt_or_block", "block_tail"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
                               return 0;
                           }}));
     rules.push_back(Rule({"bool", {"join"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
@@ -325,11 +300,6 @@ void setRules(ParseTab &parseTab)
                               leftToken.value = "factor";
                               return 0;
                           }}));
-    rules.push_back(Rule({"factor", {"(", "expr"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右')'" << std::endl;
-                              return 0;
-                          }}));
     rules.push_back(Rule({"factor", {"id"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "factor";
@@ -340,19 +310,9 @@ void setRules(ParseTab &parseTab)
                               leftToken.value = "factor";
                               return 0;
                           }}));
-    rules.push_back(Rule({"factor", {"id", "[", "num"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右']'" << std::endl;
-                              return 0;
-                          }}));
     rules.push_back(Rule({"factor", {"id", "[", "id", "]"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
                           {
                               leftToken.value = "B";
-                              return 0;
-                          }}));
-    rules.push_back(Rule({"factor", {"id", "[", "id", "]"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
-                          {
-                              std::cerr << "[Error]: Syntax error at <Line: " << leftToken.lineno << ", Position: " << leftToken.pos << ">" << "缺少右']'" << std::endl;
                               return 0;
                           }}));
     rules.push_back(Rule({"factor", {"num"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
