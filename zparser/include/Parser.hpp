@@ -5,7 +5,12 @@
 #include "pch.hpp"
 #include "Token.hpp"
 #include "CST.hpp"
+#include "SymbolTable.hpp"
 
+extern bool error_flag;
+extern int offset;
+extern std::string t;
+extern int w;
 class Parser
 {
 public:
@@ -46,6 +51,7 @@ private:
     std::vector<int> stateStack;
     // tokenStack[i].first: CST节点编号 tokenStack[i].second: token
     std::vector<std::pair<int, Token>> tokenStack;
+    std::vector<std::pair<std::string, std::string>> tempToken;
     std::list<Token> inputTokens;
     bool needCST = false, needProcess = false;
     CST cst;

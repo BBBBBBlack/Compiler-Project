@@ -1,0 +1,133 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "P",
+            "rights": [
+                {
+                    "right": "M D",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "M",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "offset = 0;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "D",
+            "rights": [
+                {
+                    "right": "T 'id' ';' A D",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "A",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "std::string lexeme = SymbolTable::get_token_stack(tokenStack, 2)[\"lexeme\"];",
+                        "std::string type = SymbolTable::get_token_stack(tokenStack, 3)[\"type\"];",
+                        "SymbolTable::put_to_symbol_table(lexeme, type, offset);",
+                        "offset += std::stoi(SymbolTable::get_token_stack(tokenStack, 3)[\"width\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "D",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "T",
+            "rights": [
+                {
+                    "right": "B E C",
+                    "action": [
+                        "leftToken[\"type\"] = rightTokens[2][\"type\"];",
+                        "leftToken[\"width\"] = rightTokens[2][\"width\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "E",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "t = SymbolTable::get_token_stack(tokenStack, 1)[\"type\"];",
+                        "w = std::stoi(SymbolTable::get_token_stack(tokenStack, 1)[\"width\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "B",
+            "rights": [
+                {
+                    "right": "'int'",
+                    "action": [
+                        "leftToken[\"type\"] = \"int\";",
+                        "leftToken[\"width\"] = \"4\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "B",
+            "rights": [
+                {
+                    "right": "'real'",
+                    "action": [
+                        "leftToken[\"type\"] = \"real\";",
+                        "leftToken[\"width\"] = \"8\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "C",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "leftToken[\"type\"] = t;",
+                        "leftToken[\"width\"] = std::to_string(w);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "C",
+            "rights": [
+                {
+                    "right": "'[' 'num' ']' C",
+                    "action": [
+                        "leftToken[\"type\"] = \"array(\" + rightTokens[1][\"val\"] + \", \" + rightTokens[3][\"type\"] + \")\";",
+                        "leftToken[\"width\"] = std::to_string(std::stoi(rightTokens[1][\"val\"]) * std::stoi(rightTokens[3][\"width\"]));"
+                    ]
+                }
+            ]
+        }
+    ]
+}
