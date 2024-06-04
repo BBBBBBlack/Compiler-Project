@@ -2,7 +2,7 @@
 
 namespace SymbolTable
 {
-    std::list<Record> symbolTable; // Define the variable in a .cpp file
+    std::vector<Record> symbolTable; // Define the variable in a .cpp file
 
     void put_to_symbol_table(std::string lexeme, std::string type, int offset)
     {

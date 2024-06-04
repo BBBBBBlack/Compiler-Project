@@ -1,11 +1,12 @@
-token file: ./in/semantic/sample_in1_token.txt
+token file: ./in/semantic/ex2/sample_in2_token.txt
 table file: ./out/table.md
 output file: ./out/CST.md
 process file: ./out/process.md
-termCount: 8 nonTermCount: 8 stateCount: 18
+termCount: 13 nonTermCount: 10 stateCount: 27
 Accept!
 Symbol Table
 Lexeme	Type	Offset
 x	real	0
 i	int	8
 arr	array(5, int)	12
+arr	array(5, array(6, real))	32

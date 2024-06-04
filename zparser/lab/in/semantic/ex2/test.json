@@ -1,0 +1,163 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "program",
+            "rights": [
+                {
+                    "right": "A basic 'id' '(' ')' block",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "A",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "offset = 0;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "block",
+            "rights": [
+                {
+                    "right": "'{' decls stmts '}'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "decls",
+            "rights": [
+                {
+                    "right": "decl decls",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "decls",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "decl",
+            "rights": [
+                {
+                    "right": "type 'id' ';'",
+                    "action": [
+                        "std::string lexeme = rightTokens[1][\"lexeme\"];",
+                        "std::string type = rightTokens[0][\"type\"];",
+                        "SymbolTable::put_to_symbol_table(lexeme, type, offset);",
+                        "offset += std::stoi(rightTokens[0][\"width\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "type",
+            "rights": [
+                {
+                    "right": "basic B array",
+                    "action": [
+                        "leftToken[\"type\"] = rightTokens[2][\"type\"];",
+                        "leftToken[\"width\"] = rightTokens[2][\"width\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "B",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "t = SymbolTable::get_token_stack(tokenStack, 1)[\"type\"];",
+                        "w = std::stoi(SymbolTable::get_token_stack(tokenStack, 1)[\"width\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "array",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "leftToken[\"type\"] = t;",
+                        "leftToken[\"width\"] = std::to_string(w);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "array",
+            "rights": [
+                {
+                    "right": "'[' 'num' ']' array",
+                    "action": [
+                        "leftToken[\"type\"] = \"array(\" + rightTokens[1][\"val\"] + \", \" + rightTokens[3][\"type\"] + \")\";",
+                        "leftToken[\"width\"] = std::to_string(std::stoi(rightTokens[1][\"val\"]) * std::stoi(rightTokens[3][\"width\"]));"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "basic",
+            "rights": [
+                {
+                    "right": "'float'",
+                    "action": [
+                        "leftToken[\"type\"] = \"float\";",
+                        "leftToken[\"width\"] = \"4\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "basic",
+            "rights": [
+                {
+                    "right": "'int'",
+                    "action": [
+                        "leftToken[\"type\"] = \"int\";",
+                        "leftToken[\"width\"] = \"4\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "basic",
+            "rights": [
+                {
+                    "right": "'real'",
+                    "action": [
+                        "leftToken[\"type\"] = \"real\";",
+                        "leftToken[\"width\"] = \"8\";"
+                    ]
+                }
+            ]
+        }
+    ]
+}
