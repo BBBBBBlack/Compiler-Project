@@ -35,15 +35,6 @@
             ]
         },
         {
-            "left": "stmts",
-            "rights": [
-                {
-                    "right": "'ε'",
-                    "action": []
-                }
-            ]
-        },
-        {
             "left": "decls",
             "rights": [
                 {
@@ -156,6 +147,105 @@
                         "leftToken[\"type\"] = \"real\";",
                         "leftToken[\"width\"] = \"8\";"
                     ]
+                }
+            ]
+        },
+        {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "stmt stmts",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "'id' '=' expr ';'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "expr '+' expr",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "expr '-' expr",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "expr '*' expr",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "expr '/' expr",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "'-' expr",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "'(' expr ')'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "'id'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "'num'",
+                    "action": []
                 }
             ]
         }
