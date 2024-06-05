@@ -1,8 +1,0 @@
-Symbol Table
-Type	Name
-IDENTIFIER	arr
-IDENTIFIER	i
-IDENTIFIER	x
-IDENTIFIER	real
-KEYWORD	int
-NUMBER	5
