@@ -1,6 +1,12 @@
-token file: ./in/sample_in_right.txt
+token file: ./in/semantic/ex2/sample_in_token.txt
 table file: ./out/table.md
 output file: ./out/CST.md
 process file: ./out/process.md
-termCount: 33 nonTermCount: 27 stateCount: 134
-[Error]: Syntax error at <Line: 14, Position: 0>
+termCount: 18 nonTermCount: 12 stateCount: 48
+Accept!
+Symbol Table
+Lexeme	Type	Offset
+x	real	0
+i	int	8
+arr	array(5, int)	12
+arr	array(5, array(6, real))	32

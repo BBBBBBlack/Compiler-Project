@@ -1,6 +1,7 @@
 #include "Config.hpp"
 #include "FAStruct.hpp"
 #include "ParseTab.hpp"
+#include "Tool.hpp"
 #include <limits.h>
 #include <filesystem>
 
@@ -29,18 +30,23 @@ int main(int argc, char *argv[])
         switch (opt)
         {
         case 'i':
+            removeSpaces(optarg);
             includePath = optarg;
             break;
         case 'c':
+            removeSpaces(optarg);
             configFile = optarg;
             break;
         case 'f':
+            removeSpaces(optarg);
             FAFile = optarg;
             break;
         case 't':
+            removeSpaces(optarg);
             tableFile = optarg;
             break;
         case 'p':
+            removeSpaces(optarg);
             parseCpp = optarg;
             break;
         case 'h':
