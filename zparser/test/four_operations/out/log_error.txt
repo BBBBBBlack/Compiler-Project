@@ -1,0 +1,6 @@
+token file: ../test/four_operations/token_error.txt
+table file: ../test/four_operations/out/parse_table.md
+output file: ../test/four_operations/out/CST_error.md
+process file: ../test/four_operations/out/process_error.md
+termCount: 8 nonTermCount: 1 stateCount: 14
+[Error]: Syntax error at <Line: 1, Position: 6>缺少右')'

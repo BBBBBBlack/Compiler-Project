@@ -20,8 +20,8 @@ void Parser::setOutputFile(std::string fileName)
                 << "\n```\n";
 
     // 向outFile写入当前时间
-    std::time_t currentTime = std::time(nullptr);
-    *outputFile << "Generate time: " << std::asctime(std::localtime(&currentTime)) << std::endl;
+    // std::time_t currentTime = std::time(nullptr);
+    // *outputFile << "Generate time: " << std::asctime(std::localtime(&currentTime)) << std::endl;
     outputFile->flush();
     needCST = true;
 }
