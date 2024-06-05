@@ -1,5 +1,5 @@
 #include "Token.hpp"
-Token::Token(std::string type, std::string value) : type(type), value(value)
+Token::Token(TokenType type, TokenValue value) : type(type), value(value)
 {
     if (type == "id")
     {

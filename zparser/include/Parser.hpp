@@ -6,11 +6,9 @@
 #include "Token.hpp"
 #include "CST.hpp"
 #include "SymbolTable.hpp"
+#include "ParserFun.hpp"
 
 extern bool error_flag;
-extern int offset;
-extern std::string t;
-extern int w;
 class Parser
 {
 public:

@@ -4,16 +4,24 @@
 #include "pch.hpp"
 #define EPSILON "ε"
 
+#define TokenType std::string
+#define TokenValue std::string
+
 struct Token
 {
-    std::string type;  // such as: NUM, ID, IF, ELSE, ...
-    std::string value; // NUM, ID有value
-    std::unordered_map<std::string, std::string> valMap;
+    TokenType type;   // such as: NUM, ID, IF, ELSE, ...
+    TokenValue value; // NUM, ID有value
+    // 用于存储多种属性
+    std::unordered_map<TokenType, TokenValue> valMap;
     int lineno;
     int pos;
 
-    std::string &operator[](std::string key)
+    std::string &operator[](TokenType key)
     {
+        // if (valMap.find(key) == valMap.end())
+        // {
+        //     throw std::runtime_error("Token has no key: " + key);
+        // }
         return valMap[key];
     }
 
@@ -43,11 +51,11 @@ struct Token
         return in;
     }
 
-    Token(std::string type, std::string value, int lineno, int pos)
+    Token(TokenType type, TokenValue value, int lineno, int pos)
         : type(type), value(value), lineno(lineno), pos(pos) {}
     Token() = default;
-    Token(std::string type) : type(type) {}
-    Token(std::string type, std::string value);
+    Token(TokenType type) : type(type) {}
+    Token(TokenType type, std::string value);
 
     Token static getEpsilon()
     {

@@ -22,9 +22,9 @@ file(GLOB ZTABLE_GENERATOR_SOURCE_FILES "${SOURCE_DIR}/ZTableGenerator.cpp")
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # 添加测试目录
-# add_subdirectory(test)
+add_subdirectory(test)
 # 启用测试
-# enable_testing()
+enable_testing()
 
 # 创建静态库
 add_library(zparser_lib STATIC ${SOURCE_FILES})

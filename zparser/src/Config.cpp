@@ -154,7 +154,7 @@ void Config::analysisRule(std::ofstream &outFile)
 
 void Config::generateMain(std::ofstream &outFile)
 {
-    outFile << "bool error_flag = false;" << std::endl;
+    // outFile << "bool error_flag = false;" << std::endl;
     outFile << "static struct option long_options[] = {" << std::endl;
     outFile << "    {\"input\", required_argument, 0, 'i'}," << std::endl;
     outFile << "    {\"table\", optional_argument, 0, 't'}," << std::endl;

@@ -31,7 +31,7 @@ TEST(ConfigTest, regex)
 
 TEST(ConfigTest, jsonlib)
 {
-    std::string configFile = "test/config.json";
+    std::string configFile = "test/test1/config.json";
     std::ifstream jfile(configFile);
     json config = json::parse(jfile);
     jfile.close();

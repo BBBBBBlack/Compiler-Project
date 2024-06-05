@@ -1,5 +1,6 @@
 #include "Parser.hpp"
 
+bool error_flag = false;
 int offset;
 std::string t;
 int w;

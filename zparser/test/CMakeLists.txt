@@ -1,56 +1,34 @@
-set(MY_TEST_SOURCE_FILES MyTest.cpp)
-set(CONFIG_TEST_SOURCE_FILES ConfigTest.cpp)
-set(FA_TEST_SOURCE_FILES FATest.cpp)
-
-# 添加测试执行文件
-add_executable(MyTest ${MY_TEST_SOURCE_FILES})
-add_executable(ConfigTest ${CONFIG_TEST_SOURCE_FILES})
-add_executable(FATest ${FA_TEST_SOURCE_FILES})
-
-# 链接 zparser_lib 库
-target_link_libraries(MyTest zparser_lib)
-target_link_libraries(ConfigTest zparser_lib)
-target_link_libraries(FATest zparser_lib)
-
-# target_compile_options(MyTest PRIVATE -fno-access-control -O2)
-target_compile_options(MyTest PRIVATE -fno-access-control -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-target_compile_options(ConfigTest PRIVATE -fno-access-control -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-target_compile_options(FATest PRIVATE -fno-access-control -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
-
 # 找到 Google Test 库
 find_package(GTest REQUIRED)
 # GTest 的头文件
 include_directories(${GTEST_INCLUDE_DIRS})
 
-# 链接 Google Test 框架
-target_link_libraries(MyTest
-        ${GTEST_BOTH_LIBRARIES}
-        pthread)
-target_link_libraries(ConfigTest
-        ${GTEST_BOTH_LIBRARIES}
-        pthread)     
-target_link_libraries(FATest
-        ${GTEST_BOTH_LIBRARIES}
-        pthread)
+function(add_test_executable TEST_NAME)
+    set(TEST_SOURCE_FILES ${TEST_NAME}.cpp)
+    add_executable(${TEST_NAME} ${TEST_SOURCE_FILES})
+    target_link_libraries(${TEST_NAME} zparser_lib)
+    target_compile_options(${TEST_NAME} PRIVATE -fno-access-control -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
+    target_link_libraries(${TEST_NAME} ${GTEST_BOTH_LIBRARIES} pthread)
+    gtest_discover_tests(${TEST_NAME})
+endfunction()
 
-# 添加测试
-gtest_discover_tests(MyTest)
-gtest_discover_tests(ConfigTest)
-gtest_discover_tests(FATest)
+# 添加测试执行文件
+add_test_executable(MyTest)
+add_test_executable(ConfigTest)
+add_test_executable(FATest)
+
 
 # 可执行文件测试
-add_executable(ParseTest ParseTest.cpp)
-target_link_libraries(ParseTest zparser_lib)
-target_compile_options(ParseTest PRIVATE -fno-access-control -g -O0 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
+add_test_executable(ParseTest)
 
 # 一个测试文件
 if(EXISTS "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
-        add_executable(GenParseTest "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
-        target_link_libraries(GenParseTest zparser_lib)
+    add_executable(GenParseTest "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
+    target_link_libraries(GenParseTest zparser_lib)
 endif()
 
 # test1
-if(EXISTS "${CMAKE_SOURCE_DIR}/test/test1/parse.cpp")
-        add_executable(ParseTest1 "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
-        target_link_libraries(ParseTest1 zparser_lib)
-endif()
+# if(EXISTS "${CMAKE_SOURCE_DIR}/test/test1/parse.cpp")
+#     add_executable(ParseTest1 "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")
+#     target_link_libraries(ParseTest1 zparser_lib)
+# endif()

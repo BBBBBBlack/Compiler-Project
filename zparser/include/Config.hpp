@@ -22,6 +22,13 @@ class Config
 public:
     Config(std::string configFile)
     {
+        // 检查config文件是否存在
+        if (!std::filesystem::exists(configFile))
+        {
+            std::cerr << "Config file not found: " << configFile << std::endl;
+            exit(1);
+        }
+
         std::ifstream jfile(configFile);
 
         config = json::parse(jfile);

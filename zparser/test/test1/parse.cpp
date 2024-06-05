@@ -8,6 +8,7 @@
  * /____|_| /_/   \_\_| \_\____/|_____|_| \_\
  */
 #include "Parser.hpp"
+#include "Tool.hpp"
 
 #include <iostream>
 #include <string>
@@ -16,32 +17,32 @@ using namespace std;
 void setRules(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
-    rules.push_back(Rule({"E", {"E", "+", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"E", {"E", "+", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = to_string(stoi(rightTokens[0].value) + stoi(rightTokens[2].value));
                               return 0;
                           }}));
-    rules.push_back(Rule({"E", {"T"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"E", {"T"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = rightTokens[0].value;
                               return 0;
                           }}));
-    rules.push_back(Rule({"T", {"T", "*", "F"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"T", {"T", "*", "F"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = to_string(stoi(rightTokens[0].value) * stoi(rightTokens[2].value));
                               return 0;
                           }}));
-    rules.push_back(Rule({"T", {"F"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"T", {"F"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = rightTokens[0].value;
                               return 0;
                           }}));
-    rules.push_back(Rule({"F", {"(", "E", ")"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"F", {"(", "E", ")"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = rightTokens[1].value;
                               return 0;
                           }}));
-    rules.push_back(Rule({"F", {"digit"}, [&](Token &leftToken, std::vector<Token> &rightTokens) -> int
+    rules.push_back(Rule({"F", {"digit"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = rightTokens[0].value;
                               return 0;
@@ -73,15 +74,19 @@ int main(int argc, char *argv[])
         switch (opt)
         {
         case 'i':
+            removeSpaces(optarg);
             tokenFile = optarg;
             break;
         case 't':
+            removeSpaces(optarg);
             tableFile = optarg;
             break;
         case 'o':
+            removeSpaces(optarg);
             outputFile = optarg;
             break;
         case 'p':
+            removeSpaces(optarg);
             processFile = optarg;
             break;
         case 'h':
