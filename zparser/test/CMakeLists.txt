@@ -16,7 +16,7 @@ endfunction()
 add_test_executable(MyTest)
 add_test_executable(ConfigTest)
 add_test_executable(FATest)
-
+add_test_executable(SemanticTest)
 
 # 可执行文件测试
 add_test_executable(ParseTest)
