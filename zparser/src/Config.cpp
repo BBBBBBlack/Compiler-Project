@@ -28,7 +28,7 @@ void Config::initOutFile(std::ofstream &outFile)
     outFile << " */" << std::endl;
 
     outFile << "#include \"Parser.hpp\"" << std::endl;
-
+    outFile << "#include \"Tool.hpp\"" << std::endl;
     outFile << std::endl;
 }
 
@@ -61,7 +61,11 @@ void writeRule(std::ofstream &outFile, const std::string &left, const std::vecto
         outFile << "\"" << right << "\"";
     }
     outFile << "}, ";
-    outFile << "[&](Token &leftToken, std::vector<Token> &rightTokens) -> int" << std::endl;
+    outFile << "[&](Token &leftToken,"
+            << " std::vector<Token> &rightTokens,"
+            << " std::vector<std::pair<int, Token>> &tokenStack,"
+            << " std::vector<std::pair<std::string, std::string>> &tempToken) -> int"
+            << std::endl;
     outFile << "                          {" << std::endl;
     for (const auto &actionStr : actionStrVec)
     {
@@ -150,6 +154,7 @@ void Config::analysisRule(std::ofstream &outFile)
 
 void Config::generateMain(std::ofstream &outFile)
 {
+    outFile << "bool error_flag = false;" << std::endl;
     outFile << "static struct option long_options[] = {" << std::endl;
     outFile << "    {\"input\", required_argument, 0, 'i'}," << std::endl;
     outFile << "    {\"table\", optional_argument, 0, 't'}," << std::endl;
@@ -159,7 +164,6 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "    {0, 0, 0, 0} // 结束标志" << std::endl;
     outFile << "};" << std::endl;
     outFile << std::endl;
-
     outFile << "int main(int argc, char *argv[])\n";
     outFile << "{\n";
     outFile << "    char options[] = \"i:t:o:p:h:\";\n";
@@ -175,15 +179,19 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "        switch (opt)\n";
     outFile << "        {\n";
     outFile << "        case 'i':\n";
+    outFile << "            removeSpaces(optarg);\n";
     outFile << "            tokenFile = optarg;\n";
     outFile << "            break;\n";
     outFile << "        case 't':\n";
+    outFile << "            removeSpaces(optarg);\n";
     outFile << "            tableFile = optarg;\n";
     outFile << "            break;\n";
     outFile << "        case 'o':\n";
+    outFile << "            removeSpaces(optarg);\n";
     outFile << "            outputFile = optarg;\n";
     outFile << "            break;\n";
     outFile << "        case 'p':\n";
+    outFile << "            removeSpaces(optarg);\n";
     outFile << "            processFile = optarg;\n";
     outFile << "            break;\n";
     outFile << "        case 'h':\n";

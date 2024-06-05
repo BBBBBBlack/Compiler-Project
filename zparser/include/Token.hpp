@@ -14,14 +14,16 @@ struct TokenType
 
 struct Token
 {
-    std::string type; // such as: NUM, ID, IF, ELSE, ...
-    /**
-     * @description: Token的属性值
-     * @note: 因为Value具体结构由用户定义，所以这里使用指针(否则报错)
-     */
-    TokenValue *value;
+    std::string type;  // such as: NUM, ID, IF, ELSE, ...
+    std::string value; // NUM, ID有value
+    std::unordered_map<std::string, std::string> valMap;
     int lineno;
     int pos;
+
+    std::string &operator[](std::string key)
+    {
+        return valMap[key];
+    }
 
     friend std::istream &operator>>(std::istream &in, Token &token)
     {
@@ -36,6 +38,14 @@ struct Token
             token.value = matches[2];
             token.lineno = std::stoi(matches[3]);
             token.pos = std::stoi(matches[4]);
+            if (token.type == "id")
+            {
+                token.valMap["lexeme"] = token.value;
+            }
+            else if (token.type == "num")
+            {
+                token.valMap["val"] = token.value;
+            }
         }
 
         return in;
@@ -45,7 +55,7 @@ struct Token
         : type(type), value(value), lineno(lineno), pos(pos) {}
     Token() = default;
     Token(std::string type) : type(type) {}
-    Token(std::string type, TokenValue *value) : type(type), value(value) {}
+    Token(std::string type, std::string value);
 
     Token static getEpsilon()
     {
@@ -53,4 +63,4 @@ struct Token
     }
 };
 
-#endif // TOKEN
+#endif // !TOKEN_HPP

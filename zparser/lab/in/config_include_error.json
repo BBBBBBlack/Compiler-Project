@@ -27,6 +27,7 @@
                 {
                     "right": "basics 'id' '(' block",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
                     ]
                 }
@@ -44,6 +45,7 @@
                 {
                     "right": "'{' declarations stmts",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右'}'\" << std::endl;"
                     ]
                 }
@@ -172,6 +174,13 @@
                     "action": [
                         "$$ = \"assignment\";"
                     ]
+                },
+                {
+                    "right": "'id' '=' ';'",
+                    "action": [
+                        "error_flag=true;",
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少'='右式\" << std::endl;"
+                    ]
                 }
             ]
         },
@@ -256,6 +265,7 @@
                 {
                     "right": "'while' '(' bool stmt_or_block",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右'}'\" << std::endl;"
                     ]
                 }
@@ -290,6 +300,7 @@
                 {
                     "right": "'if' '(' bool stmt_or_block block_tail",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
                     ]
                 }
@@ -319,6 +330,7 @@
                 {
                     "right": "'else' 'if' '(' bool stmt_or_block block_tail",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
                     ]
                 }
@@ -497,6 +509,7 @@
                 {
                     "right": "'(' expr",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
                     ]
                 },
@@ -515,6 +528,7 @@
                 {
                     "right": "'id' '[' 'num'",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右']'\" << std::endl;"
                     ]
                 },
@@ -527,6 +541,7 @@
                 {
                     "right": "'id' '[' 'id' ']'",
                     "action": [
+                        "error_flag=true;",
                         "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右']'\" << std::endl;"
                     ]
                 },

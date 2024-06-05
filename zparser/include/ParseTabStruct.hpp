@@ -104,6 +104,31 @@ struct Action
         std::istringstream in(str);
         in >> *this;
     }
+    void printActions()
+    {
+        std::string actionString;
+        switch (type)
+        {
+        case A_Shift:
+            actionString = "A_Shift";
+            break;
+        case A_Reduce:
+            actionString = "A_Reduce";
+            break;
+        case A_Goto:
+            actionString = "A_Goto";
+            break;
+        case A_Accept:
+            actionString = "A_Accept";
+            break;
+        case A_Error:
+            actionString = "A_Error";
+            break;
+        default:
+            actionString = "Unknown action";
+        }
+        printf("%s%d", actionString.c_str(), data);
+    }
 };
 
 // // TODO 产生式动作的save和load

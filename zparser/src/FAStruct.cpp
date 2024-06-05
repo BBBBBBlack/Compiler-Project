@@ -155,6 +155,10 @@ std::vector<State> FA::createTable()
                 std::unordered_set<Symbol> follow_set = Rules::Follow[sub_rule.left];
                 for (Symbol symbol : follow_set)
                 {
+                    // if (actions.find(symbol) != actions.end() && actions[symbol].type == ActionType::A_Shift)
+                    // {
+                    //     printf("冲突%s\n", symbol.c_str());
+                    // }
                     actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id + 1);
                 }
             }
@@ -166,7 +170,14 @@ std::vector<State> FA::createTable()
             int next_state = pair.second;
             if (Rules::TermVec.find(symbol) != Rules::TermVec.end())
             {
-                actions[symbol] = Action(ActionType::A_Shift, next_state);
+                if ((actions.find(symbol) == actions.end()) ||
+                    (actions.find(symbol) != actions.end() &&
+                     actions[symbol].type == ActionType::A_Reduce &&
+                     (symbol == "*" || symbol == "/")))
+                {
+                    // printf("冲突%s\n", symbol.c_str());
+                    actions[symbol] = Action(ActionType::A_Shift, next_state);
+                }
             }
             else
             {
