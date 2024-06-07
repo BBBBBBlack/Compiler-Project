@@ -143,6 +143,20 @@ std::vector<State> FA::createTable()
     for (int i = 0; i < states.size(); i++)
     {
         std::unordered_map<Symbol, Action> actions;
+        for (auto &pair : states[i].trans)
+        {
+            // std::unordered_map<Symbol, int> trans;
+            Symbol symbol = pair.first;
+            int next_state = pair.second;
+            if (Rules::TermVec.find(symbol) != Rules::TermVec.end())
+            {
+                actions[symbol] = Action(ActionType::A_Shift, next_state);
+            }
+            else
+            {
+                actions[symbol] = Action(ActionType::A_Goto, next_state);
+            }
+        }
         for (const SubRule &sub_rule : states[i].subRules)
         {
             // 有归约项
@@ -159,29 +173,14 @@ std::vector<State> FA::createTable()
                     // {
                     //     printf("冲突%s\n", symbol.c_str());
                     // }
-                    actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id + 1);
+                    if ((actions.find(symbol) == actions.end()) ||
+                        (actions.find(symbol) != actions.end() &&
+                         actions[symbol].type == ActionType::A_Shift &&
+                         ((symbol == "+" || symbol == "-") || sub_rule.right[0] == "-")))
+                    {
+                        actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id + 1);
+                    }
                 }
-            }
-        }
-        for (auto &pair : states[i].trans)
-        {
-            // std::unordered_map<Symbol, int> trans;
-            Symbol symbol = pair.first;
-            int next_state = pair.second;
-            if (Rules::TermVec.find(symbol) != Rules::TermVec.end())
-            {
-                if ((actions.find(symbol) == actions.end()) ||
-                    (actions.find(symbol) != actions.end() &&
-                     actions[symbol].type == ActionType::A_Reduce &&
-                     (symbol == "*" || symbol == "/")))
-                {
-                    // printf("冲突%s\n", symbol.c_str());
-                    actions[symbol] = Action(ActionType::A_Shift, next_state);
-                }
-            }
-            else
-            {
-                actions[symbol] = Action(ActionType::A_Goto, next_state);
             }
         }
         res.push_back(State(actions));
