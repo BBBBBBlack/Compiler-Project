@@ -18,4 +18,8 @@ struct Temp
  */
 void gen(std::string outFile, std::string contant);
 
+/**
+ * @brief 获取数组元素类型
+ */
+std::string get_elem(std::string s_type);
 #endif // PARSER_FUN_HPP

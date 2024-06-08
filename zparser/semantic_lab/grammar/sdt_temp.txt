@@ -29,3 +29,24 @@ expr     → expr1 - expr2 | expr1 * expr2 | expr1 / expr2 | -expr1
 expr     → (expr1) {expr.addr=expr1.addr}
 expr     → id {expr.addr = top.get(id.lexeme)}
 expr     → num {expr.addr = top.get(num.lexval)}
+
+
+stmt     → loc = expr;
+loc      → loc [ expr ]
+        {
+            loc.lexeme = loc1.lexeme;
+		    loc.type = get_elem(loc1.type);
+		    t = new Temp( );  
+		    loc.addr = new Temp( );
+		    gen(t ‘=’ expr.addr ‘*’ get_width(loc.type));
+		    gen(loc.addr ‘=’ loc1.addr ‘+’ t); 
+        }
+loc      → id [ expr ]
+        {
+            loc.lexeme = top.get(id.lexeme);
+		    loc.type = get_elem(id.type);
+		    loc.addr = new Temp();
+   		    gen(loc.addr ‘=’ expr.addr ‘*’ get_width(loc.type)); 
+        }
+expr     → loc {expr.addr = new Temp( );
+		        gen(expr.addr ‘=’ loc.lexeme ‘[’ L.addr ‘]’);}
