@@ -233,9 +233,7 @@
             "rights": [
                 {
                     "right": "loc",
-                    "action": [
-                        "leftToken[\"addr\"] = rightTokens[1][\"addr\"];"
-                    ]
+                    "action": []
                 }
             ]
         },
@@ -262,15 +260,11 @@
             "rights": [
                 {
                     "right": "loc '[' expr ']'",
-                    "action": [
-                        "leftToken[\"addr\"] = rightTokens[1][\"addr\"];"
-                    ]
+                    "action": []
                 },
                 {
                     "right": "'id' '[' expr ']'",
-                    "action": [
-                        "leftToken[\"addr\"] = rightTokens[1][\"addr\"];"
-                    ]
+                    "action": []
                 }
             ]
         }
