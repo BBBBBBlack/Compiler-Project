@@ -63,7 +63,7 @@ void writeRule(std::ofstream &outFile, const std::string &left, const std::vecto
     outFile << "}, ";
     outFile << "[&](Token &leftToken,"
             << " std::vector<Token> &rightTokens,"
-            << " std::vector<std::pair<int, Token>> &tokenStack,"
+            << " std::vector<Token> &tokenStack,"
             << " std::vector<std::pair<std::string, std::string>> &tempToken) -> int"
             << std::endl;
     outFile << "                          {" << std::endl;

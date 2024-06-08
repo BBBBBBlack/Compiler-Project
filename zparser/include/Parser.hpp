@@ -47,8 +47,10 @@ private:
     std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)
     ParseTab &parseTab;                  // 语法分析表
     std::vector<int> stateStack;
-    // tokenStack[i].first: CST节点编号 tokenStack[i].second: token
-    std::vector<std::pair<int, Token>> tokenStack;
+    // tokenStack[i].first: CST节点编号
+    // tokenStack[i].second: token
+    // std::vector<std::pair<int, Token>> tokenStack;
+    std::vector<Token> tokenStack;
     std::vector<std::pair<std::string, std::string>> tempToken;
     std::list<Token> inputTokens;
     bool needCST = false, needProcess = false;

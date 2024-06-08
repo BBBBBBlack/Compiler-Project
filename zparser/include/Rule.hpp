@@ -14,7 +14,7 @@
 // TODO 产生式动作的save和load
 using ActionFunction = std::function<int(Token &leftToken,
                                          std::vector<Token> &rightTokens,
-                                         std::vector<std::pair<int, Token>> &tokenStack,
+                                         std::vector<Token> &tokenStack,
                                          std::vector<std::pair<std::string, std::string>> &tempToken)>;
 /*
  * 产生式类

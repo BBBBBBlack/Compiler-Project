@@ -17,7 +17,7 @@ namespace SymbolTable
     void put_to_symbol_table(std::string lexeme, std::string type, int offset);
     void get_from_symbol_table(std::string lexeme, Token &token);
     void print_symbol_table();
-    Token get_token_stack(std::vector<std::pair<int, Token>> &tokenStack, int re_offset);
+    Token get_token_stack(std::vector<Token> &tokenStack, int re_offset);
 };
 
 #endif // !SYMBOLTABLE_HPP

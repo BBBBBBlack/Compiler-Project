@@ -63,7 +63,7 @@ void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool
     // 符号栈
     for (auto &token : tokenStack)
     {
-        processFile << token.second.type << " ";
+        processFile << token.type << " ";
     }
     processFile << "| ";
     // 输入串
@@ -134,7 +134,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
 
     stateStack.push_back(0);
     Token token0(END_SYMBOL, "", 0, 0);
-    tokenStack.push_back({cst.addNode(token0), token0});
+    tokenStack.push_back(token0);
     // 所有token流
     readInputToken(inputTokens, tokenStream);
     inputTokens.push_back(Token(END_SYMBOL, "", 0, 0));
@@ -163,7 +163,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
         if (action.type == ActionType::A_Shift) // 移入
         {
             stateStack.push_back(action.data);
-            tokenStack.push_back({cst.addNode(token), token});
+            tokenStack.push_back(token);
             inputTokens.pop_front();
         }
         else if (action.type == ActionType::A_Reduce) // 规约
@@ -172,21 +172,21 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             int ruleSize = rule.right.size();
             Token leftToken(rule.left, "", -1, -1); // 产生式左部Token(未初始化行号和位置)
             std::vector<Token> rightTokens;
-            std::vector<int> rightIndexs;
+            // std::vector<int> rightIndexs; // deprecated, 用于CST
 
             if (rule.right[0] == EPSILON) // ε产生式特判, 插入一个空Token
             {
                 stateStack.push_back(-1);
-                tokenStack.push_back({cst.addNode(Token::getEpsilon()), Token::getEpsilon()});
+                tokenStack.push_back(Token::getEpsilon());
             }
 
             // 产生式右部出栈
             for (int i = 0; i < ruleSize; i++)
             {
                 stateStack.pop_back();
-                Token topToken = tokenStack.back().second;
+                Token topToken = tokenStack.back();
                 rightTokens.push_back(topToken);
-                rightIndexs.push_back(tokenStack.back().first);
+                // rightIndexs.push_back(tokenStack.back().first);
                 if (leftToken.lineno == -1) // 用产生式右部第一个Token的lineno和pos初始化产生式左部Token
                 {
                     leftToken.lineno = topToken.lineno;
@@ -201,8 +201,8 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
 
             // 更新状态
             int leftIndex = cst.addNode(leftToken);
-            tokenStack.push_back({leftIndex, leftToken});
-            cst.addConnection(leftIndex, rightIndexs);
+            tokenStack.push_back(leftToken);
+            // cst.addConnection(leftIndex, rightIndexs);
             // note: 如果是Error, 则会push -1
             stateStack.push_back(parseTab.getNextAction(stateStack.back(), leftToken.type).data);
         }

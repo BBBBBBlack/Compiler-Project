@@ -4,27 +4,27 @@
 void setTestRule(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
-    rules.push_back(Rule({"S", {"A"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
+    rules.push_back(Rule({"S", {"A"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = "S";
                               return 0;
                           }}));
-    rules.push_back(Rule({"A", {"B", "A"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
+    rules.push_back(Rule({"A", {"B", "A"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = "A";
                               return 0;
                           }}));
-    rules.push_back(Rule({"A", {EPSILON}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
+    rules.push_back(Rule({"A", {EPSILON}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = "A";
                               return 0;
                           }}));
-    rules.push_back(Rule({"B", {"a", "B"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
+    rules.push_back(Rule({"B", {"a", "B"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = "B";
                               return 0;
                           }}));
-    rules.push_back(Rule({"B", {"b"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<std::pair<int, Token>> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
+    rules.push_back(Rule({"B", {"b"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken) -> int
                           {
                               leftToken.value = "B";
                               return 0;

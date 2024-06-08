@@ -32,9 +32,9 @@ namespace SymbolTable
         }
     }
 
-    Token get_token_stack(std::vector<std::pair<int, Token>> &tokenStack, int re_offset)
+    Token get_token_stack(std::vector<Token> &tokenStack, int re_offset)
     {
         int index = tokenStack.size() - re_offset;
-        return tokenStack[index].second;
+        return tokenStack[index];
     }
 }
