@@ -53,8 +53,9 @@ private:
     std::vector<Token> tokenStack;
     std::vector<std::pair<std::string, std::string>> tempToken;
     std::list<Token> inputTokens;
-    bool needCST = false, needProcess = false;
-    CST cst;
+    bool needProcess = false;
+    // bool needCST = false
+    // CST cst;
 
     void grammarAnalysis(std::istream &tokenStream, std::string processFileName);
     void writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader);

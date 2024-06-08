@@ -24,7 +24,7 @@ void Parser::setOutputFile(std::string fileName)
     std::time_t currentTime = std::time(nullptr);
     *outputFile << "Generate time: " << std::asctime(std::localtime(&currentTime)) << std::endl;
     outputFile->flush();
-    needCST = true;
+    // needCST = true;
 }
 
 void readInputToken(std::list<Token> &inputTokens, std::istream &tokenStream)
@@ -200,7 +200,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             rule.action(leftToken, rightTokens, tokenStack, tempToken);
 
             // 更新状态
-            int leftIndex = cst.addNode(leftToken);
+            // int leftIndex = cst.addNode(leftToken);
             tokenStack.push_back(leftToken);
             // cst.addConnection(leftIndex, rightIndexs);
             // note: 如果是Error, 则会push -1
@@ -225,9 +225,9 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
         }
     }
     SymbolTable::print_symbol_table();
-    if (needCST)
-    {
-        cst.printCST(*outputFile);
-    }
+    // if (needCST)
+    // {
+    //     cst.printCST(*outputFile);
+    // }
     // cst.printCST(std::cout);
 }
