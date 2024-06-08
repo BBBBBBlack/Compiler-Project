@@ -7,9 +7,15 @@ extern int offset;
 extern std::string t; // 暂存类型type
 extern int w;         // 暂存宽度width
 
+struct Temp
+{
+    static int tempNum;
+    static std::string newTemp();
+};
+
 /**
  * @brief 生成中间代码
  */
-void gen(std::string outFile,std::string contant);
+void gen(std::string outFile, std::string contant);
 
 #endif // PARSER_FUN_HPP

@@ -1,7 +1,13 @@
 #include <ParserFun.hpp>
-void gen(std::string outFile,std::string contant)
+
+int Temp::tempNum = 0;
+std::string Temp::newTemp()
 {
-    std::ofstream out(outFile);
-    out << contant;
+    return "t" + std::to_string(tempNum++);
+}
+void gen(std::string outFile, std::string contant)
+{
+    std::ofstream out(outFile, std::ios::app);
+    out << contant << std::endl;
     out.close();
 }
