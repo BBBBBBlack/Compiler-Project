@@ -96,17 +96,17 @@ void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool
     processFile << "|" << std::endl;
 }
 
-void Parser::grammarAnalysis(std::string tokenFile)
+void Parser::grammarAnalysis(std::string tokenFile, std::string codeTargetFile)
 {
     std::ifstream tokenStream(tokenFile);
     if (!tokenStream.is_open())
     {
         perror("打开文件失败");
     }
-    grammarAnalysis(tokenStream, "");
+    grammarAnalysis(tokenStream, "", codeTargetFile);
 }
 
-void Parser::grammarAnalysis(std::string tokenFile, std::string processFileName)
+void Parser::grammarAnalysis(std::string tokenFile, std::string processFileName, std::string codeTargetFile)
 {
     std::ifstream tokenStream(tokenFile);
     if (!tokenStream.is_open())
@@ -119,16 +119,16 @@ void Parser::grammarAnalysis(std::string tokenFile, std::string processFileName)
     {
         this->needProcess = true;
     }
-    grammarAnalysis(tokenStream, processFileName);
+    grammarAnalysis(tokenStream, processFileName, codeTargetFile);
 }
 
-void Parser::grammarAnalysis(bool needProcess, std::string processFileName)
+void Parser::grammarAnalysis(bool needProcess, std::string processFileName, std::string codeTargetFile)
 {
     this->needProcess = needProcess;
-    grammarAnalysis(std::cin, processFileName);
+    grammarAnalysis(std::cin, processFileName, codeTargetFile);
 }
 
-void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileName)
+void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileName, std::string codeTargetFile)
 {
     std::ofstream processFile;
 
@@ -197,7 +197,7 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             // 执行产生式动作
             // TODO: 因为入栈顺序是反的, 所以这里的rightTokens是反的, 是否需要reverse?
             std::reverse(rightTokens.begin(), rightTokens.end());
-            rule.action(leftToken, rightTokens, tokenStack, tempToken);
+            rule.action(leftToken, rightTokens, tokenStack, tempToken, codeTargetFile);
 
             // 更新状态
             // int leftIndex = cst.addNode(leftToken);
