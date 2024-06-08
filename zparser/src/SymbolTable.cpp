@@ -9,6 +9,19 @@ namespace SymbolTable
         symbolTable.push_back({lexeme, type, offset});
     }
 
+    void get_from_symbol_table(std::string lexeme, Token &token)
+    {
+        for (auto &record : symbolTable)
+        {
+            if (record.lexeme == lexeme)
+            {
+                token["type"] = record.type;
+                token["offset"] = std::to_string(record.offset);
+                return;
+            }
+        }
+    }
+
     void print_symbol_table()
     {
         std::cout << "Symbol Table" << std::endl;
