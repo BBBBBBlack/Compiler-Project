@@ -53,7 +53,17 @@ struct Token
 
     Token(TokenType type, TokenValue value, int lineno, int pos)
         : type(type), value(value), lineno(lineno), pos(pos) {}
-    Token(TokenType type, std::string value) : type(type), value(value) {}
+    Token(TokenType type, std::string value)
+    {
+        if (type == "id")
+        {
+            valMap["lexeme"] = value;
+        }
+        else if (type == "num")
+        {
+            valMap["val"] = value;
+        }
+    }
     Token(TokenType type) : type(type) {}
     Token() = default;
 
