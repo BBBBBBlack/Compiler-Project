@@ -167,14 +167,16 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "};" << std::endl;
     outFile << std::endl;
 
+    // 移动到ParserFun.hpp中声明
+    outFile << "// ParserFun.hpp中声明了 ParseTab tab; Parser parser(tab);" << std::endl;
     // 全局声明Parsertab和Parser
-    outFile << "ParseTab tab;" << std::endl;
-    outFile << "Parser parser(tab);" << std::endl;
+    // outFile << "ParseTab tab;" << std::endl;
+    // outFile << "Parser parser(tab);" << std::endl;
     // 暴露语义分析所需函数给action
-    outFile << "auto &gen = zparser.gen;" << std::endl;
-    outFile << "auto &makeList = zparser.makeList;" << std::endl;
-    outFile << "auto &mergeList = zparser.mergeList;" << std::endl;
-    outFile << "auto &backPatch = zparser.backPatch;" << std::endl;
+    // outFile << "auto &gen = zparser.gen;" << std::endl;
+    // outFile << "auto &makeList = zparser.makeList;" << std::endl;
+    // outFile << "auto &mergeList = zparser.mergeList;" << std::endl;
+    // outFile << "auto &backPatch = zparser.backPatch;" << std::endl;
     outFile << std::endl;
 
     // main函数

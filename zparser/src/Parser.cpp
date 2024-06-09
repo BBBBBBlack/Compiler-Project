@@ -305,6 +305,17 @@ TokenValue Parser::mergeList(TokenValue jumpListId1, TokenValue jumpListId2)
 
 void Parser::backPatch(TokenValue jumpListId, int jumpTo)
 {
+    // 有时候jumpListId为空, 这是正常的, 不需要报错
+    if (jumpListId.length() == 0)
+    {
+        return;
+    }
+
+    if (jumpListMap.find(std::stoi(jumpListId)) == jumpListMap.end())
+    {
+        throw std::runtime_error("JumpList[id=" + jumpListId + "] not found");
+    }
+
     JumpList &jumpList = jumpListMap[std::stoi(jumpListId)];
     for (auto &instrId : jumpList)
     {

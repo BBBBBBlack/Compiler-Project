@@ -17,11 +17,11 @@
                     "action": []
                 },
                 {
-                    "right": "bool '||' bool",
+                    "right": "bool '||' M bool",
                     "action": []
                 },
                 {
-                    "right": "bool '&&' bool",
+                    "right": "bool '&&' M bool",
                     "action": []
                 },
                 {
@@ -30,6 +30,15 @@
                 },
                 {
                     "right": "'(' bool ')'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "M",
+            "rights": [
+                {
+                    "right": "'ε'",
                     "action": []
                 }
             ]
