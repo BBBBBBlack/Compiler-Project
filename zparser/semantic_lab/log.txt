@@ -9,5 +9,5 @@ Symbol Table
 Lexeme	Type	Offset
 x	real	0
 i	int	8
-arr	array(5, int)	12
-arr	array(5, array(6, real))	32
+arr1	array(5, int)	12
+arr2	array(5, array(6, real))	32
