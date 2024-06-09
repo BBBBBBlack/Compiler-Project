@@ -1,6 +1,4 @@
 #include "ParseTab.hpp"
-#include <filesystem>
-#include <algorithm>
 
 ParseTab::ParseTab() {}
 
@@ -85,11 +83,11 @@ int ParseTab::saveParseTab(std::ofstream &out)
     out << "| | ";
     for (auto &symbol : termVec)
     {
-        out << symbol << " | ";
+        out << "`" << escapePipe(symbol) << "` | ";
     }
     for (auto &symbol : nonTermVec)
     {
-        out << symbol << " | ";
+        out << "`" << escapePipe(symbol) << "` | ";
     }
     out << std::endl;
 
@@ -144,7 +142,7 @@ int ParseTab::loadParseTab(std::ifstream &in)
     }
 
     // 读取计数信息
-    int termCount, nonTermCount, stateCount, flag = 0;
+    int termCount, nonTermCount, stateCount;
     std::getline(in, line);
     std::sscanf(line.c_str(), "- Terminal size : %d", &termCount);
     std::getline(in, line);
@@ -164,15 +162,17 @@ int ParseTab::loadParseTab(std::ifstream &in)
 
     // 读取符号行
     std::getline(in, line);
-    std::istringstream iss(line);
+    std::regex r("`(.*?)`");
     std::string token;
-    std::getline(iss, token, '|'); // 跳过第一个空格
-    std::getline(iss, token, '|'); // 跳过第一个空表格
-    flag = 0;
     int temp_count = 0;
-    while (std::getline(iss, token, '|'))
+    for (std::sregex_iterator i = std::sregex_iterator(line.begin(), line.end(), r);
+         i != std::sregex_iterator();
+         ++i)
     {
-        token.erase(std::remove_if(token.begin(), token.end(), ::isspace), token.end());
+        std::smatch m = *i;
+        token = m.str(1); // 获取第一个捕获组
+        token = unescapePipe(token);
+
         if (temp_count < termCount)
         {
             termVec.push_back(token);

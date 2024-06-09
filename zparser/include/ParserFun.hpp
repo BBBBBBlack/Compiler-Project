@@ -2,6 +2,7 @@
 #define PARSER_FUN_HPP
 
 #include "pch.hpp"
+#include "SemanticStruct.hpp"
 
 extern int offset;
 extern std::string t; // 暂存类型type

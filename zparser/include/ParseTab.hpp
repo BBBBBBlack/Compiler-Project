@@ -4,6 +4,7 @@
 #include "ParseTabStruct.hpp"
 #include "FAStruct.hpp"
 #include "Rule.hpp"
+#include "Tool.hpp"
 
 #define END_SYMBOL "$"
 #define PARSE_TAB_HEADING "## Parse Table"

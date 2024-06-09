@@ -14,8 +14,8 @@ void Config::analysis(std::ofstream &outFile)
     // TODO 解析config.json中的输出文件配置
     initOutFile(outFile);
     analysisCopy(outFile);
-    analysisRule(outFile);
     generateMain(outFile);
+    analysisRule(outFile);
 }
 
 void Config::initOutFile(std::ofstream &outFile)
@@ -28,8 +28,11 @@ void Config::initOutFile(std::ofstream &outFile)
     outFile << " */" << std::endl;
 
     outFile << "#include \"Parser.hpp\"" << std::endl;
-    outFile << "#include \"Tool.hpp\"" << std::endl;
+    // outFile << "#include \"Tool.hpp\"" << std::endl;
     outFile << std::endl;
+
+    // rules设置函数声明
+    outFile << "void setRules(ParseTab &parseTab);" << std::endl;
 }
 
 void Config::analysisCopy(std::ofstream &outFile)
@@ -152,6 +155,7 @@ void Config::analysisRule(std::ofstream &outFile)
 void Config::generateMain(std::ofstream &outFile)
 {
     // outFile << "bool error_flag = false;" << std::endl;
+    // 输入参数
     outFile << "static struct option long_options[] = {" << std::endl;
     outFile << "    {\"input\", required_argument, 0, 'i'}," << std::endl;
     outFile << "    {\"table\", optional_argument, 0, 't'}," << std::endl;
@@ -162,11 +166,23 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "    {0, 0, 0, 0} // 结束标志" << std::endl;
     outFile << "};" << std::endl;
     outFile << std::endl;
+
+    // 全局声明Parsertab和Parser
+    outFile << "ParseTab tab;" << std::endl;
+    outFile << "Parser parser(tab);" << std::endl;
+    // 暴露语义分析所需函数给action
+    outFile << "auto &gen = zparser.gen;" << std::endl;
+    outFile << "auto &makeList = zparser.makeList;" << std::endl;
+    outFile << "auto &mergeList = zparser.mergeList;" << std::endl;
+    outFile << "auto &backPatch = zparser.backPatch;" << std::endl;
+    outFile << std::endl;
+
+    // main函数
     outFile << "int main(int argc, char *argv[])\n";
     outFile << "{\n";
     outFile << "    char options[] = \"i:t:o:p:h:c:\";\n";
     outFile << "\n";
-    outFile << "    ParseTab tab;\n";
+    // outFile << "    ParseTab tab;\n";
     outFile << "    std::string tokenFile;\n";
     outFile << "    std::string tableFile = DEFAULT_TABLE_FILE;\n";
     outFile << "    std::string outputFile = DEFAULT_OUTPUT_FILE;\n";
@@ -220,7 +236,7 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "\n";
     outFile << "    setRules(tab);\n";
     outFile << "    tab.loadFromFile(tableFile);\n";
-    outFile << "    Parser parser(tab);\n";
+    // outFile << "    Parser parser(tab);\n";
     outFile << "    parser.setOutputFile(outputFile);\n";
     outFile << "    parser.grammarAnalysis(tokenFile, processFile, codeTargetFile);\n";
     outFile << "    return 0;\n";

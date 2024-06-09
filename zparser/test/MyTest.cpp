@@ -7,10 +7,10 @@ TEST(ParseTabTest, testSave)
 {
 
     ParseTab parseTab;
-    parseTab.setTermVec({"x", "y", "$"});
+    parseTab.setTermVec({"x", "||", "$"});
     parseTab.setNonTermVec({"S", "T"});
     std::vector<State> states;
-    State state0({{"x", Action(ActionType::A_Shift, 1)}, {"y", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Goto, 5}}, {"T", {ActionType::A_Error}}});
+    State state0({{"x", Action(ActionType::A_Shift, 1)}, {"||", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Goto, 5}}, {"T", {ActionType::A_Error}}});
 
     // 打印state0
     std::cout << "state: 0" << std::endl;
@@ -20,11 +20,11 @@ TEST(ParseTabTest, testSave)
     }
 
     states.push_back(state0);
-    states.push_back(State({{"x", {ActionType::A_Shift, 2}}, {"y", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
-    states.push_back(State({{"x", {ActionType::A_Error}}, {"y", {ActionType::A_Shift, 3}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Goto, 4}}}));
-    states.push_back(State({{"x", {ActionType::A_Reduce, 2}}, {"y", {ActionType::A_Reduce, 2}}, {"$", {ActionType::A_Reduce, 2}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
-    states.push_back(State({{"x", {ActionType::A_Reduce, 1}}, {"y", {ActionType::A_Reduce, 1}}, {"$", {ActionType::A_Reduce, 1}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
-    states.push_back(State({{"x", {ActionType::A_Error}}, {"y", {ActionType::A_Error}}, {"$", {ActionType::A_Accept}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Shift, 2}}, {"||", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Error}}, {"||", {ActionType::A_Shift, 3}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Goto, 4}}}));
+    states.push_back(State({{"x", {ActionType::A_Reduce, 2}}, {"||", {ActionType::A_Reduce, 2}}, {"$", {ActionType::A_Reduce, 2}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Reduce, 1}}, {"||", {ActionType::A_Reduce, 1}}, {"$", {ActionType::A_Reduce, 1}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Error}}, {"||", {ActionType::A_Error}}, {"$", {ActionType::A_Accept}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
 
     parseTab.setStates(states);
     parseTab.saveToFile("test/out/testSave.md");
@@ -40,7 +40,7 @@ TEST(ParseTabTest, testLoad)
     std::vector<Rule> rules;
     rules.push_back(Rule({"S", {"x", "x", "T"}, [&](ACTION_FUNCTION_PARAM) -> int
                           { return 0; }}));
-    rules.push_back(Rule({"T", {"y"}, [&](ACTION_FUNCTION_PARAM) -> int
+    rules.push_back(Rule({"T", {"||"}, [&](ACTION_FUNCTION_PARAM) -> int
                           { return 0; }}));
     parseTab.setRules(rules);
 
@@ -100,15 +100,15 @@ TEST(ParseTabTest, testTokenRead_sample_in1)
 
 void saveTest1(ParseTab &parseTab, std::string filename)
 {
-    parseTab.setTermVec({"x", "y", "$"});
+    parseTab.setTermVec({"x", "||", "$"});
     parseTab.setNonTermVec({"S", "T"});
     std::vector<State> states;
-    states.push_back(State({{"x", Action(ActionType::A_Shift, 1)}, {"y", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Goto, 5}}, {"T", {ActionType::A_Error}}}));
-    states.push_back(State({{"x", {ActionType::A_Shift, 2}}, {"y", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
-    states.push_back(State({{"x", {ActionType::A_Error}}, {"y", {ActionType::A_Shift, 3}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Goto, 4}}}));
-    states.push_back(State({{"x", {ActionType::A_Reduce, 2}}, {"y", {ActionType::A_Reduce, 2}}, {"$", {ActionType::A_Reduce, 2}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
-    states.push_back(State({{"x", {ActionType::A_Reduce, 1}}, {"y", {ActionType::A_Reduce, 1}}, {"$", {ActionType::A_Reduce, 1}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
-    states.push_back(State({{"x", {ActionType::A_Error}}, {"y", {ActionType::A_Error}}, {"$", {ActionType::A_Accept}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", Action(ActionType::A_Shift, 1)}, {"||", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Goto, 5}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Shift, 2}}, {"||", {ActionType::A_Error}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Error}}, {"||", {ActionType::A_Shift, 3}}, {"$", {ActionType::A_Error}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Goto, 4}}}));
+    states.push_back(State({{"x", {ActionType::A_Reduce, 2}}, {"||", {ActionType::A_Reduce, 2}}, {"$", {ActionType::A_Reduce, 2}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Reduce, 1}}, {"||", {ActionType::A_Reduce, 1}}, {"$", {ActionType::A_Reduce, 1}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
+    states.push_back(State({{"x", {ActionType::A_Error}}, {"||", {ActionType::A_Error}}, {"$", {ActionType::A_Accept}}, {"S", {ActionType::A_Error}}, {"T", {ActionType::A_Error}}}));
 
     parseTab.setStates(states);
     parseTab.saveToFile(filename);

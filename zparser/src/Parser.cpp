@@ -57,6 +57,7 @@ void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool
     if (processFile.tellp() > PROCESS_FILE_MAX_SIZE)
     {
         std::cout << "[ERROR] 分析过程文件过大, 可能出错" << std::endl;
+        error_flag = true;
         return;
     }
 
@@ -70,13 +71,13 @@ void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool
     // 符号栈
     for (auto &token : tokenStack)
     {
-        processFile << '`' << token.type << "` ";
+        processFile << '`' << escapePipe(token.type) << "` ";
     }
     processFile << "| ";
     // 输入串
     for (auto &token : inputTokens)
     {
-        processFile << '`' << token.type << "` ";
+        processFile << '`' << escapePipe(token.type) << "` ";
     }
     processFile << "| ";
 

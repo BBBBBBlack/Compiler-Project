@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "SemanticStruct.hpp"
 #include "Parser.hpp"
-#include "Tool.hpp"
 
 std::string tableFileName = "out/table.md";
 std::string tokenFileName = "token.txt";
@@ -64,6 +63,8 @@ TEST(SemanticStructTest, 回填测试)
     // setRules(tab);
     Parser parse(tab);
 
+    // auto &gen = parse.gen;
+    // auto &backPatch = parse.backPatch;
     // B1 -> true, B2 -> true
     Token B1("bool", "true"), B2("bool", "true");
     B1["truelist"] = parse.makeList(parse.nextinstr);
