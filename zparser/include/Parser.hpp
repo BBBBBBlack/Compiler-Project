@@ -6,7 +6,7 @@
 #include "Token.hpp"
 #include "CST.hpp"
 #include "SymbolTable.hpp"
-#include "ParserFun.hpp"
+#include "SemanticStruct.hpp"
 
 extern bool error_flag;
 class Parser
@@ -42,6 +42,19 @@ public:
     {
         this->parseTab = parseTab;
     }
+
+    // 暴露给action, 进行封装
+    int nextinstr = 0, jumpListCnt = 0;
+    std::vector<Quaternion> instrVec;              // 生成的中间代码
+    std::unordered_map<int, JumpList> jumpListMap; // 回填的跳转列表
+    // 生成四元式 返回四元式的标号
+    TokenValue gen(Quaternion::Operation op, std::string arg1, std::string arg2, std::string result);
+    TokenValue gen(Quaternion::Operation op, std::string arg1, std::string arg2);
+    TokenValue gen(Quaternion::Operation op, std::string arg);
+    // void gen(Quaternion::Operation op); // 应该没有无参的四元式吧
+    TokenValue makeList(TokenValue instrId);
+    TokenValue mergeList(TokenValue jumpListId1, TokenValue jumpListId2);
+    void backPatch(TokenValue jumpListId, int jumpTo);
 
 private:
     std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)

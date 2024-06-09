@@ -4,8 +4,8 @@
 #include "pch.hpp"
 #define EPSILON "ε"
 
-#define TokenType std::string
-#define TokenValue std::string
+using TokenType = std::string;
+using TokenValue = std::string;
 
 struct Token
 {
@@ -53,9 +53,9 @@ struct Token
 
     Token(TokenType type, TokenValue value, int lineno, int pos)
         : type(type), value(value), lineno(lineno), pos(pos) {}
-    Token() = default;
+    Token(TokenType type, std::string value) : type(type), value(value) {}
     Token(TokenType type) : type(type) {}
-    Token(TokenType type, std::string value);
+    Token() = default;
 
     Token static getEpsilon()
     {
