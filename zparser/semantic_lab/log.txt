@@ -3,11 +3,11 @@ table file: ./out/table.md
 output file: ./out/CST.md
 process file: ./out/process.md
 code target file: ./out/code_target.md
-termCount: 18 nonTermCount: 12 stateCount: 48
+termCount: 18 nonTermCount: 13 stateCount: 59
 Accept!
 Symbol Table
 Lexeme	Type	Offset
 x	real	0
 i	int	8
-arr	array(5, int)	12
-arr	array(5, array(6, real))	32
+arr1	array(5, int)	12
+arr2	array(5, array(6, real))	32

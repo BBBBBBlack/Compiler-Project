@@ -177,7 +177,8 @@
                     "right": "loc '=' expr ';'",
                     "action": [
                         "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
-                        "gen(codeTargetFile, rightTokens[0][\"lexeme\"] + \" = \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(codeTargetFile,",
+                        "   rightTokens[0][\"lexeme\"] + \"[\" + rightTokens[0][\"addr\"] + \"]\" + \" = \" + rightTokens[2][\"addr\"] + \";\");"
                     ]
                 }
             ]
@@ -233,7 +234,11 @@
             "rights": [
                 {
                     "right": "loc",
-                    "action": []
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile,",
+                        "    leftToken[\"addr\"] + \" = \" + rightTokens[0][\"lexeme\"] + \"[\" + rightTokens[0][\"addr\"] + \"]\");"
+                    ]
                 }
             ]
         },
@@ -260,11 +265,29 @@
             "rights": [
                 {
                     "right": "loc '[' expr ']'",
-                    "action": []
+                    "action": [
+                        "leftToken[\"lexeme\"] = rightTokens[0][\"lexeme\"];",
+                        "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
+                        "std::string temo = Temp::newTemp();",
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile,",
+                        "    temo + \" = \" + rightTokens[2][\"addr\"] + \" * \" +",
+                        "        std::to_string(get_width(leftToken[\"type\"])));",
+                        "gen(codeTargetFile,",
+                        "    leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" + \" + temo);"
+                    ]
                 },
                 {
                     "right": "'id' '[' expr ']'",
-                    "action": []
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "leftToken[\"lexeme\"] = rightTokens[0][\"lexeme\"];",
+                        "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile,",
+                        "   leftToken[\"addr\"] + \" = \" + rightTokens[2][\"addr\"] + \" * \" +",
+                        "       std::to_string(get_width(leftToken[\"type\"])));"
+                    ]
                 }
             ]
         }

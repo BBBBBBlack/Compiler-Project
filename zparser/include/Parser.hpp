@@ -7,6 +7,7 @@
 #include "CST.hpp"
 #include "SymbolTable.hpp"
 #include "SemanticStruct.hpp"
+#include "ParserFun.hpp"
 
 extern bool error_flag;
 class Parser
