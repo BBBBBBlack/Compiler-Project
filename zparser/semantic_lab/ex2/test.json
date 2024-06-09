@@ -170,15 +170,14 @@
                     "right": "'id' '=' expr ';'",
                     "action": [
                         "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
-                        "gen(codeTargetFile, rightTokens[0][\"lexeme\"] + \" = \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(Quaternion::ASSIGN, rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
                     ]
                 },
                 {
                     "right": "loc '=' expr ';'",
                     "action": [
                         "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
-                        "gen(codeTargetFile,",
-                        "   rightTokens[0][\"lexeme\"] + \"[\" + rightTokens[0][\"addr\"] + \"]\" + \" = \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
                     ]
                 }
             ]
@@ -190,35 +189,35 @@
                     "right": "expr '+' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" + \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(Quaternion::ADD, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
                 {
                     "right": "expr '-' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" - \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(Quaternion::SUB, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
                 {
                     "right": "expr '*' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" * \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(Quaternion::MUL, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
                 {
                     "right": "expr '/' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" / \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(Quaternion::DIV, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
                 {
                     "right": "'-' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + \" - \" + rightTokens[2][\"addr\"] + \";\");"
+                        "gen(Quaternion::SUB, \"0\", rightTokens[1][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
                 {
@@ -236,8 +235,7 @@
                     "right": "loc",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile,",
-                        "    leftToken[\"addr\"] + \" = \" + rightTokens[0][\"lexeme\"] + \"[\" + rightTokens[0][\"addr\"] + \"]\");"
+                        "gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0][\"lexeme\"], rightTokens[0][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 }
             ]
@@ -270,11 +268,8 @@
                         "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
                         "std::string temo = Temp::newTemp();",
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile,",
-                        "    temo + \" = \" + rightTokens[2][\"addr\"] + \" * \" +",
-                        "        std::to_string(get_width(leftToken[\"type\"])));",
-                        "gen(codeTargetFile,",
-                        "    leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" + \" + temo);"
+                        "gen(Quaternion::MUL, rightTokens[2][\"addr\"], std::to_string(get_width(leftToken[\"type\"])), temo);",
+                        "gen(Quaternion::ADD, rightTokens[0][\"addr\"], temo, leftToken[\"addr\"]);"
                     ]
                 },
                 {
@@ -284,9 +279,7 @@
                         "leftToken[\"lexeme\"] = rightTokens[0][\"lexeme\"];",
                         "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(codeTargetFile,",
-                        "   leftToken[\"addr\"] + \" = \" + rightTokens[2][\"addr\"] + \" * \" +",
-                        "       std::to_string(get_width(leftToken[\"type\"])));"
+                        "gen(Quaternion::MUL, rightTokens[2][\"addr\"], std::to_string(get_width(leftToken[\"type\"])), leftToken[\"addr\"]);"
                     ]
                 }
             ]
