@@ -17,32 +17,32 @@ using namespace std;
 void setRules(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
-    rules.push_back(Rule({"E", {"E", "+", "T"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken, std::string codeTargetFile) -> int
+    rules.push_back(Rule({"E", {"E", "+", "T"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               leftToken.value = to_string(stoi(rightTokens[0].value) + stoi(rightTokens[2].value));
                               return 0;
                           }}));
-    rules.push_back(Rule({"E", {"T"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken, std::string codeTargetFile) -> int
+    rules.push_back(Rule({"E", {"T"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               leftToken.value = rightTokens[0].value;
                               return 0;
                           }}));
-    rules.push_back(Rule({"T", {"T", "*", "F"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken, std::string codeTargetFile) -> int
+    rules.push_back(Rule({"T", {"T", "*", "F"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               leftToken.value = to_string(stoi(rightTokens[0].value) * stoi(rightTokens[2].value));
                               return 0;
                           }}));
-    rules.push_back(Rule({"T", {"F"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken, std::string codeTargetFile) -> int
+    rules.push_back(Rule({"T", {"F"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               leftToken.value = rightTokens[0].value;
                               return 0;
                           }}));
-    rules.push_back(Rule({"F", {"(", "E", ")"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken, std::string codeTargetFile) -> int
+    rules.push_back(Rule({"F", {"(", "E", ")"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               leftToken.value = rightTokens[1].value;
                               return 0;
                           }}));
-    rules.push_back(Rule({"F", {"digit"}, [&](Token &leftToken, std::vector<Token> &rightTokens, std::vector<Token> &tokenStack, std::vector<std::pair<std::string, std::string>> &tempToken, std::string codeTargetFile) -> int
+    rules.push_back(Rule({"F", {"digit"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               leftToken.value = rightTokens[0].value;
                               return 0;

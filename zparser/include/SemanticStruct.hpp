@@ -2,6 +2,9 @@
 #define SEMANTIC_STRUCT_HPP
 
 #include "pch.hpp"
+#include "Token.hpp"
+
+#define EMPTY_ARG "_"
 
 class Quaternion
 {
@@ -41,11 +44,11 @@ public:
         {MUL, "*"},
         {DIV, "/"},
         {UNARY_OP, "op"},
-        {ARRAY_ASSIGN_YI, "= *"},
-        {ARRAY_ASSIGN_XI, "* ="},
+        {ARRAY_ASSIGN_YI, "=[]"},
+        {ARRAY_ASSIGN_XI, "[]="},
         {ADDRESS_ASSIGN, "= &"},
-        {POINTER_ASSIGN_Y, "= *"},
-        {POINTER_ASSIGN_X, "* ="},
+        {POINTER_ASSIGN_Y, "=*"},
+        {POINTER_ASSIGN_X, "*="},
         {GOTO, "goto"},
         {IF_X_GOTO, "if"},
         {IF_FALSE_X_GOTO, "if_false"},
@@ -59,14 +62,47 @@ public:
         {PROC_CALL, "call"},
         {FUNC_CALL, "=call"}};
 
-    Quaternion(Operation op, std::string arg1, std::string arg2, std::string result) : op(op), arg1(arg1), arg2(arg2), result(result)
+    Quaternion(Operation op, std::string arg1, std::string arg2, std::string result) : op(op), arg1(arg1), arg2(arg2), result(result) {}
+    Quaternion(Operation op, std::string arg1, std::string arg2) : op(op)
     {
+        switch (op)
+        {
+        case UNARY_OP:         // x = op y
+        case ADDRESS_ASSIGN:   // x = &y
+        case POINTER_ASSIGN_Y: // x = *y
+        case POINTER_ASSIGN_X: // *x = y
+        case IF_X_GOTO:        // if x goto L
+        case IF_FALSE_X_GOTO:  // if false x goto L
+            this->arg1 = arg1;
+            this->result = arg2;
+            break;
+        case PROC_CALL: // call p, n
+            this->arg1 = arg1;
+            this->result = arg2;
+            break;
+
+        default:
+            break;
+        }
+    }
+    Quaternion(Operation op, std::string arg1) : op(op)
+    {
+        switch (op)
+        {
+        case PARAM: // param x
+            this->arg1 = arg1;
+            break;
+        case GOTO:
+            this->result = arg1;
+        default:
+            break;
+        }
     }
 
     Operation op;
-    std::string arg1;
-    std::string arg2;
-    std::string result;
+    std::string arg1 = EMPTY_ARG;
+    std::string arg2 = EMPTY_ARG;
+    std::string result = EMPTY_ARG;
 
     std::string toString()
     {
@@ -77,16 +113,6 @@ public:
 /**
  * @brief 回填中用到的控制流指令跳转列表
  */
-class JumpList
-{
-public:
-    static JumpList *makeList(int jumpTo, Quaternion instruction);
-    static JumpList *merge(JumpList *list1, JumpList *list2);
-    void backpatch(int jumpTo);
-
-private:
-    int jumpTo;
-    std::vector<Quaternion> instructionVec;
-};
+typedef std::vector<int> JumpList;
 
 #endif // !SEMANTIC_STRUCT_HPP

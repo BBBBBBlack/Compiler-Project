@@ -16,6 +16,7 @@ struct Temp
 
 /**
  * @brief 生成中间代码
+ * @deprecated 请使用Parser::gen
  */
 void gen(std::string outFile, std::string contant);
 

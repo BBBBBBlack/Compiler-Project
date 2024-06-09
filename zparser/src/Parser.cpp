@@ -231,3 +231,52 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
     // }
     // cst.printCST(std::cout);
 }
+
+TokenValue Parser::gen(Quaternion::Operation op, std::string arg1, std::string arg2, std::string result)
+{
+    Quaternion q(op, arg1, arg2, result);
+    instrVec.push_back(q);
+    return std::to_string(nextinstr++);
+}
+
+TokenValue Parser::gen(Quaternion::Operation op, std::string arg1, std::string arg2)
+{
+    Quaternion q(op, arg1, arg2);
+    instrVec.push_back(q);
+    return std::to_string(nextinstr++);
+}
+
+TokenValue Parser::gen(Quaternion::Operation op, std::string arg)
+{
+    Quaternion q(op, arg);
+    instrVec.push_back(q);
+    return std::to_string(nextinstr++);
+}
+
+TokenValue Parser::makeList(TokenValue instrId)
+{
+    JumpList jumpList;
+    jumpList.push_back(std::stoi(instrId));
+    jumpListMap[jumpListCnt] = jumpList;
+    return std::to_string(jumpListCnt++);
+}
+
+TokenValue Parser::mergeList(TokenValue jumpListId1, TokenValue jumpListId2)
+{
+    JumpList &jumpList1 = jumpListMap[std::stoi(jumpListId1)];
+    JumpList &jumpList2 = jumpListMap[std::stoi(jumpListId2)];
+    jumpList1.insert(jumpList1.end(), jumpList2.begin(), jumpList2.end());
+    jumpListMap.erase(std::stoi(jumpListId2));
+
+    return jumpListId1;
+}
+
+void Parser::backPatch(TokenValue jumpListId, int jumpTo)
+{
+    JumpList &jumpList = jumpListMap[std::stoi(jumpListId)];
+    for (auto &instrId : jumpList)
+    {
+        instrVec[instrId].result = std::to_string(jumpTo);
+    }
+    jumpListMap.erase(std::stoi(jumpListId));
+}

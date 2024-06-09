@@ -61,11 +61,7 @@ void writeRule(std::ofstream &outFile, const std::string &left, const std::vecto
         outFile << "\"" << right << "\"";
     }
     outFile << "}, ";
-    outFile << "[&](Token &leftToken,"
-            << " std::vector<Token> &rightTokens,"
-            << " std::vector<Token> &tokenStack,"
-            << " std::vector<std::pair<std::string, std::string>> &tempToken,"
-            << " std::string codeTargetFile) -> int"
+    outFile << "[&](ACTION_FUNCTION_PARAM) -> int"
             << std::endl;
     outFile << "                          {" << std::endl;
     for (const auto &actionStr : actionStrVec)
