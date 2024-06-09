@@ -12,11 +12,13 @@
 #define PRODUCTION_CONCAT " → "
 
 // TODO 产生式动作的save和load
-using ActionFunction = std::function<int(Token &leftToken,
-                                         std::vector<Token> &rightTokens,
-                                         std::vector<Token> &tokenStack,
-                                         std::vector<std::pair<std::string, std::string>> &tempToken,
-                                         std::string codeTargetFile)>;
+#define ACTION_FUNCTION_PARAM Token &leftToken,                                            \
+                              std::vector<Token> &rightTokens,                             \
+                              std::vector<Token> &tokenStack,                              \
+                              std::vector<std::pair<std::string, std::string>> &tempToken, \
+                              std::string codeTargetFile
+using ActionFunction = std::function<int(ACTION_FUNCTION_PARAM)>;
+
 /*
  * 产生式类
  */
