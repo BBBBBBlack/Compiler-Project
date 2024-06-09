@@ -28,6 +28,7 @@ void Config::initOutFile(std::ofstream &outFile)
     outFile << " */" << std::endl;
 
     outFile << "#include \"Parser.hpp\"" << std::endl;
+    outFile << "#include \"ExposeFun.hpp\"" << std::endl;
     // outFile << "#include \"Tool.hpp\"" << std::endl;
     outFile << std::endl;
 
