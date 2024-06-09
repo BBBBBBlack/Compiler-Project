@@ -171,14 +171,25 @@ std::vector<State> FA::createTable()
                 {
                     // if (actions.find(symbol) != actions.end() && actions[symbol].type == ActionType::A_Shift)
                     // {
-                    //     printf("冲突%s\n", symbol.c_str());
+                    //     printf("冲突%s  %d\n", symbol.c_str(), i);
                     // }
-                    if ((actions.find(symbol) == actions.end()) ||
-                        (actions.find(symbol) != actions.end() &&
-                         actions[symbol].type == ActionType::A_Shift &&
-                         ((symbol == "+" || symbol == "-") || sub_rule.right[0] == "-")))
+                    if (actions.find(symbol) == actions.end())
                     {
                         actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id + 1);
+                    }
+                    if (actions.find(symbol) != actions.end() &&
+                        actions[symbol].type == ActionType::A_Shift)
+                    {
+                        if ((symbol == "+" || symbol == "-") ||
+                            (sub_rule.right[0] == "-" &&
+                             (symbol == "+" || symbol == "-" || symbol == "*" || symbol == "/")))
+                        {
+                            actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id + 1);
+                        }
+                        if (symbol == "||" || (sub_rule.right[0] == "!" && (symbol == "||" || symbol == "&&")))
+                        {
+                            actions[symbol] = Action(ActionType::A_Reduce, sub_rule.id + 1);
+                        }
                     }
                 }
             }
