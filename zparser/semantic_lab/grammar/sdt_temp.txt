@@ -20,7 +20,40 @@ basic    → real{basic.type=real; basic.width=8}
 stmts    → stmt stmts
 stmts    → ε
 stmt     → id = expr; {gen(top.get(id.lexeme) '=' expr.addr;)}
+stmt     → if ( bool ) M stmt1	{backpatch(bool.truelist, M.instr); 
+				stmt.nextlist=merge(bool.falselist, stmt1.nextlist);}
 
+stmt     → if ( bool ) M1 stmt1 N else M2 stmt2 
+				{backpatch(bool.truelist, M1.instr); 
+				backpatch(bool.falselist, M2.instr);
+				temp=merge(stmt1.nextlist, N.nextlist);
+				stmt.nextlist=merge(temp, stmt2.nextlist);}
+
+stmt     → while M1 ( bool ) M2 stmt1
+				{backpatch(stmt1.truelist, M1.instr); 
+				backpatch(bool.truelist, M2.instr);
+				stmt.nextlist=bool.falselist;
+				gen('goto' M1.instr);}
+
+stmt     → do M stmt while ( bool ) ;
+				{
+					backpatch(bool.truelist, M.instr);
+					stmt.nextlist=bool.falselist;
+				}
+stmt     → break ;
+				{
+					stmt.nextlist=makelist(nextinstr);
+					gen('goto_');
+				}
+				
+M        → ɛ {M.instr=nextinstr;}
+
+N        → ɛ {N.nextlist=makelist(nextinstr); gen('goto_____');}
+
+/* Condition Expressions */
+bool     → true {bool.truelist=makelist(nextinstr); gen('goto_____');}
+bool     → false
+bool     → bool||bool | bool&& bool | ! bool | (bool) 
 /* Arithmetic Expressions */
 expr     → expr1 + expr2 {expr.addr= new Temp(); gen(expr.addr '=' expr1.addr '+' expr2.addr);}
 

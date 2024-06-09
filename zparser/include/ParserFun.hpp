@@ -8,6 +8,7 @@ extern int offset;
 extern std::string t; // 暂存类型type
 extern int w;         // 暂存宽度width
 extern std::unordered_map<std::string, int> type_width_map;
+extern TokenValue temp;
 
 struct Temp
 {
@@ -19,7 +20,7 @@ struct Temp
  * @brief 生成中间代码
  * @deprecated 请使用Parser::gen
  */
-void gen(std::string outFile, std::string contant);
+// void gen(std::string outFile, std::string contant);
 
 /**
  * @brief 获取数组元素类型

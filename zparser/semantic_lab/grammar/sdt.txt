@@ -30,7 +30,7 @@ stmt     → while M1 ( bool ) M2 stmt1
 				{backpatch(stmt1.truelist, M1.instr); 
 				backpatch(bool.truelist, M2.instr);
 				stmt.nextlist=bool.falselist;
-				gen('goto' M1.instr;}
+				gen('goto' M1.instr);}
 
 stmt     → do stmt while ( bool ) ;
 stmt     → break ;

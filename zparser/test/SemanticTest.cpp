@@ -211,3 +211,98 @@ TEST(SemanticStructTest, ExposeFun测试)
     analyze("test/semantic_test/fun_test/", tab, parser); // 用ExposeFun.hpp中的parser
     printInstr(parser);
 }
+
+void setRules3(ParseTab &parseTab)
+{
+    std::vector<Rule> rules;
+    rules.push_back(Rule({"stmt", {"if", "(", "bool", ")", "M", "stmt"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              // bool:2, M:4, stmt:5
+                              backPatch(rightTokens[2]["truelist"], rightTokens[4]["instr"]);
+                              leftToken["nextlist"] = mergeList(rightTokens[2]["falselist"], rightTokens[5]["nextlist"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"if", "(", "bool", ")", "M", "stmt", "N", "else", "M", "stmt"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              // bool:2, M1:4, stmt1:5, N:6, M2:8, stmt2:9
+                              backPatch(rightTokens[2]["truelist"], rightTokens[4]["instr"]);
+                              backPatch(rightTokens[2]["falselist"], rightTokens[8]["instr"]);
+                              temp = mergeList(rightTokens[5]["nextlist"], rightTokens[6]["nextlist"]);
+                              leftToken["nextlist"] = mergeList(temp, rightTokens[9]["nextlist"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"while", "M", "(", "bool", ")", "M", "stmt"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              // M1:1, bool:3, M2:5, stmt:6
+                              backPatch(rightTokens[6]["truelist"], rightTokens[1]["instr"]);
+                              backPatch(rightTokens[3]["truelist"], rightTokens[5]["instr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"do", "M", "stmt", "while", "(", "bool", ")"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              // M:2, stmt:3, bool:6
+                              // bool为真时跳转到M
+                              backPatch(rightTokens[6]["truelist"], rightTokens[2]["instr"]);
+                              leftToken["nextlist"] = rightTokens[6]["falselist"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"break", ";"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["nextlist"] = makeList(nextinstr);
+                              gen(Quaternion::Operation::GOTO, "_");
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"true"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["truelist"] = makeList(nextinstr);
+                              gen(Quaternion::Operation::GOTO, "_");
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"false"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["falselist"] = makeList(nextinstr);
+                              gen(Quaternion::Operation::GOTO, "_");
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"bool", "||", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              backPatch(leftToken["falselist"], nextinstr);
+                              leftToken["truelist"] = mergeList(rightTokens[0]["truelist"], rightTokens[3]["truelist"]);
+                              leftToken["falselist"] = rightTokens[3]["falselist"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"bool", "&&", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              backPatch(leftToken["truelist"], nextinstr);
+                              leftToken["truelist"] = rightTokens[3]["truelist"];
+                              leftToken["falselist"] = mergeList(rightTokens[0]["falselist"], rightTokens[3]["falselist"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"!", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["truelist"] = rightTokens[1]["falselist"];
+                              leftToken["falselist"] = rightTokens[1]["truelist"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"bool", {"(", "bool", ")"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["truelist"] = rightTokens[1]["truelist"];
+                              leftToken["falselist"] = rightTokens[1]["falselist"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"M", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["instr"] = nextinstr;
+                              return 0;
+                          }}));
+    parseTab.setRules(rules);
+}
+
+TEST(SemanticStructTest, if测试)
+{
+    runZTableGenerator("test/semantic_test/if_test/", "config.json");
+    setRules3(tab); // 用ExposeFun.hpp中的tab
+
+    analyze("test/semantic_test/if_test/", tab, parser); // 用ExposeFun.hpp中的parser
+    printInstr(parser);
+}
