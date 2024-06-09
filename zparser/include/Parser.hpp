@@ -7,6 +7,9 @@
 #include "CST.hpp"
 #include "SymbolTable.hpp"
 #include "SemanticStruct.hpp"
+#include "ParserFun.hpp"
+
+#define PROCESS_FILE_MAX_SIZE 3 * 1024 * 1024 // 3MB
 
 extern bool error_flag;
 class Parser
