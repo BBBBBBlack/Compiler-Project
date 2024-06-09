@@ -1,0 +1,38 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "bool",
+            "rights": [
+                {
+                    "right": "'true'",
+                    "action": []
+                },
+                {
+                    "right": "'false'",
+                    "action": []
+                },
+                {
+                    "right": "bool '||' bool",
+                    "action": []
+                },
+                {
+                    "right": "bool '&&' bool",
+                    "action": []
+                },
+                {
+                    "right": "'!' bool",
+                    "action": []
+                },
+                {
+                    "right": "'(' bool ')'",
+                    "action": []
+                }
+            ]
+        }
+    ]
+}

@@ -53,23 +53,30 @@ void Parser::writeProcess(std::ofstream &processFile, const Action &action, bool
         processFile << "| 状态栈 | 符号栈 | 输入串 | 动作 |\n";
         processFile << "| --- | --- | ---: | --- |\n";
     }
+    // 如果processFile>10MB, 可能出错, 打印错误信息
+    if (processFile.tellp() > PROCESS_FILE_MAX_SIZE)
+    {
+        std::cout << "[ERROR] 分析过程文件过大, 可能出错" << std::endl;
+        return;
+    }
+
     // 状态栈
     processFile << "| ";
     for (auto &state : stateStack)
     {
-        processFile << state << " ";
+        processFile << '`' << state << "` ";
     }
     processFile << "| ";
     // 符号栈
     for (auto &token : tokenStack)
     {
-        processFile << token.type << " ";
+        processFile << '`' << token.type << "` ";
     }
     processFile << "| ";
     // 输入串
     for (auto &token : inputTokens)
     {
-        processFile << token.type << " ";
+        processFile << '`' << token.type << "` ";
     }
     processFile << "| ";
 
