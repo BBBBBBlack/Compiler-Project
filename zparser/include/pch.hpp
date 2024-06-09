@@ -5,6 +5,7 @@
 #define DEFAULT_TABLE_FILE "zparser/out/table.md"
 #define DEFAULT_OUTPUT_FILE "zparser/out/output.md"
 #define DEFAULT_PROCESS_FILE "zparser/out/process.md"
+#define DEFAULT_CODE_TARGET_FILE "zparser/out/code_target.md"
 
 // 管理所有头文件, 避免重复include
 

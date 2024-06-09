@@ -64,7 +64,8 @@ void writeRule(std::ofstream &outFile, const std::string &left, const std::vecto
     outFile << "[&](Token &leftToken,"
             << " std::vector<Token> &rightTokens,"
             << " std::vector<Token> &tokenStack,"
-            << " std::vector<std::pair<std::string, std::string>> &tempToken) -> int"
+            << " std::vector<std::pair<std::string, std::string>> &tempToken,"
+            << " std::string codeTargetFile) -> int"
             << std::endl;
     outFile << "                          {" << std::endl;
     for (const auto &actionStr : actionStrVec)
@@ -160,19 +161,21 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "    {\"table\", optional_argument, 0, 't'}," << std::endl;
     outFile << "    {\"output\", optional_argument, 0, 'o'}," << std::endl;
     outFile << "    {\"process\", optional_argument, 0, 'p'}," << std::endl;
+    outFile << "    {\"code\", optional_argument, 0, 'c'}," << std::endl;
     outFile << "    {\"help\", no_argument, 0, 'h'}," << std::endl;
     outFile << "    {0, 0, 0, 0} // 结束标志" << std::endl;
     outFile << "};" << std::endl;
     outFile << std::endl;
     outFile << "int main(int argc, char *argv[])\n";
     outFile << "{\n";
-    outFile << "    char options[] = \"i:t:o:p:h:\";\n";
+    outFile << "    char options[] = \"i:t:o:p:h:c:\";\n";
     outFile << "\n";
     outFile << "    ParseTab tab;\n";
     outFile << "    std::string tokenFile;\n";
     outFile << "    std::string tableFile = DEFAULT_TABLE_FILE;\n";
     outFile << "    std::string outputFile = DEFAULT_OUTPUT_FILE;\n";
     outFile << "    std::string processFile = DEFAULT_PROCESS_FILE;\n";
+    outFile << "    std::string codeTargetFile = DEFAULT_CODE_TARGET_FILE;\n";
     outFile << "    int opt;\n";
     outFile << "    while ((opt = getopt_long(argc, argv, options, long_options, nullptr)) != -1)\n";
     outFile << "    {\n";
@@ -194,6 +197,10 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "            removeSpaces(optarg);\n";
     outFile << "            processFile = optarg;\n";
     outFile << "            break;\n";
+    outFile << "        case 'c':\n";
+    outFile << "            removeSpaces(optarg);\n";
+    outFile << "            codeTargetFile = optarg;\n";
+    outFile << "            break;\n";
     outFile << "        case 'h':\n";
     outFile << "        default: // 打印帮助信息\n";
     outFile << "            std::cout << \"Usage: \" << argv[0] << std::endl;\n";
@@ -201,6 +208,7 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "            std::cout << \"[OPTIONAL] -t/--table \\t<table file>\" << std::endl;\n";
     outFile << "            std::cout << \"[OPTIONAL] -o/--output \\t<output file>\" << std::endl;\n";
     outFile << "            std::cout << \"[OPTIONAL] -p/--process \\t<process file>\" << std::endl;\n";
+    outFile << "            std::cout << \"[OPTIONAL] -c/--code \\t<code file>\" << std::endl;\n";
     outFile << "\n";
     outFile << "            return 0;\n";
     outFile << "            break;\n";
@@ -211,12 +219,14 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "    std::cout << \"table file: \" << tableFile << std::endl;\n";
     outFile << "    std::cout << \"output file: \" << outputFile << std::endl;\n";
     outFile << "    std::cout << \"process file: \" << processFile << std::endl;\n";
+    outFile << "    std::cout << \"code target file: \" << codeTargetFile << std::endl;\n";
+
     outFile << "\n";
     outFile << "    setRules(tab);\n";
     outFile << "    tab.loadFromFile(tableFile);\n";
     outFile << "    Parser parser(tab);\n";
     outFile << "    parser.setOutputFile(outputFile);\n";
-    outFile << "    parser.grammarAnalysis(tokenFile, processFile);\n";
+    outFile << "    parser.grammarAnalysis(tokenFile, processFile, codeTargetFile);\n";
     outFile << "    return 0;\n";
     outFile << "}\n";
 }

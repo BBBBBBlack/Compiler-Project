@@ -123,12 +123,7 @@
                         "leftToken[\"type\"] = \"float\";",
                         "leftToken[\"width\"] = \"4\";"
                     ]
-                }
-            ]
-        },
-        {
-            "left": "basic",
-            "rights": [
+                },
                 {
                     "right": "'int'",
                     "action": [
@@ -173,7 +168,17 @@
             "rights": [
                 {
                     "right": "'id' '=' expr ';'",
-                    "action": []
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "gen(codeTargetFile, rightTokens[0][\"lexeme\"] + \" = \" + rightTokens[2][\"addr\"] + \";\");"
+                    ]
+                },
+                {
+                    "right": "loc '=' expr ';'",
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "gen(codeTargetFile, rightTokens[0][\"lexeme\"] + \" = \" + rightTokens[2][\"addr\"] + \";\");"
+                    ]
                 }
             ]
         },
@@ -182,43 +187,44 @@
             "rights": [
                 {
                     "right": "expr '+' expr",
-                    "action": []
-                }
-            ]
-        },
-        {
-            "left": "expr",
-            "rights": [
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" + \" + rightTokens[2][\"addr\"] + \";\");"
+                    ]
+                },
                 {
                     "right": "expr '-' expr",
-                    "action": []
-                }
-            ]
-        },
-        {
-            "left": "expr",
-            "rights": [
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" - \" + rightTokens[2][\"addr\"] + \";\");"
+                    ]
+                },
                 {
                     "right": "expr '*' expr",
-                    "action": []
-                }
-            ]
-        },
-        {
-            "left": "expr",
-            "rights": [
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" * \" + rightTokens[2][\"addr\"] + \";\");"
+                    ]
+                },
                 {
                     "right": "expr '/' expr",
-                    "action": []
-                }
-            ]
-        },
-        {
-            "left": "expr",
-            "rights": [
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + rightTokens[0][\"addr\"] + \" / \" + rightTokens[2][\"addr\"] + \";\");"
+                    ]
+                },
                 {
                     "right": "'-' expr",
-                    "action": []
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(codeTargetFile, leftToken[\"addr\"] + \" = \" + \" - \" + rightTokens[2][\"addr\"] + \";\");"
+                    ]
+                },
+                {
+                    "right": "'(' expr ')'",
+                    "action": [
+                        "leftToken[\"addr\"] = rightTokens[1][\"addr\"];"
+                    ]
                 }
             ]
         },
@@ -226,7 +232,7 @@
             "left": "expr",
             "rights": [
                 {
-                    "right": "'(' expr ')'",
+                    "right": "loc",
                     "action": []
                 }
             ]
@@ -236,15 +242,28 @@
             "rights": [
                 {
                     "right": "'id'",
-                    "action": []
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "leftToken[\"addr\"] = rightTokens[0][\"lexeme\"];"
+                    ]
+                },
+                {
+                    "right": "'num'",
+                    "action": [
+                        "leftToken[\"addr\"] = rightTokens[0][\"val\"];"
+                    ]
                 }
             ]
         },
         {
-            "left": "expr",
+            "left": "loc",
             "rights": [
                 {
-                    "right": "'num'",
+                    "right": "loc '[' expr ']'",
+                    "action": []
+                },
+                {
+                    "right": "'id' '[' expr ']'",
                     "action": []
                 }
             ]

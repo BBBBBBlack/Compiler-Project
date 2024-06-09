@@ -4,6 +4,8 @@ int main(){
     int[5] arr;
     real[5][6] arr;
     i = 1;
-    x = 1 + i *2;
+    x = 1 + i * 2;
+    arr[i][i] = 2;
+    arr[2][3] = x;
 }
 //衝突：35	43	44	45	46

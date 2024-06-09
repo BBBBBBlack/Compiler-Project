@@ -25,18 +25,18 @@ public:
      * @param tokenFile token文件名
      * @note 不需要输出分析过程
      */
-    void grammarAnalysis(std::string tokenFile);
+    void grammarAnalysis(std::string tokenFile, std::string codeTargetFile);
     /**
      * @brief 语法分析
      * @param tokenFile token文件名
      * @param processFileName 分析过程输出文件名
      */
-    void grammarAnalysis(std::string tokenFile, std::string processFileName);
+    void grammarAnalysis(std::string tokenFile, std::string processFileName, std::string codeTargetFile);
     /**
      * @brief 语法分析 从cin读取token流
      * @deprecated 未测试, 不建议使用
      */
-    void grammarAnalysis(bool needProcess, std::string processFileName);
+    void grammarAnalysis(bool needProcess, std::string processFileName, std::string codeTargetFile);
 
     void setParseTab(ParseTab &parseTab)
     {
@@ -70,7 +70,7 @@ private:
     // bool needCST = false
     // CST cst;
 
-    void grammarAnalysis(std::istream &tokenStream, std::string processFileName);
+    void grammarAnalysis(std::istream &tokenStream, std::string processFileName, std::string codeTargetFile);
     void writeProcess(std::ofstream &processFile, const Action &action, bool writeHeader);
 };
 
