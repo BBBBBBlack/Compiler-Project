@@ -8,6 +8,7 @@ extern int offset;
 extern std::string t; // 暂存类型type
 extern int w;         // 暂存宽度width
 extern std::unordered_map<std::string, int> type_width_map;
+extern TokenValue temp;
 
 struct Temp
 {

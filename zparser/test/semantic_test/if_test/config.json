@@ -1,0 +1,147 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "if '(' bool ')' M stmt",
+                    "action": [
+                        "// bool:2, M:4, stmt:5",
+                        "backPatch(rightTokens[2][\"truelist\"], rightTokens[4][\"instr\"]);",
+                        "leftToken[\"nextlist\"] = mergeList(rightTokens[2][\"falselist\"], rightTokens[5][\"nextlist\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "if '(' bool ')' M stmt N else M stmt",
+                    "action": [
+                        "// bool:2, M1:4, stmt1:5, N:6, M2:8, stmt2:9",
+                        "backPatch(rightTokens[2][\"truelist\"], rightTokens[4][\"instr\"]);",
+                        "backPatch(rightTokens[2][\"falselist\"], rightTokens[8][\"instr\"]);",
+                        "temp = mergeList(rightTokens[5][\"nextlist\"], rightTokens[6][\"nextlist\"]);",
+                        "leftToken[\"nextlist\"] = mergeList(temp, rightTokens[9][\"nextlist\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "while M '(' bool ')' M stmt",
+                    "action": [
+                        "// M1:1, bool:3, M2:5, stmt:6",
+                        "backPatch(rightTokens[6][\"truelist\"], rightTokens[1][\"instr\"]);",
+                        "backPatch(rightTokens[3][\"truelist\"], rightTokens[5][\"instr\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "do M stmt while '(' bool ')' ';'",
+                    "action": [
+                        "// M:2, stmt:3, bool:6",
+                        "backPatch(rightTokens[6][\"truelist\"], rightTokens[2][\"instr\"]);",
+                        "leftToken[\"nextlist\"] = rightTokens[6][\"falselist\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "break ';'",
+                    "action": [
+                        "leftToken[\"nextlist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "bool",
+            "rights": [
+                {
+                    "right": "'true'",
+                    "action": [
+                        "leftToken[\"truelist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                },
+                {
+                    "right": "'false'",
+                    "action": [
+                        "leftToken[\"falselist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                },
+                {
+                    "right": "bool '||' M bool",
+                    "action": [
+                        "backPatch(leftToken[\"falselist\"], nextinstr);",
+                        "leftToken[\"truelist\"] = mergeList(rightTokens[0][\"truelist\"], rightTokens[3][\"truelist\"]);",
+                        "leftToken[\"falselist\"] = rightTokens[3][\"falselist\"];"
+                    ]
+                },
+                {
+                    "right": "bool '&&' M bool",
+                    "action": [
+                        "backPatch(leftToken[\"truelist\"], nextinstr);",
+                        "leftToken[\"truelist\"] = rightTokens[3][\"truelist\"];",
+                        "leftToken[\"falselist\"] = mergeList(rightTokens[0][\"falselist\"], rightTokens[3][\"falselist\"]);"
+                    ]
+                },
+                {
+                    "right": "'!' bool",
+                    "action": [
+                        "leftToken[\"truelist\"] = rightTokens[1][\"falselist\"];",
+                        "leftToken[\"falselist\"] = rightTokens[1][\"truelist\"];"
+                    ]
+                },
+                {
+                    "right": "'(' bool ')'",
+                    "action": [
+                        "leftToken[\"truelist\"] = rightTokens[1][\"truelist\"];",
+                        "leftToken[\"falselist\"] = rightTokens[1][\"falselist\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "M",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "leftToken[\"instr\"] = nextinstr;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "N",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "leftToken[\"nextlist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                }
+            ]
+        }
+    ]
+}

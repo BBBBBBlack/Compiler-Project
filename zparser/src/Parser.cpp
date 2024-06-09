@@ -4,6 +4,7 @@ bool error_flag = false;
 int offset;
 std::string t;
 int w;
+TokenValue temp;
 void Parser::setOutputFile(std::string fileName)
 {
     outputFile = new std::ofstream(); // 申请内存
