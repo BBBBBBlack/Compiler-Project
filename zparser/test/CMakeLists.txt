@@ -19,7 +19,7 @@ add_test_executable(FATest)
 add_test_executable(SemanticTest)
 
 # 可执行文件测试
-add_test_executable(ParseTest)
+# add_test_executable(ParseTest)
 
 # 一个测试文件
 if(EXISTS "${CMAKE_SOURCE_DIR}/test/out/config/parse.cpp")

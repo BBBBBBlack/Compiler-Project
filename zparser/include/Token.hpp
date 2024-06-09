@@ -16,7 +16,7 @@ struct Token
     int lineno;
     int pos;
 
-    std::string &operator[](TokenType key)
+    TokenValue &operator[](std::string key)
     {
         // if (valMap.find(key) == valMap.end())
         // {

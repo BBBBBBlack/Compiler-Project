@@ -76,6 +76,7 @@ public:
             this->arg1 = arg1;
             this->result = arg2;
             break;
+        case ASSIGN:    // x = y
         case PROC_CALL: // call p, n
             this->arg1 = arg1;
             this->result = arg2;

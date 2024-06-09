@@ -47,6 +47,55 @@ TEST(SemanticStructTest, 四元组toString测试)
     ASSERT_EQ(q.toString(), expected);
 }
 
+void printInstr(Parser &parser)
+{
+    std::cout << "===============" << std::endl;
+    int cnt = 0;
+    for (auto &instr : parser.instrVec)
+    {
+        std::cout << "[" << cnt++ << "]" << instr.toString() << std::endl;
+    }
+    std::cout << "===============" << std::endl;
+}
+
+TEST(SemanticStructTest, 回填测试)
+{
+    ParseTab tab;
+    // setRules(tab);
+    Parser parse(tab);
+
+    // B1 -> true, B2 -> true
+    Token B1("bool", "true"), B2("bool", "true");
+    B1["truelist"] = parse.makeList(parse.nextinstr);
+    std::cout << B1["truelist"] << std::endl;
+    parse.gen(Quaternion::Operation::GOTO, "_");
+
+    printInstr(parse);
+
+    int M_instr = parse.nextinstr;
+    B2["truelist"] = parse.makeList(parse.nextinstr);
+    parse.gen(Quaternion::Operation::GOTO, "_");
+    printInstr(parse);
+
+    // B ->B1 && B2
+    Token B("bool", "?");
+    parse.backPatch(B1["truelist"], M_instr);
+    B["truelist"] = B2["truelist"];
+    B["falselist"] = parse.mergeList(B1["falselist"], B2["falselist"]);
+    // 模拟B ->B1 && B2归约结束, truelist尚未回填
+
+    // if (B) S(z=x+y)
+    Token S1("stmt", "z=x+y"), S("stmt", "?");
+    M_instr = parse.nextinstr;
+    parse.gen(Quaternion::Quaternion::ADD, "x", "y", "z");
+    parse.backPatch(B["truelist"], M_instr);
+    S["nextlist"] = parse.mergeList(B["falselist"], S1["nextlist"]);
+
+    printInstr(parse);
+    // parse.backPatch(B["falselist"], parse.nextinstr);
+    // printInstr(parse);
+}
+
 void setRules(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
@@ -77,7 +126,7 @@ void setRules(ParseTab &parseTab)
     parseTab.setRules(rules);
 }
 
-TEST(SemanticStructTest, 不知道叫什么的测试)
+TEST(SemanticStructTest, bool表达式action测试)
 {
     runZTableGenerator("test/semantic_test/fun_test/", "config.json");
     ParseTab tab;

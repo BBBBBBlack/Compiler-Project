@@ -68,6 +68,12 @@ Usage: ./GenParseTest
 
 ## 语义分析问题记录
 
+### 回填
+
+1. truelist和falselist
+   - 对于true, 没有falselist; 对于false, 没有truelist, 这是正确的, 但是代码中可能要进行处理
+2. 对于nextlist的回填, 是在控制语句之外, 对stmts进行回填的, 所以ppt上空缺了
+
 ### CST遗留问题
 
 没有查看实验要求&没有学习语义分析, 在实现语法分析时就将cst结构和语法分析(自底向上)过程耦合起来

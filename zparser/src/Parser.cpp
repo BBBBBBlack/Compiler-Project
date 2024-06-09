@@ -270,6 +270,30 @@ TokenValue Parser::makeList(TokenValue instrId)
 
 TokenValue Parser::mergeList(TokenValue jumpListId1, TokenValue jumpListId2)
 {
+    // NOTE: 如果是true 没有falseList, 如果是false 没有trueList, 这是正常的, 不需要报错
+    if (jumpListId1.length() == 0)
+    {
+        return jumpListId2;
+    }
+    if (jumpListId2.length() == 0)
+    {
+        return jumpListId1;
+    }
+    if (jumpListId1.length() == 0 && jumpListId2.length() == 0)
+    {
+        return "";
+    }
+
+    // 检查jumpListId1和jumpListId2是否存在
+    if (jumpListMap.find(std::stoi(jumpListId1)) == jumpListMap.end())
+    {
+        throw std::runtime_error("JumpList[id=" + jumpListId1 + "] not found");
+    }
+    if (jumpListMap.find(std::stoi(jumpListId2)) == jumpListMap.end())
+    {
+        throw std::runtime_error("JumpList[id=" + jumpListId2 + "] not found");
+    }
+
     JumpList &jumpList1 = jumpListMap[std::stoi(jumpListId1)];
     JumpList &jumpList2 = jumpListMap[std::stoi(jumpListId2)];
     jumpList1.insert(jumpList1.end(), jumpList2.begin(), jumpList2.end());

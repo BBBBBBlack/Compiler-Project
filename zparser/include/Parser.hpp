@@ -55,6 +55,7 @@ public:
     TokenValue gen(Quaternion::Operation op, std::string arg1, std::string arg2);
     TokenValue gen(Quaternion::Operation op, std::string arg);
     // void gen(Quaternion::Operation op); // 应该没有无参的四元式吧
+    TokenValue makeList(int instrId) { return makeList(std::to_string(instrId)); }
     TokenValue makeList(TokenValue instrId);
     TokenValue mergeList(TokenValue jumpListId1, TokenValue jumpListId2);
     void backPatch(TokenValue jumpListId, int jumpTo);
