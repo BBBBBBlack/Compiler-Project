@@ -172,14 +172,14 @@ void setRules2(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"bool", {"bool", "||", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
-                              backPatch(leftToken["falselist"], nextinstr);
+                              backPatch(rightTokens[0]["falselist"], nextinstr);
                               leftToken["truelist"] = mergeList(rightTokens[0]["truelist"], rightTokens[3]["truelist"]);
                               leftToken["falselist"] = rightTokens[3]["falselist"];
                               return 0;
                           }}));
     rules.push_back(Rule({"bool", {"bool", "&&", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
-                              backPatch(leftToken["truelist"], nextinstr);
+                              backPatch(rightTokens[0]["truelist"], nextinstr);
                               leftToken["truelist"] = rightTokens[3]["truelist"];
                               leftToken["falselist"] = mergeList(rightTokens[0]["falselist"], rightTokens[3]["falselist"]);
                               return 0;
@@ -392,14 +392,14 @@ void setRules_if(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"bool", {"bool", "||", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
-                              backPatch(leftToken["falselist"], nextinstr);
+                              backPatch(rightTokens[0]["falselist"], nextinstr);
                               leftToken["truelist"] = mergeList(rightTokens[0]["truelist"], rightTokens[3]["truelist"]);
                               leftToken["falselist"] = rightTokens[3]["falselist"];
                               return 0;
                           }}));
     rules.push_back(Rule({"bool", {"bool", "&&", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
-                              backPatch(leftToken["truelist"], nextinstr);
+                              backPatch(rightTokens[0]["truelist"], nextinstr);
                               leftToken["truelist"] = rightTokens[3]["truelist"];
                               leftToken["falselist"] = mergeList(rightTokens[0]["falselist"], rightTokens[3]["falselist"]);
                               return 0;
@@ -665,14 +665,14 @@ void setRules_complete(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"bool", {"bool", "||", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
-                              backPatch(leftToken["falselist"], nextinstr);
+                              backPatch(rightTokens[0]["falselist"], nextinstr);
                               leftToken["truelist"] = mergeList(rightTokens[0]["truelist"], rightTokens[3]["truelist"]);
                               leftToken["falselist"] = rightTokens[3]["falselist"];
                               return 0;
                           }}));
     rules.push_back(Rule({"bool", {"bool", "&&", "M", "bool"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
-                              backPatch(leftToken["truelist"], nextinstr);
+                              backPatch(rightTokens[0]["truelist"], nextinstr);
                               leftToken["truelist"] = rightTokens[3]["truelist"];
                               leftToken["falselist"] = mergeList(rightTokens[0]["falselist"], rightTokens[3]["falselist"]);
                               return 0;

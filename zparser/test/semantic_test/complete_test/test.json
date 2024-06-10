@@ -296,7 +296,7 @@
                 {
                     "right": "bool '||' M bool",
                     "action": [
-                        "backPatch(leftToken[\"falselist\"], nextinstr);",
+                        "backPatch(rightTokens[0][\"falselist\"], nextinstr);",
                         "leftToken[\"truelist\"] = mergeList(rightTokens[0][\"truelist\"], rightTokens[3][\"truelist\"]);",
                         "leftToken[\"falselist\"] = rightTokens[3][\"falselist\"];"
                     ]
@@ -304,7 +304,7 @@
                 {
                     "right": "bool '&&' M bool",
                     "action": [
-                        "backPatch(leftToken[\"truelist\"], nextinstr);",
+                        "backPatch(rightTokens[0][\"truelist\"], nextinstr);",
                         "leftToken[\"truelist\"] = rightTokens[3][\"truelist\"];",
                         "leftToken[\"falselist\"] = mergeList(rightTokens[0][\"falselist\"], rightTokens[3][\"falselist\"]);"
                     ]
