@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
 
     setRules(tab);
     tab.loadFromFile(tableFile);
+    parser.setParseTab(tab);
     parser.setOutputFile(outputFile);
     parser.grammarAnalysis(tokenFile, processFile, codeTargetFile);
     return 0;

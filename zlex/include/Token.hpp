@@ -51,6 +51,9 @@ typedef enum
     T_Default,
     T_Struct,
     T_Typedef,
+    // note 语义分析, 修改
+    T_True,
+    T_False,
 
 } TokenType;
 

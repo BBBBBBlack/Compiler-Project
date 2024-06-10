@@ -88,7 +88,11 @@ std::map<std::string, int> Token::operatorMap = {
     {"case", T_Case},
     {"default", T_Default},
     {"struct", T_Struct},
-    {"typedef", T_Typedef}};
+    {"typedef", T_Typedef},
+    // note 语义分析, 修改
+    {"!", '!'},
+    {"true", T_True},
+    {"false", T_False}};
 
 void Token::print_token()
 {

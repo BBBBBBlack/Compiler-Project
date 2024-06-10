@@ -1,0 +1,493 @@
+{
+    "parseTabFile": "test/in/test3_2tab.md",
+    "copy": [
+        "#include <iostream>",
+        "#include <string>"
+    ],
+    "rules": [
+        {
+            "left": "program",
+            "rights": [
+                {
+                    "right": "A basic 'id' '(' ')' block",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "A",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "offset = 0;"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "block",
+            "rights": [
+                {
+                    "right": "'{' decls stmts '}'",
+                    "action": [
+                        "// decls:1, stmts:2",
+                        "backPatch(rightTokens[2][\"nextlist\"], nextinstr);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "decls",
+            "rights": [
+                {
+                    "right": "decl decls",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "decls",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "decl",
+            "rights": [
+                {
+                    "right": "type 'id' ';'",
+                    "action": [
+                        "std::string lexeme = rightTokens[1][\"lexeme\"];",
+                        "std::string type = rightTokens[0][\"type\"];",
+                        "SymbolTable::put_to_symbol_table(lexeme, type, offset);",
+                        "offset += std::stoi(rightTokens[0][\"width\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "type",
+            "rights": [
+                {
+                    "right": "basic B array",
+                    "action": [
+                        "leftToken[\"type\"] = rightTokens[2][\"type\"];",
+                        "leftToken[\"width\"] = rightTokens[2][\"width\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "B",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "t = SymbolTable::get_token_stack(tokenStack, 1)[\"type\"];",
+                        "w = std::stoi(SymbolTable::get_token_stack(tokenStack, 1)[\"width\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "array",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "leftToken[\"type\"] = t;",
+                        "leftToken[\"width\"] = std::to_string(w);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "array",
+            "rights": [
+                {
+                    "right": "'[' 'num' ']' array",
+                    "action": [
+                        "leftToken[\"type\"] = \"array(\" + rightTokens[1][\"val\"] + \", \" + rightTokens[3][\"type\"] + \")\";",
+                        "leftToken[\"width\"] = std::to_string(std::stoi(rightTokens[1][\"val\"]) * std::stoi(rightTokens[3][\"width\"]));"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "basic",
+            "rights": [
+                {
+                    "right": "'float'",
+                    "action": [
+                        "leftToken[\"type\"] = \"float\";",
+                        "leftToken[\"width\"] = \"4\";"
+                    ]
+                },
+                {
+                    "right": "'int'",
+                    "action": [
+                        "leftToken[\"type\"] = \"int\";",
+                        "leftToken[\"width\"] = \"4\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "basic",
+            "rights": [
+                {
+                    "right": "'real'",
+                    "action": [
+                        "leftToken[\"type\"] = \"real\";",
+                        "leftToken[\"width\"] = \"8\";"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "stmt M stmts",
+                    "action": [
+                        "// stmt:0, M:1, stmts:2",
+                        "backPatch(rightTokens[0][\"nextlist\"], rightTokens[1][\"instr\"]);",
+                        "leftToken[\"nextlist\"] = rightTokens[2][\"nextlist\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "'id' '=' expr ';'",
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "gen(Quaternion::ASSIGN, rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
+                    ]
+                },
+                {
+                    "right": "loc '=' expr ';'",
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "'if' '(' bool ')' M stmt",
+                    "action": [
+                        "// bool:2, M:4, stmt:5",
+                        "backPatch(rightTokens[2][\"truelist\"], rightTokens[4][\"instr\"]);",
+                        "leftToken[\"nextlist\"] = mergeList(rightTokens[2][\"falselist\"], rightTokens[5][\"nextlist\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "'if' '(' bool ')' M stmt N 'else' M stmt",
+                    "action": [
+                        "// bool:2, M1:4, stmt1:5, N:6, M2:8, stmt2:9",
+                        "backPatch(rightTokens[2][\"truelist\"], rightTokens[4][\"instr\"]);",
+                        "backPatch(rightTokens[2][\"falselist\"], rightTokens[8][\"instr\"]);",
+                        "temp = mergeList(rightTokens[5][\"nextlist\"], rightTokens[6][\"nextlist\"]);",
+                        "leftToken[\"nextlist\"] = mergeList(temp, rightTokens[9][\"nextlist\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "'while' M '(' bool ')' M stmt",
+                    "action": [
+                        "// M1:1, bool:3, M2:5, stmt:6",
+                        "backPatch(rightTokens[6][\"truelist\"], rightTokens[1][\"instr\"]);",
+                        "backPatch(rightTokens[3][\"truelist\"], rightTokens[5][\"instr\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "'do' M stmt 'while' '(' bool ')' ';'",
+                    "action": [
+                        "// M:2, stmt:3, bool:6",
+                        "backPatch(rightTokens[6][\"truelist\"], rightTokens[2][\"instr\"]);",
+                        "leftToken[\"nextlist\"] = rightTokens[6][\"falselist\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "stmt",
+            "rights": [
+                {
+                    "right": "break ';'",
+                    "action": [
+                        "leftToken[\"nextlist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                },
+                {
+                    "right": "block",
+                    "action": []
+                }
+            ]
+        },
+        {
+            "left": "bool",
+            "rights": [
+                {
+                    "right": "expr rel expr",
+                    "action": [
+                        "// expr:0, rel:1, expr:2",
+                        "leftToken[\"truelist\"] = makeList(nextinstr);",
+                        "leftToken[\"falselist\"] = makeList(nextinstr + 1);",
+                        "gen(Quaternion::toOp(rightTokens[1][\"op\"]), rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], \"_\");",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "bool",
+            "rights": [
+                {
+                    "right": "'true'",
+                    "action": [
+                        "leftToken[\"truelist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                },
+                {
+                    "right": "'false'",
+                    "action": [
+                        "leftToken[\"falselist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                },
+                {
+                    "right": "bool '||' M bool",
+                    "action": [
+                        "backPatch(leftToken[\"falselist\"], nextinstr);",
+                        "leftToken[\"truelist\"] = mergeList(rightTokens[0][\"truelist\"], rightTokens[3][\"truelist\"]);",
+                        "leftToken[\"falselist\"] = rightTokens[3][\"falselist\"];"
+                    ]
+                },
+                {
+                    "right": "bool '&&' M bool",
+                    "action": [
+                        "backPatch(leftToken[\"truelist\"], nextinstr);",
+                        "leftToken[\"truelist\"] = rightTokens[3][\"truelist\"];",
+                        "leftToken[\"falselist\"] = mergeList(rightTokens[0][\"falselist\"], rightTokens[3][\"falselist\"]);"
+                    ]
+                },
+                {
+                    "right": "'!' bool",
+                    "action": [
+                        "leftToken[\"truelist\"] = rightTokens[1][\"falselist\"];",
+                        "leftToken[\"falselist\"] = rightTokens[1][\"truelist\"];"
+                    ]
+                },
+                {
+                    "right": "'(' bool ')'",
+                    "action": [
+                        "leftToken[\"truelist\"] = rightTokens[1][\"truelist\"];",
+                        "leftToken[\"falselist\"] = rightTokens[1][\"falselist\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "rel",
+            "rights": [
+                {
+                    "right": "'<'",
+                    "action": [
+                        "leftToken[\"op\"] =  Quaternion::toStr(Quaternion::Operation::IF_X_LT_Y_GOTO);"
+                    ]
+                },
+                {
+                    "right": "'>'",
+                    "action": [
+                        "leftToken[\"op\"] = Quaternion::toStr(Quaternion::Operation::IF_X_GT_Y_GOTO);"
+                    ]
+                },
+                {
+                    "right": "'<='",
+                    "action": [
+                        "leftToken[\"op\"] = Quaternion::toStr(Quaternion::Operation::IF_X_LE_Y_GOTO);"
+                    ]
+                },
+                {
+                    "right": "'>='",
+                    "action": [
+                        "leftToken[\"op\"] = Quaternion::toStr(Quaternion::Operation::IF_X_GE_Y_GOTO);"
+                    ]
+                },
+                {
+                    "right": "'=='",
+                    "action": [
+                        "leftToken[\"op\"] = Quaternion::toStr(Quaternion::Operation::IF_X_EQ_Y_GOTO);"
+                    ]
+                },
+                {
+                    "right": "'!='",
+                    "action": [
+                        "leftToken[\"op\"] = Quaternion::toStr(Quaternion::Operation::IF_X_NE_Y_GOTO);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "M",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "leftToken[\"instr\"] = std::to_string(nextinstr);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "N",
+            "rights": [
+                {
+                    "right": "'ε'",
+                    "action": [
+                        "leftToken[\"nextlist\"] = makeList(nextinstr);",
+                        "gen(Quaternion::Operation::GOTO, \"_\");"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "expr '+' expr",
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::ADD, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
+                    ]
+                },
+                {
+                    "right": "expr '-' expr",
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::SUB, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
+                    ]
+                },
+                {
+                    "right": "expr '*' expr",
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::MUL, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
+                    ]
+                },
+                {
+                    "right": "expr '/' expr",
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::DIV, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
+                    ]
+                },
+                {
+                    "right": "'-' expr",
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::SUB, \"0\", rightTokens[1][\"addr\"], leftToken[\"addr\"]);"
+                    ]
+                },
+                {
+                    "right": "'(' expr ')'",
+                    "action": [
+                        "leftToken[\"addr\"] = rightTokens[1][\"addr\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "loc",
+                    "action": [
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0][\"lexeme\"], rightTokens[0][\"addr\"], leftToken[\"addr\"]);"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "expr",
+            "rights": [
+                {
+                    "right": "'id'",
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "leftToken[\"addr\"] = rightTokens[0][\"lexeme\"];"
+                    ]
+                },
+                {
+                    "right": "'num'",
+                    "action": [
+                        "leftToken[\"addr\"] = rightTokens[0][\"val\"];"
+                    ]
+                }
+            ]
+        },
+        {
+            "left": "loc",
+            "rights": [
+                {
+                    "right": "loc '[' expr ']'",
+                    "action": [
+                        "leftToken[\"lexeme\"] = rightTokens[0][\"lexeme\"];",
+                        "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
+                        "std::string temo = Temp::newTemp();",
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::MUL, rightTokens[2][\"addr\"], std::to_string(get_width(leftToken[\"type\"])), temo);",
+                        "gen(Quaternion::ADD, rightTokens[0][\"addr\"], temo, leftToken[\"addr\"]);"
+                    ]
+                },
+                {
+                    "right": "'id' '[' expr ']'",
+                    "action": [
+                        "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "leftToken[\"lexeme\"] = rightTokens[0][\"lexeme\"];",
+                        "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
+                        "leftToken[\"addr\"] = Temp::newTemp();",
+                        "gen(Quaternion::MUL, rightTokens[2][\"addr\"], std::to_string(get_width(leftToken[\"type\"])), leftToken[\"addr\"]);"
+                    ]
+                }
+            ]
+        }
+    ]
+}
