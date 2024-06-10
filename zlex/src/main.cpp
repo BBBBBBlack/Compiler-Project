@@ -4,10 +4,10 @@
 #include "Token.hpp"
 int main(int argc, char *argv[])
 {
-    std::string tokenTableOutput="../../zparser/test/semantic_test/complete_test/in/token1.txt";
+    std::string tokenTableOutput="../../zparser/test/semantic_test/complete_test/in/token2.txt";
     std::string FAFile="../data/zlex_out/FA.md";
     std::string symbolTable="../data/zlex_out/symbolTable.txt";
-    std::string sourceFile="../../zparser/test/semantic_test/complete_test/in/source1.c";
+    std::string sourceFile="../../zparser/test/semantic_test/complete_test/in/source2.c";
     bool printFA=1;
     std::string folderPath = tokenTableOutput.substr(0, tokenTableOutput.find_last_of("/\\"));
     std::filesystem::create_directories(folderPath);

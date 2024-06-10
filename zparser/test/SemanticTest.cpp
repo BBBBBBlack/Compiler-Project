@@ -25,13 +25,13 @@ void runZTableGenerator(std::string testDir, std::string testJsonName)
     std::system(command.c_str());
 }
 
-void analyze(std::string testDir, ParseTab &tab, Parser &parser, std::string tokenFileName = "token.txt")
+void analyze(std::string testDir, ParseTab &tab, Parser &parser, std::string tokenFileName = "token.txt", std::string outDir = "")
 {
-    std::string tableFile = testDir + tableFileName;
+    std::string tableFile = testDir + outDir + tableFileName;
     std::string tokenFile = testDir + tokenFileName;
-    std::string processFile = testDir + processFileName;
-    std::string codeTargetFile = testDir + codeTargetFileName;
-    std::string outputFile = testDir + outputFileName;
+    std::string processFile = testDir + outDir + processFileName;
+    std::string codeTargetFile = testDir + outDir + codeTargetFileName;
+    std::string outputFile = testDir + outDir + outputFileName;
 
     tab.loadFromFile(tableFile);
     parser.setParseTab(tab); // 现在不是引用传递了
@@ -239,7 +239,7 @@ TEST(SemanticStructTest, 完整测试_while)
     // runZTableGenerator("test/semantic_test/complete_test/", "test.json");
     setRules_complete(tab); // 用ExposeFun.hpp中的tab
 
-    analyze("test/semantic_test/complete_test/", tab, parser, "in/token2.txt"); // 用ExposeFun.hpp中的parser
+    analyze("test/semantic_test/complete_test/", tab, parser, "in/token2.txt", "while/"); // 用ExposeFun.hpp中的parser
     printInstr(parser);
 }
 
@@ -621,6 +621,8 @@ void setRules_complete(ParseTab &parseTab)
                               // M1:1, bool:3, M2:5, stmt:6
                               backPatch(rightTokens[6]["truelist"], rightTokens[1]["instr"]);
                               backPatch(rightTokens[3]["truelist"], rightTokens[5]["instr"]);
+                              leftToken["nextlist"] = rightTokens[3]["falselist"];
+                              gen(Quaternion::GOTO, rightTokens[1]["instr"]);
                               return 0;
                           }}));
     rules.push_back(Rule({"stmt", {"do", "M", "stmt", "while", "(", "bool", ")", ";"}, [&](ACTION_FUNCTION_PARAM) -> int

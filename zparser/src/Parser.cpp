@@ -329,3 +329,15 @@ void Parser::backPatch(TokenValue jumpListId, int jumpTo)
     }
     jumpListMap.erase(std::stoi(jumpListId));
 }
+
+void Parser::printInstr(std::ostream &os)
+{
+    os << "## 中间代码\n";
+    os << "| 序号 | 操作 | 参数1 | 参数2 | 结果 |\n";
+    os << "| --- | --- | --- | --- | --- |\n";
+    for (int i = 0; i < instrVec.size(); i++)
+    {
+        os << "| " << i << " | " << Quaternion::toStr(instrVec[i].op) << " | " << instrVec[i].arg1 << " | " << instrVec[i].arg2 << " | " << instrVec[i].result << " |\n";
+    }
+    os << std::endl;
+}

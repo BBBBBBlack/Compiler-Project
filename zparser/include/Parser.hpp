@@ -44,6 +44,8 @@ public:
      */
     void grammarAnalysis(bool needProcess, std::string processFileName, std::string codeTargetFile);
 
+    void printInstr(std::ostream &os);
+
     // 暴露给action, 进行封装
     int nextinstr = 0, jumpListCnt = 0;
     std::vector<Quaternion> instrVec;              // 生成的中间代码

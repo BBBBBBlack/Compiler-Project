@@ -225,7 +225,9 @@
                     "action": [
                         "// M1:1, bool:3, M2:5, stmt:6",
                         "backPatch(rightTokens[6][\"truelist\"], rightTokens[1][\"instr\"]);",
-                        "backPatch(rightTokens[3][\"truelist\"], rightTokens[5][\"instr\"]);"
+                        "backPatch(rightTokens[3][\"truelist\"], rightTokens[5][\"instr\"]);",
+                        "leftToken[\"nextlist\"] = rightTokens[3][\"falselist\"];",
+                        "gen(Quaternion::GOTO, rightTokens[1][\"instr\"]);"
                     ]
                 }
             ]

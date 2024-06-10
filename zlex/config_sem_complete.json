@@ -1,7 +1,7 @@
 {
     "config": {
-        "sourceCodePath": "../../zparser/test/semantic_test/complete_test/in/source1.c",
-        "tokenOutPath": "../../zparser/test/semantic_test/complete_test/in/token1.txt",
+        "sourceCodePath": "../../zparser/test/semantic_test/complete_test/in/source2.c",
+        "tokenOutPath": "../../zparser/test/semantic_test/complete_test/in/token2.txt",
         "symbolTablePath": "../data/zlex_out/symbolTable.txt",
         "FAOutPath": "../data/zlex_out/FA.md",
         "printFA": true
