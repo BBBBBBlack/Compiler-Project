@@ -25,7 +25,7 @@ void runZTableGenerator(std::string testDir, std::string testJsonName)
     std::system(command.c_str());
 }
 
-void analyze(std::string testDir, ParseTab &tab, Parser &parser)
+void analyze(std::string testDir, ParseTab &tab, Parser &parser, std::string tokenFileName = "token.txt")
 {
     std::string tableFile = testDir + tableFileName;
     std::string tokenFile = testDir + tokenFileName;
@@ -34,6 +34,7 @@ void analyze(std::string testDir, ParseTab &tab, Parser &parser)
     std::string outputFile = testDir + outputFileName;
 
     tab.loadFromFile(tableFile);
+    parser.setParseTab(tab); // 现在不是引用传递了
     parser.setOutputFile(outputFile);
     parser.grammarAnalysis(tokenFile, processFile, codeTargetFile);
 }
@@ -110,7 +111,7 @@ TEST(SemanticStructTest, 回填测试)
     // printInstr(parse);
 }
 
-void setRules(ParseTab &parseTab)
+void setRules1(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
     rules.push_back(Rule({"bool", {"true"}, [&](ACTION_FUNCTION_PARAM) -> int
@@ -148,7 +149,7 @@ TEST(SemanticStructTest, bool表达式action测试)
 {
     runZTableGenerator("test/semantic_test/fun_test/", "config.json");
     ParseTab tab;
-    setRules(tab);
+    setRules1(tab);
 
     analyze("test/semantic_test/fun_test/", tab);
 }
@@ -212,9 +213,113 @@ TEST(SemanticStructTest, ExposeFun测试)
     printInstr(parser);
 }
 
-void setRules3(ParseTab &parseTab)
+void setRules_if(ParseTab &parseTab);
+TEST(SemanticStructTest, if测试)
+{
+    // runZTableGenerator("test/semantic_test/if_test/", "test.json");
+    setRules_if(tab); // 用ExposeFun.hpp中的tab
+
+    analyze("test/semantic_test/if_test/", tab, parser, "in/token1.txt"); // 用ExposeFun.hpp中的parser
+    printInstr(parser);
+}
+
+void setRules_if(ParseTab &parseTab)
 {
     std::vector<Rule> rules;
+    rules.push_back(Rule({"program", {"A", "basic", "id", "(", ")", "block"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"A", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              offset = 0;
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"block", {"{", "decls", "stmts", "}"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"decls", {"decl", "decls"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"decls", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"decl", {"type", "id", ";"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              std::string lexeme = rightTokens[1]["lexeme"];
+                              std::string type = rightTokens[0]["type"];
+                              SymbolTable::put_to_symbol_table(lexeme, type, offset);
+                              offset += std::stoi(rightTokens[0]["width"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"type", {"basic", "B", "array"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["type"] = rightTokens[2]["type"];
+                              leftToken["width"] = rightTokens[2]["width"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"B", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              t = SymbolTable::get_token_stack(tokenStack, 1)["type"];
+                              w = std::stoi(SymbolTable::get_token_stack(tokenStack, 1)["width"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"array", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["type"] = t;
+                              leftToken["width"] = std::to_string(w);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"array", {"[", "num", "]", "array"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["type"] = "array(" + rightTokens[1]["val"] + ", " + rightTokens[3]["type"] + ")";
+                              leftToken["width"] = std::to_string(std::stoi(rightTokens[1]["val"]) * std::stoi(rightTokens[3]["width"]));
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"basic", {"float"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["type"] = "float";
+                              leftToken["width"] = "4";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"basic", {"int"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["type"] = "int";
+                              leftToken["width"] = "4";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"basic", {"real"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["type"] = "real";
+                              leftToken["width"] = "8";
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmts", {"stmt", "M", "stmts"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              // stmt:0, M:1, stmts:2
+                              backPatch(rightTokens[0]["nextlist"], rightTokens[1]["instr"]);
+                              leftToken["nextlist"] = rightTokens[2]["nextlist"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmts", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"id", "=", "expr", ";"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              SymbolTable::get_from_symbol_table(rightTokens[0]["lexeme"], rightTokens[0]);
+                              gen(Quaternion::ASSIGN, rightTokens[2]["addr"], rightTokens[0]["lexeme"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"stmt", {"loc", "=", "expr", ";"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              SymbolTable::get_from_symbol_table(rightTokens[0]["lexeme"], rightTokens[0]);
+                              gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0]["addr"], rightTokens[2]["addr"], rightTokens[0]["lexeme"]);
+                              return 0;
+                          }}));
     rules.push_back(Rule({"stmt", {"if", "(", "bool", ")", "M", "stmt"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               // bool:2, M:4, stmt:5
@@ -238,10 +343,9 @@ void setRules3(ParseTab &parseTab)
                               backPatch(rightTokens[3]["truelist"], rightTokens[5]["instr"]);
                               return 0;
                           }}));
-    rules.push_back(Rule({"stmt", {"do", "M", "stmt", "while", "(", "bool", ")"}, [&](ACTION_FUNCTION_PARAM) -> int
+    rules.push_back(Rule({"stmt", {"do", "M", "stmt", "while", "(", "bool", ")", ";"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
                               // M:2, stmt:3, bool:6
-                              // bool为真时跳转到M
                               backPatch(rightTokens[6]["truelist"], rightTokens[2]["instr"]);
                               leftToken["nextlist"] = rightTokens[6]["falselist"];
                               return 0;
@@ -295,14 +399,82 @@ void setRules3(ParseTab &parseTab)
                               leftToken["instr"] = nextinstr;
                               return 0;
                           }}));
+    rules.push_back(Rule({"N", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["nextlist"] = makeList(nextinstr);
+                              gen(Quaternion::Operation::GOTO, "_");
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"expr", "+", "expr"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::ADD, rightTokens[0]["addr"], rightTokens[2]["addr"], leftToken["addr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"expr", "-", "expr"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::SUB, rightTokens[0]["addr"], rightTokens[2]["addr"], leftToken["addr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"expr", "*", "expr"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::MUL, rightTokens[0]["addr"], rightTokens[2]["addr"], leftToken["addr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"expr", "/", "expr"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::DIV, rightTokens[0]["addr"], rightTokens[2]["addr"], leftToken["addr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"-", "expr"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::SUB, "0", rightTokens[1]["addr"], leftToken["addr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"(", "expr", ")"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = rightTokens[1]["addr"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"loc"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0]["lexeme"], rightTokens[0]["addr"], leftToken["addr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"id"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              SymbolTable::get_from_symbol_table(rightTokens[0]["lexeme"], rightTokens[0]);
+                              leftToken["addr"] = rightTokens[0]["lexeme"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"expr", {"num"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["addr"] = rightTokens[0]["val"];
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"loc", {"loc", "[", "expr", "]"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              leftToken["lexeme"] = rightTokens[0]["lexeme"];
+                              leftToken["type"] = get_elem(rightTokens[0]["type"]);
+                              std::string temo = Temp::newTemp();
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::MUL, rightTokens[2]["addr"], std::to_string(get_width(leftToken["type"])), temo);
+                              gen(Quaternion::ADD, rightTokens[0]["addr"], temo, leftToken["addr"]);
+                              return 0;
+                          }}));
+    rules.push_back(Rule({"loc", {"id", "[", "expr", "]"}, [&](ACTION_FUNCTION_PARAM) -> int
+                          {
+                              SymbolTable::get_from_symbol_table(rightTokens[0]["lexeme"], rightTokens[0]);
+                              leftToken["lexeme"] = rightTokens[0]["lexeme"];
+                              leftToken["type"] = get_elem(rightTokens[0]["type"]);
+                              leftToken["addr"] = Temp::newTemp();
+                              gen(Quaternion::MUL, rightTokens[2]["addr"], std::to_string(get_width(leftToken["type"])), leftToken["addr"]);
+                              return 0;
+                          }}));
     parseTab.setRules(rules);
-}
-
-TEST(SemanticStructTest, if测试)
-{
-    runZTableGenerator("test/semantic_test/if_test/", "config.json");
-    setRules3(tab); // 用ExposeFun.hpp中的tab
-
-    analyze("test/semantic_test/if_test/", tab, parser); // 用ExposeFun.hpp中的parser
-    printInstr(parser);
 }

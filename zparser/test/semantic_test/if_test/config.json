@@ -6,6 +6,19 @@
     ],
     "rules": [
         {
+            "left": "stmts",
+            "rights": [
+                {
+                    "right": "stmt M stmts",
+                    "action": [
+                        "// stmt:0, M:1, stmts:2",
+                        "backPatch(rightTokens[0][\"nextlist\"], rightTokens[1][\"instr\"]);",
+                        "leftToken[\"nextlist\"] = rightTokens[2][\"nextlist\"];"
+                    ]
+                }
+            ]
+        },
+        {
             "left": "stmt",
             "rights": [
                 {

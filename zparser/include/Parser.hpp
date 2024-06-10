@@ -16,13 +16,15 @@ extern bool error_flag;
 class Parser
 {
 public:
-    Parser(ParseTab &parseTab) : parseTab(parseTab) {}
-    Parser(ParseTab &parseTab, std::string outputFile) : parseTab(parseTab)
+    Parser() {}
+    Parser(ParseTab parseTab) : parseTab(parseTab) {}
+    Parser(ParseTab parseTab, std::string outputFile) : parseTab(parseTab)
     {
         setOutputFile(outputFile);
     }
 
     void setOutputFile(std::string fileName);
+    void setParseTab(ParseTab parseTab) { this->parseTab = parseTab; }
 
     /**
      * @brief 语法分析
@@ -59,7 +61,7 @@ public:
 
 private:
     std::ofstream *outputFile = nullptr; // 输出语法分析结果(语法树)
-    ParseTab &parseTab;                  // 语法分析表
+    ParseTab parseTab;                   // 语法分析表 修改为传入, 而不使用引用
     std::vector<int> stateStack;
     // tokenStack[i].first: CST节点编号
     // tokenStack[i].second: token

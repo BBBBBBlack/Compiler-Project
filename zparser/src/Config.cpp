@@ -240,6 +240,7 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "    setRules(tab);\n";
     outFile << "    tab.loadFromFile(tableFile);\n";
     // outFile << "    Parser parser(tab);\n";
+    outFile << "    parser.setParseTab(tab);\n";
     outFile << "    parser.setOutputFile(outputFile);\n";
     outFile << "    parser.grammarAnalysis(tokenFile, processFile, codeTargetFile);\n";
     outFile << "    return 0;\n";

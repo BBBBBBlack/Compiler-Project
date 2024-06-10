@@ -4,43 +4,19 @@
 #include "pch.hpp"
 #include "Parser.hpp"
 
-ParseTab tab;
-Parser parser(tab);
+extern ParseTab tab;
+extern Parser parser;
+extern int &nextinstr;
 
-int nextinstr = parser.nextinstr;
 // 生成四元式 返回四元式的标号
-TokenType gen(Quaternion::Operation op, std::string arg1, std::string arg2, std::string result)
-{
-    return parser.gen(op, arg1, arg2, result);
-}
-TokenType gen(Quaternion::Operation op, std::string arg1, std::string arg2)
-{
-    return parser.gen(op, arg1, arg2);
-}
-TokenType gen(Quaternion::Operation op, std::string arg)
-{
-    return parser.gen(op, arg);
-}
-TokenType makeList(int instrId)
-{
-    return parser.makeList(instrId);
-}
-TokenType makeList(TokenType instrId)
-{
-    return parser.makeList(instrId);
-}
-TokenType mergeList(TokenType jumpListId1, TokenType jumpListId2)
-{
-    return parser.mergeList(jumpListId1, jumpListId2);
-}
+TokenType gen(Quaternion::Operation op, std::string arg1, std::string arg2, std::string result);
+TokenType gen(Quaternion::Operation op, std::string arg1, std::string arg2);
+TokenType gen(Quaternion::Operation op, std::string arg);
+TokenType makeList(int instrId);
+TokenType makeList(TokenType instrId);
+TokenType mergeList(TokenType jumpListId1, TokenType jumpListId2);
 
-void backPatch(TokenType jumpListId, std::string jumpTo)
-{
-    parser.backPatch(jumpListId, stoi(jumpTo));
-}
-void backPatch(TokenType jumpListId, int jumpTo)
-{
-    parser.backPatch(jumpListId, jumpTo);
-}
+void backPatch(TokenType jumpListId, std::string jumpTo);
+void backPatch(TokenType jumpListId, int jumpTo);
 
 #endif // EXPOSE_FUN_HPP

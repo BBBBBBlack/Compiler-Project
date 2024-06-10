@@ -68,11 +68,17 @@ Usage: ./GenParseTest
 
 ## 语义分析问题记录
 
+### 错误设计
+
+对引用不够熟悉, 而过分滥用
+- 引用作为成员变量不是一个好选择: 必须在类创建时赋值初值, 而不能在之后修改 
+
 ### 回填
 
 1. truelist和falselist
    - 对于true, 没有falselist; 对于false, 没有truelist, 这是正确的, 但是代码中可能要进行处理
 2. 对于nextlist的回填, 是在控制语句之外, 对stmts进行回填的, 所以ppt上空缺了
+
 
 ### CST遗留问题
 

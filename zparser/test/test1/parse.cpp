@@ -8,6 +8,7 @@
  * /____|_| /_/   \_\_| \_\____/|_____|_| \_\
  */
 #include "Parser.hpp"
+#include "ExposeFun.hpp"
 
 void setRules(ParseTab &parseTab);
 #include <iostream>
@@ -24,12 +25,7 @@ static struct option long_options[] = {
     {0, 0, 0, 0} // 结束标志
 };
 
-ParseTab tab;
-Parser parser(tab);
-auto &gen = zparser.gen;
-auto &makeList = zparser.makeList;
-auto &mergeList = zparser.mergeList;
-auto &backPatch = zparser.backPatch;
+// ParserFun.hpp中声明了 ParseTab tab; Parser parser(tab);
 
 int main(int argc, char *argv[])
 {

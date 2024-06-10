@@ -232,6 +232,11 @@ void Parser::grammarAnalysis(std::istream &tokenStream, std::string processFileN
             std::cerr << "[Error]: Syntax error at <Line: " << token.lineno << ", Position: " << token.pos << ">" << std::endl;
             break;
         }
+        else
+        {
+            std::cerr << "[Error]: Unknown action type at <Line: " << token.lineno << ", Position: " << token.pos << ">" << std::endl;
+            break;
+        }
     }
     SymbolTable::print_symbol_table();
     // if (needCST)
