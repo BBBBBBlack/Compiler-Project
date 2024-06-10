@@ -22,7 +22,7 @@
             "left": "stmt",
             "rights": [
                 {
-                    "right": "if '(' bool ')' M stmt",
+                    "right": "'if' '(' bool ')' M stmt",
                     "action": [
                         "// bool:2, M:4, stmt:5",
                         "backPatch(rightTokens[2][\"truelist\"], rightTokens[4][\"instr\"]);",
@@ -35,7 +35,7 @@
             "left": "stmt",
             "rights": [
                 {
-                    "right": "if '(' bool ')' M stmt N else M stmt",
+                    "right": "'if' '(' bool ')' M stmt N 'else' M stmt",
                     "action": [
                         "// bool:2, M1:4, stmt1:5, N:6, M2:8, stmt2:9",
                         "backPatch(rightTokens[2][\"truelist\"], rightTokens[4][\"instr\"]);",
@@ -50,7 +50,7 @@
             "left": "stmt",
             "rights": [
                 {
-                    "right": "while M '(' bool ')' M stmt",
+                    "right": "'while' M '(' bool ')' M stmt",
                     "action": [
                         "// M1:1, bool:3, M2:5, stmt:6",
                         "backPatch(rightTokens[6][\"truelist\"], rightTokens[1][\"instr\"]);",
@@ -63,7 +63,7 @@
             "left": "stmt",
             "rights": [
                 {
-                    "right": "do M stmt while '(' bool ')' ';'",
+                    "right": "'do' M stmt 'while' '(' bool ')' ';'",
                     "action": [
                         "// M:2, stmt:3, bool:6",
                         "backPatch(rightTokens[6][\"truelist\"], rightTokens[2][\"instr\"]);",

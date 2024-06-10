@@ -396,7 +396,7 @@ void setRules_if(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"M", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
-                              leftToken["instr"] = nextinstr;
+                              leftToken["instr"] = std::to_string(nextinstr);
                               return 0;
                           }}));
     rules.push_back(Rule({"N", {"ε"}, [&](ACTION_FUNCTION_PARAM) -> int
