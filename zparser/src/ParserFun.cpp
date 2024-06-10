@@ -18,14 +18,24 @@ std::string Temp::newTemp()
 //     out.close();
 // }
 
+std::string get_type(const std::string &str)
+{
+    size_t pos = str.find(',');
+    if (pos != std::string::npos)
+    {
+        return str.substr(pos + 2, str.size() - pos - 3);
+    }
+    return "";
+}
+
 std::string get_elem(std::string s_type)
 {
-    std::regex pattern(R"(array\((\d+),\s*(\w+|array\(.*?\))\))");
+    std::regex pattern(R"(array\((\d+),\s*(\w+|array\(.+?\))\))");
     std::smatch match;
     if (std::regex_search(s_type, match, pattern))
     {
         int size = std::stoi(match[1].str());
-        std::string type = match[2].str();
+        std::string type = get_type(s_type);
         s_type = type;
     }
     return s_type;
@@ -39,7 +49,7 @@ int get_width(std::string s_type)
     while (std::regex_search(s_type, match, pattern))
     {
         int size = std::stoi(match[1].str());
-        std::string type = match[2].str();
+        std::string type = get_type(s_type);
         s_type = type;
         res *= size;
     }

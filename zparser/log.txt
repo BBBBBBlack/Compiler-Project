@@ -1,7 +1,0 @@
-token file: ./in/sample_in1_token.txt
-table file: ./out/table.md
-output file: ./out/CST.md
-process file: ./out/process.md
-termCount: 33 nonTermCount: 27 stateCount: 140
-[Error]: Syntax error at <Line: 0, Position: 0>缺少右'}'
-[Error]: Syntax error at <Line: 3, Position: 3>

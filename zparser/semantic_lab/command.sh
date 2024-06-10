@@ -5,13 +5,13 @@ rm -f ./out/code_target.md
 
 ../build/ZTableGenerator \
     -i ../include\
-    -c ./ex2/test.json \
+    -c ./formal/test.json \
     -f ./out/FA.md \
     -t ./out/table.md \
     -p ./out/parse.cpp
 
 
-./ZParser -i ./ex2/sample_in_token.txt \
+./ZParser -i ./formal/token.txt \
     -t ./out/table.md \
     -o ./out/CST.md \
     -p ./out/process.md \
