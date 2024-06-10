@@ -35,7 +35,7 @@ protected:
      */
     void buildDFA(bool debugMode, PAVec PAvec, std::string outputFileName);
     /**
-     * @brief 使用构件好的dfa进行词法分析
+     * @brief 使用构建好的dfa进行词法分析
      */
     int lexicalAnalysis(std::ostream &outputStream, std::string fileName);
 };

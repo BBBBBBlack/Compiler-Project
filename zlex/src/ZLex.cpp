@@ -53,6 +53,11 @@ int ZLex::lexicalAnalysis(std::ostream &outputStream, std::string fileName)
         perror("文件打开失败");
         return -1;
     }
+    else
+    {
+        std::system("pwd");
+        std::cout << "文件[" << fileName << "]打开成功" << std::endl;
+    }
 
     // 设置文件的读取位置
     file.seekg(pos);

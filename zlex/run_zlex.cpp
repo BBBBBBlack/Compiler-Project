@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	std::string configFile = argv[1];
+	std::cout << "config file: " << configFile << std::endl;
 	std::ifstream jfile(configFile);
 
 	json data = json::parse(jfile);
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 	{
 		std::cerr << "Configuration not exist" << std::endl;
 	}
-	std::string sourceCode = "zlex/src/main.cpp";
+	std::string sourceCode = "src/main.cpp";
 	std::string folderPath = sourceCode.substr(0, sourceCode.find_last_of("/\\"));
 	std::filesystem::create_directories(folderPath);
 	std::ofstream source(sourceCode, std::ios::trunc);
