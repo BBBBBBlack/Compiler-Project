@@ -23,7 +23,8 @@ std::unordered_map<std::string, Quaternion::Operation> Quaternion::strOpMap = {
     {"if_ge", IF_X_GE_Y_GOTO},
     {"param", PARAM},
     {"call", PROC_CALL},
-    {"=call", FUNC_CALL}};
+    {"=call", FUNC_CALL},
+    {"(float)", TYPE_TRANSFER_FLOAT}};
 
 std::unordered_map<Quaternion::Operation, std::string> Quaternion::opStrMap = {
     {ASSIGN, "="},
@@ -48,4 +49,5 @@ std::unordered_map<Quaternion::Operation, std::string> Quaternion::opStrMap = {
     {IF_X_GE_Y_GOTO, "if_ge"},
     {PARAM, "param"},
     {PROC_CALL, "call"},
-    {FUNC_CALL, "=call"}};
+    {FUNC_CALL, "=call"},
+    {TYPE_TRANSFER_FLOAT, "(float)"}};

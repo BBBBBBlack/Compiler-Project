@@ -3,6 +3,7 @@
 
 #include "pch.hpp"
 #include "SemanticStruct.hpp"
+#include "SymbolTable.hpp"
 
 extern int offset;
 extern std::string t; // 暂存类型type

@@ -18,5 +18,6 @@ TokenType mergeList(TokenType jumpListId1, TokenType jumpListId2);
 
 void backPatch(TokenType jumpListId, std::string jumpTo);
 void backPatch(TokenType jumpListId, int jumpTo);
+void printInstr(std::ostream &out);
 
 #endif // EXPOSE_FUN_HPP

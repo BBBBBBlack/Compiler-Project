@@ -332,12 +332,14 @@ void setRules_if(ParseTab &parseTab)
                           }}));
     rules.push_back(Rule({"stmt", {"id", "=", "expr", ";"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
+                              // id:0, expr:2
                               SymbolTable::get_from_symbol_table(rightTokens[0]["lexeme"], rightTokens[0]);
                               gen(Quaternion::ASSIGN, rightTokens[2]["addr"], rightTokens[0]["lexeme"]);
                               return 0;
                           }}));
     rules.push_back(Rule({"stmt", {"loc", "=", "expr", ";"}, [&](ACTION_FUNCTION_PARAM) -> int
                           {
+                              // loc:0, expr:2
                               SymbolTable::get_from_symbol_table(rightTokens[0]["lexeme"], rightTokens[0]);
                               gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0]["addr"], rightTokens[2]["addr"], rightTokens[0]["lexeme"]);
                               return 0;

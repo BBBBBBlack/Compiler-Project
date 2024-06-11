@@ -9,12 +9,13 @@ struct Record
     std::string lexeme;
     std::string type;
     int offset;
+    bool isTemp;
 };
 
 namespace SymbolTable
 {
     extern std::vector<Record> symbolTable; // Declare the variable in the header file
-    void put_to_symbol_table(std::string lexeme, std::string type, int offset);
+    void put_to_symbol_table(std::string lexeme, std::string type, int offset, bool isTemp = false);
     void get_from_symbol_table(std::string lexeme, Token &token);
     void print_symbol_table();
     Token get_token_stack(std::vector<Token> &tokenStack, int re_offset);

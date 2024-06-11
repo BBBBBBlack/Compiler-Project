@@ -9,6 +9,7 @@ std::unordered_map<std::string, int> type_width_map = {
 int Temp::tempNum = 0;
 std::string Temp::newTemp()
 {
+    SymbolTable::put_to_symbol_table(newTemp(), t, offset, true);
     return "t" + std::to_string(tempNum++);
 }
 

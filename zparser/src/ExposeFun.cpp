@@ -41,3 +41,8 @@ void backPatch(TokenType jumpListId, int jumpTo)
     // parser.printInstr(std::cout);
     parser.backPatch(jumpListId, jumpTo);
 }
+
+void printInstr(std::ostream &out)
+{
+    parser.printInstr(out);
+}
