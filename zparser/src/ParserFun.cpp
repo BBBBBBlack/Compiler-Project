@@ -71,7 +71,7 @@ std::string narrow(std::string addr, std::string type1, std::string type2, Token
     {
         leftToken["type"] = "int";
         std::string temp = Temp::newTemp();
-        gen(Quaternion::TYPE_TRANSFER_FLOAT, addr, temp);
+        gen(Quaternion::TYPE_TRANSFER_INT, addr, temp);
         return temp;
     }
     return addr;
