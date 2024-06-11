@@ -17,24 +17,25 @@ public:
         MUL,    // x = y * z
         DIV,    // x = y / z
         // TODO: 一元运算符
-        UNARY_OP,         // x = op y
-        ARRAY_ASSIGN_YI,  // x = y[i]
-        ARRAY_ASSIGN_XI,  // x[i] = y
-        ADDRESS_ASSIGN,   // x = &y
-        POINTER_ASSIGN_Y, // x = *y
-        POINTER_ASSIGN_X, // *x = y
-        GOTO,             // goto L
-        IF_X_GOTO,        // if x goto L
-        IF_FALSE_X_GOTO,  // if false x goto L
-        IF_X_LT_Y_GOTO,   // if x < y goto L (Less Than)
-        IF_X_LE_Y_GOTO,   // if x <= y goto L
-        IF_X_EQ_Y_GOTO,   // if x == y goto L
-        IF_X_NE_Y_GOTO,   // if x != y goto L
-        IF_X_GT_Y_GOTO,   // if x > y goto L
-        IF_X_GE_Y_GOTO,   // if x >= y goto L
-        PARAM,            // param x
-        PROC_CALL,        // call p, n
-        FUNC_CALL         // y = call p, n
+        UNARY_OP,            // x = op y
+        ARRAY_ASSIGN_YI,     // x = y[i]
+        ARRAY_ASSIGN_XI,     // x[i] = y
+        ADDRESS_ASSIGN,      // x = &y
+        POINTER_ASSIGN_Y,    // x = *y
+        POINTER_ASSIGN_X,    // *x = y
+        GOTO,                // goto L
+        IF_X_GOTO,           // if x goto L
+        IF_FALSE_X_GOTO,     // if false x goto L
+        IF_X_LT_Y_GOTO,      // if x < y goto L (Less Than)
+        IF_X_LE_Y_GOTO,      // if x <= y goto L
+        IF_X_EQ_Y_GOTO,      // if x == y goto L
+        IF_X_NE_Y_GOTO,      // if x != y goto L
+        IF_X_GT_Y_GOTO,      // if x > y goto L
+        IF_X_GE_Y_GOTO,      // if x >= y goto L
+        PARAM,               // param x
+        PROC_CALL,           // call p, n
+        FUNC_CALL,           // y = call p, n
+        TYPE_TRANSFER_FLOAT, // x = (float)y
     };
 
     static std::unordered_map<std::string, Operation> strOpMap;
@@ -65,8 +66,9 @@ public:
             this->arg1 = arg1;
             this->result = arg2;
             break;
-        case ASSIGN:    // x = y
-        case PROC_CALL: // call p, n
+        case ASSIGN:              // x = y
+        case PROC_CALL:           // call p, n
+        case TYPE_TRANSFER_FLOAT: // x = (float)y
             this->arg1 = arg1;
             this->result = arg2;
             break;
