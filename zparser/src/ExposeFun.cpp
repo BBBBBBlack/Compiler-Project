@@ -33,11 +33,16 @@ TokenType mergeList(TokenType jumpListId1, TokenType jumpListId2)
 
 void backPatch(TokenType jumpListId, std::string jumpTo)
 {
-    parser.printInstr(std::cout);
+    // parser.printInstr(std::cout);
     parser.backPatch(jumpListId, stoi(jumpTo));
 }
 void backPatch(TokenType jumpListId, int jumpTo)
 {
-    parser.printInstr(std::cout);
+    // parser.printInstr(std::cout);
     parser.backPatch(jumpListId, jumpTo);
+}
+
+void printInstr(std::ostream &out)
+{
+    parser.printInstr(out);
 }
