@@ -177,6 +177,10 @@
                     "right": "'id' '=' expr ';'",
                     "action": [
                         "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "if (rightTokens[0][\"type\"] == \"\" && rightTokens[0][\"offset\"] == \"\")",
+                        "     {",
+                        "          std::cerr << \"Error: Undefined variable: \" << rightTokens[0][\"lexeme\"] << std::endl;",
+                        "     }",
                         "gen(Quaternion::ASSIGN, rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
                     ]
                 },
@@ -184,6 +188,10 @@
                     "right": "loc '=' expr ';'",
                     "action": [
                         "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "if (rightTokens[0][\"type\"] == \"\" && rightTokens[0][\"offset\"] == \"\")",
+                        "     {",
+                        "          std::cerr << \"Error: Undefined variable: \" << rightTokens[0][\"lexeme\"] << std::endl;",
+                        "     }",
                         "gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
                     ]
                 }
@@ -198,6 +206,13 @@
                         "// bool:2, M:4, stmt:5",
                         "backPatch(rightTokens[2][\"truelist\"], rightTokens[4][\"instr\"]);",
                         "leftToken[\"nextlist\"] = mergeList(rightTokens[2][\"falselist\"], rightTokens[5][\"nextlist\"]);"
+                    ]
+                },
+                {
+                    "right": "'if' '(' bool M stmt",
+                    "action": [
+                        "error_flag=true;",
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
                     ]
                 }
             ]
@@ -214,6 +229,13 @@
                         "temp = mergeList(rightTokens[5][\"nextlist\"], rightTokens[6][\"nextlist\"]);",
                         "leftToken[\"nextlist\"] = mergeList(temp, rightTokens[9][\"nextlist\"]);"
                     ]
+                },
+                {
+                    "right": "'if' '(' bool M stmt N 'else' M stmt",
+                    "action": [
+                        "error_flag=true;",
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
+                    ]
                 }
             ]
         },
@@ -229,6 +251,13 @@
                         "leftToken[\"nextlist\"] = rightTokens[3][\"falselist\"];",
                         "gen(Quaternion::GOTO, rightTokens[1][\"instr\"]);"
                     ]
+                },
+                {
+                    "right": "'while' M '(' bool M stmt",
+                    "action": [
+                        "error_flag=true;",
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
+                    ]
                 }
             ]
         },
@@ -241,6 +270,13 @@
                         "// M:2, stmt:3, bool:6",
                         "backPatch(rightTokens[6][\"truelist\"], rightTokens[2][\"instr\"]);",
                         "leftToken[\"nextlist\"] = rightTokens[6][\"falselist\"];"
+                    ]
+                },
+                {
+                    "right": "'do' M stmt 'while' '(' bool ';'",
+                    "action": [
+                        "error_flag=true;",
+                        "std::cerr << \"[Error]: Syntax error at <Line: \" << leftToken.lineno << \", Position: \" << leftToken.pos << \">\" << \"缺少右')'\" << std::endl;"
                     ]
                 }
             ]
@@ -454,6 +490,10 @@
                     "right": "'id'",
                     "action": [
                         "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "if (rightTokens[0][\"type\"] == \"\" && rightTokens[0][\"offset\"] == \"\")",
+                        "     {",
+                        "          std::cerr << \"Error: Undefined variable: \" << rightTokens[0][\"lexeme\"] << std::endl;",
+                        "     }",
                         "leftToken[\"addr\"] = rightTokens[0][\"lexeme\"];"
                     ]
                 },
@@ -483,6 +523,10 @@
                     "right": "'id' '[' expr ']'",
                     "action": [
                         "SymbolTable::get_from_symbol_table(rightTokens[0][\"lexeme\"], rightTokens[0]);",
+                        "if (rightTokens[0][\"type\"] == \"\" && rightTokens[0][\"offset\"] == \"\")",
+                        "     {",
+                        "          std::cerr << \"Error: Undefined variable: \" << rightTokens[0][\"lexeme\"] << std::endl;",
+                        "     }",
                         "leftToken[\"lexeme\"] = rightTokens[0][\"lexeme\"];",
                         "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
                         "leftToken[\"addr\"] = Temp::newTemp();",
