@@ -181,7 +181,8 @@
                         "     {",
                         "          std::cerr << \"Error: Undefined variable: \" << rightTokens[0][\"lexeme\"] << std::endl;",
                         "     }",
-                        "gen(Quaternion::ASSIGN, rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
+                        "std::string temp = assign(rightTokens[2][\"addr\"], rightTokens[2][\"type\"], rightTokens[0][\"type\"], rightTokens[2]);",
+                        "gen(Quaternion::ASSIGN, temp, rightTokens[0][\"lexeme\"]);"
                     ]
                 },
                 {
@@ -192,7 +193,8 @@
                         "     {",
                         "          std::cerr << \"Error: Undefined variable: \" << rightTokens[0][\"lexeme\"] << std::endl;",
                         "     }",
-                        "gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], rightTokens[0][\"lexeme\"]);"
+                        "std::string temp = assign(rightTokens[2][\"addr\"], rightTokens[2][\"type\"], rightTokens[0][\"type\"], rightTokens[2]);",
+                        "gen(Quaternion::ARRAY_ASSIGN_YI, rightTokens[0][\"addr\"], temp, rightTokens[0][\"lexeme\"]);"
                     ]
                 }
             ]
@@ -432,13 +434,17 @@
                     "right": "expr '+' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
-                        "gen(Quaternion::ADD, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
+                        "std::string temp1 = widen(rightTokens[0][\"addr\"], rightTokens[0][\"type\"], rightTokens[2][\"type\"], leftToken);",
+                        "std::string temp2 = widen(rightTokens[2][\"addr\"], rightTokens[2][\"type\"], rightTokens[0][\"type\"], leftToken);",
+                        "gen(Quaternion::ADD, temp1, temp2, leftToken[\"addr\"]);"
                     ]
                 },
                 {
                     "right": "expr '-' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
+                        "std::string temp1 = widen(rightTokens[0][\"addr\"], rightTokens[0][\"type\"], rightTokens[2][\"type\"], leftToken);",
+                        "std::string temp2 = widen(rightTokens[2][\"addr\"], rightTokens[2][\"type\"], rightTokens[0][\"type\"], leftToken);",
                         "gen(Quaternion::SUB, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
@@ -446,6 +452,8 @@
                     "right": "expr '*' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
+                        "std::string temp1 = widen(rightTokens[0][\"addr\"], rightTokens[0][\"type\"], rightTokens[2][\"type\"], leftToken);",
+                        "std::string temp2 = widen(rightTokens[2][\"addr\"], rightTokens[2][\"type\"], rightTokens[0][\"type\"], leftToken);",
                         "gen(Quaternion::MUL, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
@@ -453,6 +461,8 @@
                     "right": "expr '/' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
+                        "std::string temp1 = widen(rightTokens[0][\"addr\"], rightTokens[0][\"type\"], rightTokens[2][\"type\"], leftToken);",
+                        "std::string temp2 = widen(rightTokens[2][\"addr\"], rightTokens[2][\"type\"], rightTokens[0][\"type\"], leftToken);",
                         "gen(Quaternion::DIV, rightTokens[0][\"addr\"], rightTokens[2][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
@@ -460,6 +470,7 @@
                     "right": "'-' expr",
                     "action": [
                         "leftToken[\"addr\"] = Temp::newTemp();",
+                        "leftToken[\"type\"] = rightTokens[1][\"type\"];",
                         "gen(Quaternion::SUB, \"0\", rightTokens[1][\"addr\"], leftToken[\"addr\"]);"
                     ]
                 },
@@ -494,7 +505,9 @@
                         "     {",
                         "          std::cerr << \"Error: Undefined variable: \" << rightTokens[0][\"lexeme\"] << std::endl;",
                         "     }",
-                        "leftToken[\"addr\"] = rightTokens[0][\"lexeme\"];"
+                        "leftToken[\"addr\"] = rightTokens[0][\"lexeme\"];",
+                        "leftToken[\"type\"] = rightTokens[0][\"type\"];",
+                        "leftToken[\"offset\"] = rightTokens[0][\"offset\"];"
                     ]
                 },
                 {
@@ -529,6 +542,7 @@
                         "     }",
                         "leftToken[\"lexeme\"] = rightTokens[0][\"lexeme\"];",
                         "leftToken[\"type\"] = get_elem(rightTokens[0][\"type\"]);",
+                        "leftToken[\"offset\"] = rightTokens[0][\"offset\"];",
                         "leftToken[\"addr\"] = Temp::newTemp();",
                         "gen(Quaternion::MUL, rightTokens[2][\"addr\"], std::to_string(get_width(leftToken[\"type\"])), leftToken[\"addr\"]);"
                     ]

@@ -29,6 +29,7 @@ void Config::initOutFile(std::ofstream &outFile)
 
     outFile << "#include \"Parser.hpp\"" << std::endl;
     outFile << "#include \"ExposeFun.hpp\"" << std::endl;
+    outFile << "#include \"ParserFun.hpp\"" << std::endl;
     // outFile << "#include \"Tool.hpp\"" << std::endl;
     outFile << std::endl;
 
@@ -243,6 +244,7 @@ void Config::generateMain(std::ofstream &outFile)
     outFile << "    parser.setParseTab(tab);\n";
     outFile << "    parser.setOutputFile(outputFile);\n";
     outFile << "    parser.grammarAnalysis(tokenFile, processFile, codeTargetFile);\n";
+    outFile << "    printInstr(std::cout);\n";
     outFile << "    return 0;\n";
     outFile << "}\n";
 }

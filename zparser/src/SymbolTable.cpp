@@ -4,7 +4,7 @@ namespace SymbolTable
 {
     std::vector<Record> symbolTable; // Define the variable in a .cpp file
 
-    void put_to_symbol_table(std::string lexeme, std::string type, int offset, bool isTemp = false)
+    void put_to_symbol_table(std::string lexeme, std::string type, int offset, bool isTemp)
     {
         symbolTable.push_back({lexeme, type, offset, isTemp});
     }

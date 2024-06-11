@@ -7,7 +7,7 @@
 #include "CST.hpp"
 #include "SymbolTable.hpp"
 #include "SemanticStruct.hpp"
-#include "ParserFun.hpp"
+// #include "ParserFun.hpp"
 #include "Tool.hpp"
 
 #define PROCESS_FILE_MAX_SIZE 1 * 1024 * 1024 // 1MB

@@ -4,6 +4,7 @@
 #include "pch.hpp"
 #include "SemanticStruct.hpp"
 #include "SymbolTable.hpp"
+#include "ExposeFun.hpp"
 
 extern int offset;
 extern std::string t; // 暂存类型type
@@ -29,4 +30,10 @@ struct Temp
 std::string get_elem(std::string s_type);
 
 int get_width(std::string s_type);
+
+std::string assign(std::string addr, std::string type1, std::string type2, Token &leftToken);
+
+std::string widen(std::string addr, std::string type1, std::string type2, Token &leftToken);
+
+std::string narrow(std::string addr, std::string type1, std::string type2, Token &leftToken);
 #endif // PARSER_FUN_HPP
