@@ -34,7 +34,8 @@ public:
         IF_X_GE_Y_GOTO,      // if x >= y goto L
         PARAM,               // param x
         PROC_CALL,           // call p, n
-        FUNC_CALL,           // y = call p, n
+        FUNC_CALL,           // y = call p, n,
+        TYPE_TRANSFER_INT,   // x = (int)y
         TYPE_TRANSFER_FLOAT, // x = (float)y
     };
 
@@ -68,6 +69,7 @@ public:
             break;
         case ASSIGN:              // x = y
         case PROC_CALL:           // call p, n
+        case TYPE_TRANSFER_INT:   // x = (int)y
         case TYPE_TRANSFER_FLOAT: // x = (float)y
             this->arg1 = arg1;
             this->result = arg2;
